@@ -1,0 +1,6 @@
+//Items
+item.thatch_sack.name=Thatch Sack
+item.leather_sack.name=Leather Sack
+
+//Blocks
+tile.test_block.name=Test Block

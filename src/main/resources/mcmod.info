@@ -1,0 +1,15 @@
+[
+{
+  "modid": "sacks_and_such",
+  "name": "Sacks and Such",
+  "description": "A mod that adds some sacks intended for use with the mod TerraFirmaCraft",
+  "version": "1.0",
+  "mcversion": 1.12",
+  "updateUrl": "",
+  "authorList": ["Traister101"],
+  "credits": "Joe mamma",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
