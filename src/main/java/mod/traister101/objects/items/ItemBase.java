@@ -3,6 +3,7 @@ package mod.traister101.objects.items;
 import javax.annotation.Nonnull;
 
 import mod.traister101.Main;
+import mod.traister101.item.ModItems;
 import net.dries007.tfc.api.capability.size.Size;
 import net.dries007.tfc.api.capability.size.Weight;
 import net.dries007.tfc.objects.items.ItemTFC;
@@ -13,36 +14,68 @@ public class ItemBase extends ItemTFC
 {
 	
 	protected String name;
-
-	public ItemBase(String name) {
+	protected Size size;
+	protected Weight weight;
+	protected CreativeTabs tab;
+	
+	
+	public ItemBase(String name, CreativeTabs tab) {
 		this.name = name;
+		//Default item size
+		this.size = Size.NORMAL;
+		//Default item weight
+		this.weight = Weight.LIGHT;
+		
 		setTranslationKey(name);
 		setRegistryName(name);
-		/*Fiddle with this later
+		setCreativeTab(tab);
+		
 		ModItems.ITEMS.add(this);
-		*/
 	}
+	
+	public ItemBase(String name) {
+		this.name = name;
+		//Default item size
+		this.size = Size.NORMAL;
+		//Default item weight
+		this.weight = Weight.LIGHT;
+		
+		setTranslationKey(name);
+		setRegistryName(name);
+		//Default tab
+		setCreativeTab(Main.creativeTab);
+		
+		ModItems.ITEMS.add(this);
+	}
+	
 	
 	//Registers model
 	public void registerItemModel() {
 		Main.PROXY.registerItemRenderer(this, 0, name);
 	}
 	
-	//Sets the creative tab to whatever you pass into the method
-	@Override
-	public ItemBase setCreativeTab(CreativeTabs tab) {
-		super.setCreativeTab(tab);
+	//Overrides default size
+	public ItemBase setSize(Size size)
+	{
+		this.size = size;
+		return this;
+	}
+	
+	//Overrides default weight
+	public ItemBase setWeight(Weight weight)
+	{
+		this.weight = weight;
 		return this;
 	}
 	
     @Nonnull
     public Size getSize(@Nonnull ItemStack stack) {
-        return Size.NORMAL;
+        return this.size;
     }
 
     @Nonnull
     public Weight getWeight(@Nonnull ItemStack stack) {
-        return Weight.HEAVY;
+        return this.weight;
     }
 
 }

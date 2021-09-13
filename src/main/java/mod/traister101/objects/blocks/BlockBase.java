@@ -1,6 +1,7 @@
 package mod.traister101.objects.blocks;
 
 import mod.traister101.Main;
+import mod.traister101.blocks.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,7 +13,7 @@ public class BlockBase extends Block
 	
 	protected String name;
 	
-	public BlockBase(String name, Material material, float hardness, float resistance) 
+	public BlockBase(String name, Material material, float hardness, float resistance, CreativeTabs tab) 
 	{
 		super(material);
 	
@@ -22,10 +23,29 @@ public class BlockBase extends Block
 		setRegistryName(name);
 		setHardness(hardness);
 		setResistance(resistance);
+		setCreativeTab(tab);
 		
-		/*Fiddle with this later
+		
 		ModBlocks.BLOCKS.add(this);
-		*/
+	}
+	
+	public BlockBase(String name) 
+	{
+		super(Material.IRON);
+	
+		this.name = name;
+	
+		setTranslationKey(name);
+		setRegistryName(name);
+		//Default hardness
+		setHardness(10f);
+		//Default resistance
+		setResistance(10f);
+		//Default tab
+		setCreativeTab(Main.creativeTab);
+		
+		
+		ModBlocks.BLOCKS.add(this);
 	}
 	
 	public void registerItemModel(Item itemBlock) 
