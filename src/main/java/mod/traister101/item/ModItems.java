@@ -18,22 +18,9 @@ public class ModItems {
 	//Makes an array that all the items go in
 	public static final List<Item> ITEMS = new ArrayList();
 	
+	//Items
 	public static ItemBase THATCH_SACK = new ItemBase("thatch_sack");
 	public static ItemBase LEATHER_SACK = new ItemBase("leather_sack");
-	
-	
-	public static void register(IForgeRegistry<Item> registry) 
-	{
-		registry.registerAll(
-				THATCH_SACK, LEATHER_SACK
-		);
-	}
-	
-	public static void registerModels() 
-	{
-		THATCH_SACK.registerItemModel();
-		LEATHER_SACK.registerItemModel();
-	}
-	
+
 }
 

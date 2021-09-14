@@ -16,13 +16,6 @@ public class RegistrationHandler
 {
 	
 	
-	/*
-	@SubscribeEvent
-	public static void onBlockRegister(RegistryEvent.Register<Block> event)
-	{
-		event.getRegistry().registerAll(ModBlocks.BLOCKS.toArray(new Block[0]));
-	}
-	
 	@SubscribeEvent
 	public static void onItemRegister(RegistryEvent.Register<Item> event)
 	{
@@ -42,8 +35,34 @@ public class RegistrationHandler
 			Main.PROXY.registerItemRenderer(Item.getItemFromBlock(block), 0, "inventory");
 		}
 	}
-	*/
 	
+	@SubscribeEvent
+	public static void onBlockRegister(RegistryEvent.Register<Block> event)
+	{
+		event.getRegistry().registerAll(ModBlocks.BLOCKS.toArray(new Block[0]));
+	}
+	
+	public static void preInitRegistries()
+	{
+		
+	}
+	
+	public static void initRegistries()
+	{
+		
+	}
+	
+	public static void postInitRegistries()
+	{
+		
+	}
+	
+	public static void serverRegistries()
+	{
+		
+	}
+	
+	/*
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
 		ModBlocks.register(event.getRegistry());
@@ -61,5 +80,5 @@ public class RegistrationHandler
 		ModItems.registerModels();
 		ModBlocks.registerModels();
 	}
-	
+	*/
 }

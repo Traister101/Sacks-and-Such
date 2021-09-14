@@ -48,12 +48,6 @@ public class ItemBase extends ItemTFC
 		ModItems.ITEMS.add(this);
 	}
 	
-	
-	//Registers model
-	public void registerItemModel() {
-		Main.PROXY.registerItemRenderer(this, 0, name);
-	}
-	
 	//Overrides default size
 	public ItemBase setSize(Size size)
 	{

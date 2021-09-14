@@ -5,11 +5,14 @@ import org.apache.logging.log4j.Logger;
 import mod.traister101.client.ModTab;
 import mod.traister101.proxy.CommonProxy;
 import mod.traister101.util.Reference;
+import mod.traister101.util.handlers.RegistrationHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES)
 public class Main
@@ -21,7 +24,7 @@ public class Main
 	//Sets up mod Logger
     private static Logger logger;
 	
-    //Sets up mod instance using Mod ID
+    //Sets up mod instance using mod ID
 	@Mod.Instance(Reference.MODID)
 	public static Main instance;
 	
@@ -29,24 +32,29 @@ public class Main
     @SidedProxy(clientSide = Reference.CLIENT, serverSide = Reference.COMMON)
     public static CommonProxy PROXY;
     
-    //Things that need to be done during loading
-    @Mod.EventHandler
+    @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
     	logger = event.getModLog();
     	logger.info(Reference.MODID + " is loading");
+    	RegistrationHandler.preInitRegistries();
     }
 
-    @Mod.EventHandler
+    @EventHandler
     public void init(FMLInitializationEvent event)
     {
-    	
+    	RegistrationHandler.initRegistries();
     }
     
-    @Mod.EventHandler
+    @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-    	
+    	RegistrationHandler.postInitRegistries();
+    }
+    
+    public void serverInit(FMLServerStartingEvent event)
+    {
+    	RegistrationHandler.serverRegistries();
     }
     
 }

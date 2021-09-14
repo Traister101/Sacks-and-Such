@@ -2,6 +2,7 @@ package mod.traister101.objects.blocks;
 
 import mod.traister101.Main;
 import mod.traister101.blocks.ModBlocks;
+import mod.traister101.item.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,7 +14,7 @@ public class BlockBase extends Block
 	
 	protected String name;
 	
-	public BlockBase(String name, Material material, float hardness, float resistance, CreativeTabs tab) 
+	public BlockBase(String name, Material material, float hardness, float resistance, int miningLevel, String tool, CreativeTabs tab) 
 	{
 		super(material);
 	
@@ -23,6 +24,7 @@ public class BlockBase extends Block
 		setRegistryName(name);
 		setHardness(hardness);
 		setResistance(resistance);
+		setHarvestLevel(tool, miningLevel);
 		setCreativeTab(tab);
 		
 		
@@ -41,21 +43,14 @@ public class BlockBase extends Block
 		setHardness(10f);
 		//Default resistance
 		setResistance(10f);
+		//Default harvest level
+		setHarvestLevel("", 10);
 		//Default tab
 		setCreativeTab(Main.creativeTab);
 		
 		
 		ModBlocks.BLOCKS.add(this);
-	}
-	
-	public void registerItemModel(Item itemBlock) 
-	{
-		Main.PROXY.registerItemRenderer(itemBlock, 0, name);
-	}
-	
-	public Item createItemBlock() 
-	{
-		return new ItemBlock(this).setRegistryName(getRegistryName());
+		ModItems.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
 	}
 	
 	@Override
