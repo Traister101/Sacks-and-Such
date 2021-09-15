@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber
-public class RegistrationHandler 
+public class RegistryHandler 
 {
 	
 	
@@ -36,22 +36,22 @@ public class RegistrationHandler
 		}
 	}
 	
-	public static void preInitRegistries()
+	public static void preInitRegistry()
 	{
 		
 	}
 	
-	public static void initRegistries()
+	public static void initRegistry()
 	{
 		
 	}
 	
-	public static void postInitRegistries()
+	public static void postInitRegistry()
 	{
 		
 	}
 	
-	public static void serverRegistries()
+	public static void serverRegistry()
 	{
 		
 	}

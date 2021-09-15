@@ -13,9 +13,9 @@ public class ModItems {
 	public static final List<Item> ITEMS = new ArrayList();
 	
 	//Items
-	public static SackBase THATCH_SACK = new SackBase("thatch_sack");
-	public static SackBase LEATHER_SACK = new SackBase("leather_sack");
-	public static ItemBase UNFINISHED_LEATHER_SACK = new ItemBase("unfinished_leather_sack");
+	public static Item THATCH_SACK = new SackBase("thatch_sack");
+	public static Item LEATHER_SACK = new SackBase("leather_sack");
+	public static Item UNFINISHED_LEATHER_SACK = new ItemBase("unfinished_leather_sack");
 	
 
 }
