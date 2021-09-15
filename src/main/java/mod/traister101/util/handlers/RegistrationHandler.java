@@ -1,9 +1,13 @@
 package mod.traister101.util.handlers;
+
 import mod.traister101.Main;
-import mod.traister101.blocks.ModBlocks;
-import mod.traister101.item.ModItems;
-import net.minecraft.block.Block;
+import mod.traister101.util.item.ModItems;
+import net.dries007.tfc.api.recipes.knapping.KnappingRecipe;
+import net.dries007.tfc.api.recipes.knapping.KnappingRecipeSimple;
+import net.dries007.tfc.api.recipes.knapping.KnappingType;
+import net.dries007.tfc.objects.items.ItemsTFC;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,16 +34,6 @@ public class RegistrationHandler
 		{
 			Main.PROXY.registerItemRenderer(item, 0, "inventory");
 		}
-		for(Block block : ModBlocks.BLOCKS)
-		{
-			Main.PROXY.registerItemRenderer(Item.getItemFromBlock(block), 0, "inventory");
-		}
-	}
-	
-	@SubscribeEvent
-	public static void onBlockRegister(RegistryEvent.Register<Block> event)
-	{
-		event.getRegistry().registerAll(ModBlocks.BLOCKS.toArray(new Block[0]));
 	}
 	
 	public static void preInitRegistries()
@@ -62,23 +56,15 @@ public class RegistrationHandler
 		
 	}
 	
-	/*
 	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event) {
-		ModBlocks.register(event.getRegistry());
-	}
-	
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) 
-	{
-		ModItems.register(event.getRegistry());
-		ModBlocks.registerItemBlocks(event.getRegistry());
-	}
-	
-	@SubscribeEvent
-	public static void registerItems(ModelRegistryEvent event) {
-		ModItems.registerModels();
-		ModBlocks.registerModels();
-	}
-	*/
+    public static void onRegisterKnappingRecipeEvent(RegistryEvent.Register<KnappingRecipe> event)
+    {
+
+        /* LEATHER ITEMS */
+
+        event.getRegistry().registerAll(
+            new KnappingRecipeSimple(KnappingType.LEATHER, true, new ItemStack(ModItems.UNFINISHED_LEATHER_SACK), " XXX ", "XXXXX", "XXXXX", "XXXXX", " XXX ").setRegistryName("unfinished_leather_sack")
+        );
+
+    }
 }

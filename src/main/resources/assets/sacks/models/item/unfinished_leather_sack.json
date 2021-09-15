@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
 	"textures": {
-		"layer0": "sacks_and_such:items/thatch_sack"
+		"layer0": "sacks:items/unfinished_leather_sack"
 	}
 }

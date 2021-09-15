@@ -1,0 +1,19 @@
+{
+	"type": "damage_item_shaped",
+	"pattern": [
+		"T T",
+		" TK"
+	],
+	"key":{
+		"K": {
+			"type": "forge:ore_dict",
+			"ore": "knife"
+		},
+		"T": {
+			"item": "tfc:thatch"
+		}
+	},
+	"result": {
+		"item": "sacks:thatch_sack"
+	}
+}
