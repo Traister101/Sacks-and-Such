@@ -1,5 +1,6 @@
 package mod.traister101.objects.container;
 
+
 import javax.annotation.Nonnull;
 
 import net.dries007.tfc.api.capability.food.CapabilityFood;
@@ -15,18 +16,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class ContainerSack extends ContainerItemStack
+public class ContainerSack extends ContainerItemStack implements ISlotCallback
 {
     public ContainerSack(InventoryPlayer playerInv, ItemStack stack)
     {
-        super(playerInv, stack);
+    	super(playerInv, stack);
+    	System.out.println("Open GUI");
         this.itemIndex += 4;
     }
 
     @Override
     protected void addContainerSlots()
     {
-        IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+    	IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         if (inventory instanceof ISlotCallback)
         {
             ISlotCallback callback = (ISlotCallback) inventory;
