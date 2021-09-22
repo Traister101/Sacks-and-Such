@@ -1,7 +1,7 @@
 package mod.traister101.util.handlers;
 
 import mod.traister101.Main;
-import mod.traister101.util.item.ModItems;
+import mod.traister101.objects.items.ModItems;
 import net.dries007.tfc.api.recipes.knapping.KnappingRecipe;
 import net.dries007.tfc.api.recipes.knapping.KnappingRecipeSimple;
 import net.dries007.tfc.api.recipes.knapping.KnappingType;

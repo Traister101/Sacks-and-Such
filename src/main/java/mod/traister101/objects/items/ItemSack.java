@@ -10,11 +10,11 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
-public class SackBase extends ItemBase
+public class ItemSack extends ItemBase
 {
-	private final GuiHandler.Type GUI;
+	private GuiHandler.Type GUI;
 	
-	public SackBase(String name, GuiHandler.Type gui) 
+	public ItemSack(String name, GuiHandler.Type gui) 
 	{
 		super(name);
 		this.GUI = gui;
@@ -25,7 +25,7 @@ public class SackBase extends ItemBase
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
 	{
 		ItemStack stack = playerIn.getHeldItem(handIn);
-		if (!worldIn.isRemote)
+		if (!worldIn.isRemote && !playerIn.isSneaking())
 		{
 			GuiHandler.openGui(worldIn, playerIn, GUI);
 			System.out.println("Should have the GUI");

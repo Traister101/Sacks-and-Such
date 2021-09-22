@@ -22,8 +22,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class Main
 {
 	
-	
-	
 	//Sets up mod instance using mod ID
 	@Instance(Reference.MODID)
 	private static Main INSTANCE = null;
