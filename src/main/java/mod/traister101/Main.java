@@ -22,9 +22,9 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class Main
 {
 	
-	//Sets up mod instance using mod ID
-	@Instance(Reference.MODID)
-	private static Main INSTANCE = null;
+	//Sets up mod instance
+	@Instance
+	private static Main INSTANCE;
 
 	//Sets up mod Logger
 	private final Logger log = LogManager.getLogger(Reference.MODID);
@@ -45,7 +45,7 @@ public class Main
 	}
 	
 	//Proxy
-    @SidedProxy(clientSide = Reference.CLIENT, serverSide = Reference.COMMON)
+    @SidedProxy(modId = Reference.MODID, clientSide = Reference.CLIENT, serverSide = Reference.COMMON)
     public static CommonProxy PROXY;
     
     @EventHandler
