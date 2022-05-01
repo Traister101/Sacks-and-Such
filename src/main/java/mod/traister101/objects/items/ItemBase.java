@@ -9,8 +9,8 @@ import net.dries007.tfc.objects.items.ItemTFC;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
-public class ItemBase extends ItemTFC
-{	
+public class ItemBase extends ItemTFC {
+	
 	public ItemBase(String name) {
 		
 		setTranslationKey(name);
@@ -29,5 +29,4 @@ public class ItemBase extends ItemTFC
     public Weight getWeight(@Nonnull ItemStack stack) {
         return Weight.LIGHT;
     }
-
 }

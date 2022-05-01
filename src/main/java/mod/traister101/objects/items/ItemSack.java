@@ -3,12 +3,16 @@ package mod.traister101.objects.items;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import mod.traister101.objects.container.EnumSackType;
+import mod.traister101.util.handlers.ConfigHandler;
 import mod.traister101.util.handlers.GuiHandler;
-import net.dries007.tfc.api.capability.size.CapabilityItemSize;
-import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
+import net.dries007.tfc.api.capability.size.Weight;
 import net.dries007.tfc.objects.inventory.capability.ISlotCallback;
+import net.dries007.tfc.util.OreDictionaryHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -21,74 +25,99 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class ItemSack extends ItemBase
-{
-	private GuiHandler.Type GUI;
-	private static int SLOTS;
+public class ItemSack extends ItemBase {
 	
-	public ItemSack(String name, int slots, GuiHandler.Type gui) 
-	{
+	private static EnumSackType TYPE;
+	
+	public ItemSack(String name, EnumSackType type) {
+		
 		super(name);
-		this.GUI = gui;
-		this.SLOTS = slots;
+		this.TYPE = type;
 	}
-
-	@Nonnull
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
-	{
-		ItemStack stack = playerIn.getHeldItem(handIn);
-		if (!worldIn.isRemote && !playerIn.isSneaking())
-		{
-			GuiHandler.openGui(worldIn, playerIn, GUI);
+	
+	 @Override
+	 public boolean canStack(@Nonnull ItemStack stack) {
+		 return false;
+	 }
+	 
+	 @Nonnull
+	 @Override
+	 public Size getSize(ItemStack stack) {
+		 //TODO variable size depending on how filled container is
+		 return Size.SMALL;
+	 }
+	 
+	 @Nonnull
+	 @Override
+	 public Weight getWeight(ItemStack stack) {
+		 //TODO variable weight depending on how filled container is 
+		 return Weight.LIGHT;
+	 }
+     
+	 @Nonnull
+	 public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+		 ItemStack stack = playerIn.getHeldItem(handIn);
+		 if (!worldIn.isRemote && !playerIn.isSneaking()) {
+			 GuiHandler.openGui(worldIn, playerIn, getGuiForType(TYPE));
+		 }
+		 return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+	 }
+	
+	public int getSackSize() {
+		return getSlotsForType(TYPE);
+	}
+	
+	private static int getSlotsForType(EnumSackType type) {
+		switch (type) {
+			case THATCH:
+				return ConfigHandler.General.THATCHSACK.slots;
+			case LEATHER:
+				return ConfigHandler.General.LEATHERSACK.slots;
+			case BURLAP:
+			default:
+				return ConfigHandler.General.BURLAPSACK.slots;
 		}
-		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-    }
+	}
+	
+	private static GuiHandler.Type getGuiForType(EnumSackType type) {
+		switch (type) {
+		case THATCH:
+			return GuiHandler.Type.SACK_THATCH;
+		case LEATHER:
+			return GuiHandler.Type.SACK_LEATHER;
+		case BURLAP:
+		default:
+			return GuiHandler.Type.SACK_BURLAP;
+		}
+	}
 	
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
-    {
-        return new QuiverCapability(nbt);
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new SackCapability(nbt);
     }
-
+    
     // Extends ItemStackHandler for ease of use.
-    public static class QuiverCapability extends ItemStackHandler implements ICapabilityProvider, ISlotCallback
-    {
+    public static class SackCapability extends ItemStackHandler implements ICapabilityProvider, ISlotCallback {
 
-        QuiverCapability(@Nullable NBTTagCompound nbt)
-        {
-            super(SLOTS);
+    	SackCapability(@Nullable NBTTagCompound nbt) {
+    		super(getSlotsForType(TYPE));
 
-            if (nbt != null)
-            {
-                deserializeNBT(nbt);
-            }
-        }
+    		if (nbt != null) {
+    			deserializeNBT(nbt);
+    		}
+    	}
 
         @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
-        {
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
             return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
         }
 
         @Nullable
         @Override
         @SuppressWarnings("unchecked")
-        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
-        {
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
             return hasCapability(capability, facing) ? (T) this : null;
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack)
-        {
-        	  IItemSize size = CapabilityItemSize.getIItemSize(stack);
-              if (size != null)
-              {
-                  return size.getSize(stack).isSmallerThan(Size.NORMAL);
-              }
-              return false;
         }
     }
 }
