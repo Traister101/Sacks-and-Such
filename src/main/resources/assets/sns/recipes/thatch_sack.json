@@ -1,0 +1,23 @@
+{
+	"type": "damage_item_shaped",
+	"pattern": [
+		"JJJ",
+		"T T",
+		" TK"
+	],
+	"key":{
+		"K": {
+			"type": "forge:ore_dict",
+			"ore": "knife"
+		},
+		"T": {
+			"item": "tfc:thatch"
+		},
+		"J": {
+			"item": "tfc:crop/product/jute_fiber"
+		}
+	},
+	"result": {
+		"item": "sns:thatch_sack"
+	}
+}

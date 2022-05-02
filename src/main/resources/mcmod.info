@@ -1,7 +1,7 @@
 [
 {
-  "modid": "sacks",
-  "name": "Sacks and Such",
+  "modid": "sns",
+  "name": "Sacks N Such",
   "description": "A mod that adds some sacks intended for use with the mod TerraFirmaCraft",
   "version": "1.0",
   "mcversion": 1.12",
