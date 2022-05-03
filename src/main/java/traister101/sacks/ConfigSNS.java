@@ -13,8 +13,7 @@ public class ConfigSNS {
 	
 	@SubscribeEvent
 	public void onConfigChangedEvent(OnConfigChangedEvent event) {
-		if (event.getModID().equals(MODID))
-		{
+		if (event.getModID().equals(MODID)) {
 			ConfigManager.sync(MODID, Type.INSTANCE);
 		}
 	}
@@ -34,5 +33,9 @@ public class ConfigSNS {
 		@Config.Comment("Burlap sack settings")
 		@Config.LangKey("config." + MODID + ".general.burlap_sack")
 		public static final BurlapSack BURLAPSACK = new BurlapSack();
+		
+		@Config.Comment("Miners sack settings")
+		@Config.LangKey("config." + MODID + ".general.miner_sack")
+		public static final MinerSack MINERSACK = new MinerSack();
 	}
 }

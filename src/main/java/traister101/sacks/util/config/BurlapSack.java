@@ -8,11 +8,14 @@ import net.minecraftforge.common.config.Config.RangeInt;
 public class BurlapSack {
 	
 	private static final String langKey = "config." + MODID + ".general.burlap_sack";
+
+	@Config.Comment("Enable or dissable sack")
+	@Config.LangKey(langKey + ".toggle")
+	public boolean burlapSack = true;
+
+	@Config.Comment("Slot cap for sack")
+	@Config.LangKey(langKey + ".slot_cap")
+	@RangeInt(min = 1, max = 512)
+	public int slotCap = 48;
 	
-	@Config.LangKey(langKey + ".enable")
-	public static boolean burlap_sack = true;
-	
-	@Config.LangKey(langKey + ".slots")
-	@RangeInt(min = 1, max = 4)
-	public static int slots = 4;
 }

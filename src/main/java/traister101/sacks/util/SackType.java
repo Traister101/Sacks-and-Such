@@ -1,22 +1,21 @@
 package traister101.sacks.util;
 
+import traister101.sacks.ConfigSNS;
 import traister101.sacks.util.handlers.GuiHandler;
 
 public enum SackType {
 
-	THATCH(4, 32),
-	LEATHER(4, 64),
-	BURLAP(4, 128),
-	MINERS(1, 512);
-
+	THATCH(4),
+	LEATHER(4),
+	BURLAP(4),
+	MINER(1);
+	
 	public final int slots;
-	public final int slotSize;
-
-	SackType(int slots, int slotSize) {
+	
+	SackType(int slots) {
 		this.slots = slots;
-		this.slotSize = slotSize;
 	}
-
+	
 	public static int getSlotsForType(SackType type) {
 		switch (type) {
 		case THATCH:
@@ -25,13 +24,28 @@ public enum SackType {
 			return SackType.LEATHER.slots;
 		case BURLAP:
 			return SackType.BURLAP.slots;
-		case MINERS:
-			return SackType.MINERS.slots;
+		case MINER:
+			return SackType.MINER.slots;
 		default:
 			return 4;
 		}
 	}
-
+	
+	public static int getSlotLimitForType(SackType type) {
+		switch (type) {
+		case THATCH:
+			return ConfigSNS.General.THATCHSACK.slotCap;
+		case LEATHER:
+			return ConfigSNS.General.LEATHERSACK.slotCap;
+		case BURLAP:
+			return ConfigSNS.General.BURLAPSACK.slotCap;
+		case MINER:
+			return ConfigSNS.General.MINERSACK.slotCap;
+		default:
+			return 32;
+		}
+	}
+	
 	public static GuiHandler.Type getGuiForType(SackType type) {
 		switch (type) {
 		case THATCH:
@@ -40,7 +54,7 @@ public enum SackType {
 			return GuiHandler.Type.LEATHER;
 		case BURLAP:
 			return GuiHandler.Type.BURLAP;
-		case MINERS:
+		case MINER:
 			return GuiHandler.Type.MINERS;
 		default:
 			return GuiHandler.Type.NULL;
