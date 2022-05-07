@@ -16,19 +16,18 @@ import net.minecraft.item.ItemStack;
 public class ItemBase extends Item implements IItemSize {
 
 	public ItemBase(String name) {
-
 		setTranslationKey(MODID + "." + name);
 		setRegistryName(name);
 		setCreativeTab(SacksNSuch.creativeTab);
 
 		ItemsSNS.ITEMS.add(this);
 	}
-
+	
 	@Nonnull
 	public Size getSize(@Nonnull ItemStack stack) {
 		return Size.NORMAL;
 	}
-
+	
 	@Nonnull
 	public Weight getWeight(@Nonnull ItemStack stack) {
 		return Weight.LIGHT;

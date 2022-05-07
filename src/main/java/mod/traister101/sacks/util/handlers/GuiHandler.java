@@ -9,6 +9,7 @@ import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.gui.GuiContainerSack;
 import mod.traister101.sacks.objects.container.ContainerSack;
 import mod.traister101.sacks.objects.items.ItemSack;
+import mod.traister101.sacks.util.SackType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -32,16 +33,16 @@ public class GuiHandler implements IGuiHandler {
 		BlockPos pos = new BlockPos(x, y, z);
 		ItemStack stack = player.getHeldItemMainhand();
 
-		Type type = Type.valueOf(ID);
+		SackType type = SackType.valueOf(ID);
 		switch (type) {
 		case THATCH:
-			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand(), type);
 		case LEATHER:
-			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand(), type);
 		case BURLAP:
-			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
-		case MINERS:
-			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand(), type);
+		case MINER:
+			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand(), type);
 		default:
 			return null;
 		}
@@ -51,7 +52,7 @@ public class GuiHandler implements IGuiHandler {
 	@Nullable
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		Container container = getServerGuiElement(ID, player, world, x, y, z);
-		Type type = Type.valueOf(ID);
+		SackType type = SackType.valueOf(ID);
 		BlockPos pos = new BlockPos(x, y, z);
 
 		switch (type) {
@@ -62,7 +63,7 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4);
 		case BURLAP:
 			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4);
-		case MINERS:
+		case MINER:
 			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_1);
 		default:
 			return null;

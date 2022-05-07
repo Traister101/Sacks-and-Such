@@ -1,16 +1,21 @@
 package mod.traister101.sacks.util;
 
+import javax.annotation.Nonnull;
+
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.util.handlers.GuiHandler;
+import mod.traister101.sacks.util.handlers.GuiHandler.Type;
 
 public enum SackType {
 
 	THATCH(4),
 	LEATHER(4),
 	BURLAP(4),
-	MINER(1);
+	MINER(1),
+	NULL(0);
 	
-	public final int slots;
+	private int slots;
+	private static final SackType[] values = values();
 	
 	SackType(int slots) {
 		this.slots = slots;
@@ -27,7 +32,7 @@ public enum SackType {
 		case MINER:
 			return SackType.MINER.slots;
 		default:
-			return 4;
+			return 0;
 		}
 	}
 	
@@ -42,7 +47,7 @@ public enum SackType {
 		case MINER:
 			return ConfigSNS.General.MINERSACK.slotCap;
 		default:
-			return 32;
+			return 0;
 		}
 	}
 	
@@ -59,5 +64,10 @@ public enum SackType {
 		default:
 			return GuiHandler.Type.NULL;
 		}
+	}
+	
+	@Nonnull
+	public static SackType valueOf(int id) {
+		return id < 0 || id >= values.length ? NULL : values[id];
 	}
 }

@@ -5,9 +5,11 @@ import mod.traister101.sacks.objects.items.ItemsSNS;
 import net.dries007.tfc.api.recipes.knapping.KnappingRecipe;
 import net.dries007.tfc.api.recipes.knapping.KnappingRecipeSimple;
 import net.dries007.tfc.api.recipes.knapping.KnappingType;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,7 +29,7 @@ public class RegistryHandler {
 	@SideOnly(Side.CLIENT)
 	public static void onModelRegister(ModelRegistryEvent event) {
 		for(Item item : ItemsSNS.ITEMS) {
-			SacksNSuch.PROXY.registerItemRenderer(item, 0, "inventory");
+			registerItemRenderer(item, 0, "inventory");
 		}
 	}
 	
@@ -56,4 +58,8 @@ public class RegistryHandler {
             new KnappingRecipeSimple(KnappingType.LEATHER, true, new ItemStack(ItemsSNS.UNFINISHED_LEATHER_SACK), " XXX ", "XXXXX", "XXXXX", "XXXXX", " XXX ").setRegistryName("unfinished_leather_sack")
         );
     }
+	
+	public static void registerItemRenderer(Item item, int meta, String id) {
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
+	}
 }

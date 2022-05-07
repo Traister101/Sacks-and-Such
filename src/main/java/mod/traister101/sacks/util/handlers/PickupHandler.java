@@ -20,9 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class PickupHandler {
 	
-	
 	// TODO depending on sack type automatically pick up different types of items. Example: Miner should only pick up ore
-	
 	@SubscribeEvent
 	public void onPickupItem(EntityItemPickupEvent event) {
 		ItemStack itemPickup = event.getItem().getItem();
@@ -59,7 +57,7 @@ public class PickupHandler {
 			}
 		}
 	}
-
+	
 	// Tops off stuff in player inventory
 	private static boolean topOffPlayerInventory(EntityItemPickupEvent event, ItemStack stack) {
 

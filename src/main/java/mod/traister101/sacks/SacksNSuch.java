@@ -4,13 +4,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import mod.traister101.sacks.client.SNSTab;
-import mod.traister101.sacks.proxy.CommonProxy;
-import mod.traister101.sacks.util.handlers.*;
+import mod.traister101.sacks.util.handlers.GuiHandler;
+import mod.traister101.sacks.util.handlers.PickupHandler;
+import mod.traister101.sacks.util.handlers.RegistryHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -22,9 +22,7 @@ public class SacksNSuch {
 	
 	public static final String MODID = "sns";
     public static final String NAME = "Sacks N Such";
-    public static final String VERSION = "1.0";
-    public static final String CLIENT = "mod.traister101.sacks.proxy.ClientProxy";
-    public static final String COMMON = "mod.traister101.sacks.proxy.CommonProxy";
+    public static final String VERSION = "@version@";
     public static final String DEPENDENCIES = "required-after:forge" /*"required-after:tfc"*/;
 	
 	//Sets up mod instance
@@ -46,10 +44,6 @@ public class SacksNSuch {
 	public static SacksNSuch getInstance() {
 		return INSTANCE;
 	}
-	
-	//Proxy
-    @SidedProxy(modId = MODID, clientSide = CLIENT, serverSide = COMMON)
-    public static CommonProxy PROXY;
     
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
