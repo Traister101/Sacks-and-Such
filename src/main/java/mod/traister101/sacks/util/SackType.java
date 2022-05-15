@@ -4,10 +4,8 @@ import javax.annotation.Nonnull;
 
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.util.handlers.GuiHandler;
-import mod.traister101.sacks.util.handlers.GuiHandler.Type;
 
 public enum SackType {
-
 	THATCH(4),
 	LEATHER(4),
 	BURLAP(4),
@@ -21,7 +19,7 @@ public enum SackType {
 		this.slots = slots;
 	}
 	
-	public static int getSlotsForType(SackType type) {
+	public static int getSlotCount(SackType type) {
 		switch (type) {
 		case THATCH:
 			return SackType.THATCH.slots;
@@ -36,7 +34,7 @@ public enum SackType {
 		}
 	}
 	
-	public static int getSlotLimitForType(SackType type) {
+	public static int getStackCap(SackType type) {
 		switch (type) {
 		case THATCH:
 			return ConfigSNS.General.THATCHSACK.slotCap;
@@ -51,18 +49,18 @@ public enum SackType {
 		}
 	}
 	
-	public static GuiHandler.Type getGuiForType(SackType type) {
+	public static boolean isEnabled(SackType type) {
 		switch (type) {
 		case THATCH:
-			return GuiHandler.Type.THATCH;
+			return ConfigSNS.General.THATCHSACK.enabled;
 		case LEATHER:
-			return GuiHandler.Type.LEATHER;
+			return ConfigSNS.General.LEATHERSACK.enabled;
 		case BURLAP:
-			return GuiHandler.Type.BURLAP;
+			return ConfigSNS.General.BURLAPSACK.enabled;
 		case MINER:
-			return GuiHandler.Type.MINERS;
+			return ConfigSNS.General.MINERSACK.enabled;
 		default:
-			return GuiHandler.Type.NULL;
+			return false;
 		}
 	}
 	

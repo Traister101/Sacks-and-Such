@@ -26,10 +26,10 @@ public class SackHandler extends ItemStackHandler implements ICapabilityProvider
 	private final int stacklimit;
 	private final ItemStack sack;
 	
-	public SackHandler(@Nullable NBTTagCompound nbt, SackType type, int stacklimit, ItemStack sack) {
-		super(SackType.getSlotsForType(type));
+	public SackHandler(@Nullable NBTTagCompound nbt, SackType type, ItemStack sack) {
+		super(SackType.getSlotCount(type));
 		this.type = type;
-		this.stacklimit = stacklimit;
+		this.stacklimit = SackType.getStackCap(type);
 		this.sack = sack;
 		if (nbt != null) {
 			deserializeNBT(nbt);
@@ -51,18 +51,16 @@ public class SackHandler extends ItemStackHandler implements ICapabilityProvider
 	@Override
 	@Nonnull
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		if (amount == 0)
-			return ItemStack.EMPTY;
+		
+		if (amount == 0) return ItemStack.EMPTY;
 		
 		validateSlotIndex(slot);
 		ItemStack existing = this.stacks.get(slot);
-		if (existing.isEmpty())
-			return ItemStack.EMPTY;
+		if (existing.isEmpty()) return ItemStack.EMPTY;
 		
 		int toExtract = Math.min(amount, stacklimit);
 		
-		if (existing.getMaxStackSize() == 1)
-			toExtract = 1;
+		if (existing.getMaxStackSize() == 1) toExtract = 1;
 		
 		if (existing.getCount() <= toExtract) {
 			if (!simulate) {

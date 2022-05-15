@@ -2,6 +2,7 @@ package mod.traister101.sacks.util.handlers;
 
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.items.ItemsSNS;
+import mod.traister101.sacks.util.helper.IConfigurable;
 import net.dries007.tfc.api.recipes.knapping.KnappingRecipe;
 import net.dries007.tfc.api.recipes.knapping.KnappingRecipeSimple;
 import net.dries007.tfc.api.recipes.knapping.KnappingType;
@@ -15,6 +16,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
+
+// TODO figure out good way to have sack item parts go away too
 
 @Mod.EventBusSubscriber
 public class RegistryHandler {
@@ -22,38 +26,37 @@ public class RegistryHandler {
 	
 	@SubscribeEvent
 	public static void onItemRegister(RegistryEvent.Register<Item> event) {
-		event.getRegistry().registerAll(ItemsSNS.ITEMS.toArray(new Item[0]));
+//		event.getRegistry().registerAll(ItemsSNS.ITEMS.toArray(new Item[0]));
+		IForgeRegistry<Item> registry = event.getRegistry();
+		for (Item item : ItemsSNS.ITEMS) {
+			if (item instanceof IConfigurable) {
+				if (((IConfigurable) item).isEnabled()) {
+					registry.register(item);
+				}
+			} else {
+			registry.register(item);
+			}
+		}
 	}
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public static void onModelRegister(ModelRegistryEvent event) {
-		for(Item item : ItemsSNS.ITEMS) {
-			registerItemRenderer(item, 0, "inventory");
+		for (Item item : ItemsSNS.ITEMS) {
+			if (item instanceof IConfigurable) {
+				if (((IConfigurable) item).isEnabled()) {
+					registerItemRenderer(item, 0, "inventory");
+				}
+			} else {
+				registerItemRenderer(item, 0, "inventory");
+			}
 		}
-	}
-	
-	public static void preInitRegistry() {
-		
-	}
-	
-	public static void initRegistry() {
-		
-	}
-	
-	public static void postInitRegistry() {
-		
-	}
-	
-	public static void serverRegistry() {
-		
 	}
 	
 	@SubscribeEvent
     public static void onRegisterKnappingRecipeEvent(RegistryEvent.Register<KnappingRecipe> event) {
-
+		
         // LEATHER ITEMS
-
         event.getRegistry().registerAll(
             new KnappingRecipeSimple(KnappingType.LEATHER, true, new ItemStack(ItemsSNS.UNFINISHED_LEATHER_SACK), " XXX ", "XXXXX", "XXXXX", "XXXXX", " XXX ").setRegistryName("unfinished_leather_sack")
         );

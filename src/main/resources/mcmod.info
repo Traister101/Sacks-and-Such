@@ -3,13 +3,13 @@
   "modid": "sns",
   "name": "Sacks N Such",
   "description": "A mod that adds some sacks intended for use with the mod TerraFirmaCraft",
-  "version": "1.0",
-  "mcversion": 1.12",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
   "updateUrl": "",
   "authorList": ["Traister101"],
   "credits": "Joe mamma",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": []
+  "dependencies": ["tfc"]
 }
 ]

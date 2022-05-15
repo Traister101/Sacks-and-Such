@@ -8,7 +8,7 @@ import net.minecraftforge.common.config.Config.RangeInt;
 public class ThatchSack {
 	
 	private static final String langKey = "config." + MODID + ".general.thatch_sack";
-
+	
 	@Config.RequiresMcRestart
 	@Config.Comment("Enable or dissable sack")
 	@Config.LangKey(langKey + ".toggle")

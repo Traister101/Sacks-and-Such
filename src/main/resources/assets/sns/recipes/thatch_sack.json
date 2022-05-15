@@ -1,4 +1,10 @@
 {
+	"conditions": [
+		{
+			"type": "sns:config",
+			"config": "thatch_sack"
+		}
+	],
 	"type": "damage_item_shaped",
 	"pattern": [
 		"JJJ",

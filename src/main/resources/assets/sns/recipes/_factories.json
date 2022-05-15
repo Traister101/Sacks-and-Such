@@ -1,5 +1,8 @@
 {
 	"recipes": {
 		"damage_item_shaped": "net.dries007.tfc.objects.recipes.ShapedDamageRecipe$Factory"
+	},
+	"conditions": {
+		"config": "mod.traister101.sacks.objects.recipes.ConditionalFactory"
 	}
 }

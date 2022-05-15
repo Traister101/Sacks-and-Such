@@ -8,6 +8,7 @@ import mod.traister101.sacks.SacksNSuch;
 import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
 import net.dries007.tfc.api.capability.size.Weight;
+import net.dries007.tfc.objects.CreativeTabsTFC;
 import net.dries007.tfc.objects.items.ItemTFC;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -18,8 +19,7 @@ public class ItemBase extends Item implements IItemSize {
 	public ItemBase(String name) {
 		setTranslationKey(MODID + "." + name);
 		setRegistryName(name);
-		setCreativeTab(SacksNSuch.creativeTab);
-
+		setCreativeTab(CreativeTabsTFC.CT_MISC);
 		ItemsSNS.ITEMS.add(this);
 	}
 	

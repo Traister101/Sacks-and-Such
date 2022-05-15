@@ -23,7 +23,7 @@ public class GuiHandler implements IGuiHandler {
 	public static final ResourceLocation SACK_SLOTS_1 = new ResourceLocation(MODID, "textures/gui/sack_1.png");
 	public static final ResourceLocation SACK_SLOTS_4 = new ResourceLocation(MODID, "textures/gui/sack_4.png");
 
-	public static void openGui(World world, EntityPlayer player, Type type) {
+	public static void openGui(World world, EntityPlayer player, SackType type) {
 		player.openGui(SacksNSuch.getInstance(), type.ordinal(), world, 0, 0, 0);
 	}
 
@@ -32,20 +32,8 @@ public class GuiHandler implements IGuiHandler {
 	public Container getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		BlockPos pos = new BlockPos(x, y, z);
 		ItemStack stack = player.getHeldItemMainhand();
-
 		SackType type = SackType.valueOf(ID);
-		switch (type) {
-		case THATCH:
-			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand(), type);
-		case LEATHER:
-			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand(), type);
-		case BURLAP:
-			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand(), type);
-		case MINER:
-			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand(), type);
-		default:
-			return null;
-		}
+		return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand(), type);
 	}
 
 	@Override
@@ -54,34 +42,16 @@ public class GuiHandler implements IGuiHandler {
 		Container container = getServerGuiElement(ID, player, world, x, y, z);
 		SackType type = SackType.valueOf(ID);
 		BlockPos pos = new BlockPos(x, y, z);
-
+		
 		switch (type) {
-
 		case THATCH:
-			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4);
 		case LEATHER:
-			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4);
 		case BURLAP:
 			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4);
 		case MINER:
 			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_1);
 		default:
 			return null;
-		}
-	}
-
-	public enum Type {
-		THATCH,
-		LEATHER,
-		BURLAP,
-		MINERS,
-		NULL;
-
-		private static final Type[] values = values();
-
-		@Nonnull
-		public static Type valueOf(int id) {
-			return id < 0 || id >= values.length ? NULL : values[id];
 		}
 	}
 }

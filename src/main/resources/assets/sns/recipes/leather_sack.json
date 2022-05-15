@@ -1,8 +1,14 @@
 {
+	"conditions": [
+		{
+			"type": "sns:config",
+			"config": "leather_sack"
+		}
+	],
 	"type": "minecraft:crafting_shapeless",
 	"ingredients": [
 		{
-			"item": "sacks:unfinished_leather_sack"
+			"item": "sns:unfinished_leather_sack"
 		},
 		{
 			"item": "tfc:crop/product/jute_fiber"
