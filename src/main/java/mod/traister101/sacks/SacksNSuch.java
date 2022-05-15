@@ -37,6 +37,11 @@ public final class SacksNSuch {
     public void preInit(FMLPreInitializationEvent event) {
     	log.info(MODID + " is loading");
     	NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-    	MinecraftForge.EVENT_BUS.register(new PickupHandler());
+    	
+    	// Only register pickup handler if auto pickup is enabled
+    	if (ConfigSNS.Global.pickup) {
+    		MinecraftForge.EVENT_BUS.register(new PickupHandler());
+    		log.warn("Sacks of all types won't have autopickup");
+    	}
     }
 }

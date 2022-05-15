@@ -1,11 +1,8 @@
 package mod.traister101.sacks.objects.container;
 
-import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.inventory.slot.SackSlot;
 import mod.traister101.sacks.util.SackType;
-import net.dries007.tfc.objects.container.ContainerItemStack;
-import net.dries007.tfc.objects.inventory.capability.ISlotCallback;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;

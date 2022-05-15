@@ -7,3 +7,50 @@ item.sns.thatch_sack.name=Thatch Sack
 item.sns.leather_sack.name=Leather Sack
 item.sns.burlap_sack.name=Burlap Sack
 item.sns.miners_sack.name=Miners Sack
+
+##Config
+
+#Groups
+config.sns.general=General
+config.sns.general.tooltip=General config for sacks
+
+config.sns.global=Global
+config.sns.global.tooltip=Global config
+
+#Thatch
+config.sns.general.thatch_sack=Thatch sack
+config.sns.general.thatch_sack.tooltip=Config for thatch sacks
+
+config.sns.general.thatch_sack.enabled=Enabled
+config.sns.general.thatch_sack.pickup=Pickup
+config.sns.general.thatch_sack.slot_cap=Slot cap
+
+#Leather
+config.sns.general.leather_sack=Leather sack
+config.sns.general.leather_sack.tooltip=Config for leather sacks
+
+config.sns.general.leather_sack.enabled=Enabled
+config.sns.general.leather_sack.pickup=Pickup
+config.sns.general.leather_sack.slot_cap=Slot cap
+
+#Burlap
+config.sns.general.burlap_sack=Burlap sack
+config.sns.general.burlap_sack.tooltip=Config for burlap sacks
+
+config.sns.general.burlap_sack.enabled=Enabled
+config.sns.general.burlap_sack.pickup=Pickup
+config.sns.general.burlap_sack.slot_cap=Slot cap
+
+#Miner
+config.sns.general.miner_sack=Miners sack
+config.sns.general.miner_sack.tooltip=Config for miners sack
+
+config.sns.general.miner_sack.enabled=Enabled
+config.sns.general.miner_sack.pickup=Pickup
+config.sns.general.miner_sack.slot_cap=Slot cap
+
+#Global
+config.sns.global.enabled=Enable mod features
+config.sns.global.enabled.tooltip=Basically a mod toggle
+config.sns.global.pickup=Enable global pickup
+config.sns.global.pickup.tooltip=Global control for automatic pickup, this will not force enable for every type

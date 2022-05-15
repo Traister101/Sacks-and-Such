@@ -3,6 +3,7 @@ package mod.traister101.sacks.objects.inventory.slot;
 import javax.annotation.Nonnull;
 
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
+import mod.traister101.sacks.objects.items.ItemSack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -54,6 +55,7 @@ public class SackSlot extends SlotItemHandler {
 	@Override
 	public boolean isItemValid(@Nonnull ItemStack stack) {
 		if (stack.isEmpty()) return false;
+		if (stack.getItem() instanceof ItemSack) return false;
 		
 		ItemStack currentStack = getItemHandler().getStackInSlot(index);
 		getItemHandler().setStackInSlot(index, ItemStack.EMPTY);

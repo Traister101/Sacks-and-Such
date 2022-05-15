@@ -2,7 +2,6 @@ package mod.traister101.sacks.util.handlers;
 
 import static mod.traister101.sacks.SacksNSuch.MODID;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import mod.traister101.sacks.SacksNSuch;

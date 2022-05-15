@@ -1,21 +1,14 @@
 package mod.traister101.sacks.objects.container;
 
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.collect.Sets;
-
-import mod.traister101.sacks.SacksNSuch;
-import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SackType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 @ParametersAreNonnullByDefault
@@ -158,14 +151,12 @@ public abstract class AbstractContainerSack extends Container {
 	public ItemStack slotClick(int slotID, int dragType, ClickType clickType, EntityPlayer player) {
 		// Not a slot, let vanilla handle it
 		if (slotID < 0) return super.slotClick(slotID, dragType, clickType, player);
+		// Prevent moving of the item stack that is currently open
+		if (slotID == itemIndex) return ItemStack.EMPTY;
 		// Vanilla slot
 		if (slotID > slotAmount) return super.slotClick(slotID, dragType, clickType, player);
- 		// Prevent moving of the item stack that is currently open
- 		if (slotID == itemIndex) return ItemStack.EMPTY;
  		// Shift click, vanilla method works fine
  		if (clickType == ClickType.QUICK_MOVE) return super.slotClick(slotID, dragType, clickType, player);
-		
-		ItemStack emptyStack = ItemStack.EMPTY;
 		
 		Slot slot = this.inventorySlots.get(slotID);
 		ItemStack slotStack = slot.getStack();

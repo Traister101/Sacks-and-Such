@@ -1,7 +1,5 @@
 package mod.traister101.sacks.objects.items;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,11 +30,11 @@ public class ItemSack extends ItemBase implements IConfigurable {
 		this.size = Size.NORMAL;
 		this.weight = Weight.VERY_HEAVY;
 	}
-
-//	@Override
-//	public int getItemStackLimit() {
-//		return 1;
-//	}
+	
+	@Override
+	public int getItemStackLimit() {
+		return 1;
+	}
 	
 	@Override
 	public boolean canStack(ItemStack stack) {

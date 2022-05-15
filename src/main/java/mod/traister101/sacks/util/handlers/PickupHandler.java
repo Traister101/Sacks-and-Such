@@ -1,13 +1,8 @@
 package mod.traister101.sacks.util.handlers;
 
-import mod.traister101.sacks.SacksNSuch;
-import mod.traister101.sacks.objects.container.ContainerSack;
 import mod.traister101.sacks.objects.items.ItemSack;
 import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
-import net.dries007.tfc.objects.items.ItemTFC;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -25,33 +20,32 @@ public class PickupHandler {
 	public void onPickupItem(EntityItemPickupEvent event) {
 		ItemStack itemPickup = event.getItem().getItem();
 		
-		// If the picked up item implements TFC weight/size
-		if(itemPickup.getItem() instanceof IItemSize) {
-			// If the picked up item is smaller than size normal 
-			if(((IItemSize) itemPickup.getItem()).getSize(itemPickup).isSmallerThan(Size.NORMAL)) {
-				if (topOffPlayerInventory(event, itemPickup)) {
-					
-					for(int i = 0; i < event.getEntityPlayer().inventory.getSizeInventory(); i++) {
-						ItemStack sack = event.getEntityPlayer().inventory.getStackInSlot(i);
-						
-						if(sack.getItem() instanceof ItemSack) {
-							IItemHandler sackInv = sack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-							for (int j = 0; j < sackInv.getSlots(); j++){
-								if (sackInv.getStackInSlot(j).getCount() < sackInv.getSlotLimit(j)) {
-									ItemStack result = sackInv.insertItem(j, itemPickup, false);
-									int numPickedUp = itemPickup.getCount() - result.getCount();
-									event.getItem().setItem(result);
-									
-									if(numPickedUp > 0) {
-										playPickupSound(event);
-										((EntityPlayerMP) event.getEntityPlayer()).connection.sendPacket(new 
-												SPacketCollectItem(event.getItem().getEntityId(), event.getEntityPlayer().getEntityId(), numPickedUp));
-										event.getEntityPlayer().openContainer.detectAndSendChanges();
-										return;
-									}
-								}
-							}
-						}
+		// Does not implement IItemSize
+		if (!(itemPickup.getItem() instanceof IItemSize)) return;
+		// Not smaller than normal
+		if (!((IItemSize) itemPickup.getItem()).getSize(itemPickup).isSmallerThan(Size.NORMAL)) return;
+		// Player inventory is toped off with none left over
+		if (topOffPlayerInventory(event, itemPickup)) return;
+
+		for (int i = 0; i < event.getEntityPlayer().inventory.getSizeInventory(); i++) {
+			ItemStack sack = event.getEntityPlayer().inventory.getStackInSlot(i);
+
+			if (!(sack.getItem() instanceof ItemSack)) continue;
+			
+			IItemHandler sackInv = sack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			for (int j = 0; j < sackInv.getSlots(); j++) {
+				if (sackInv.getStackInSlot(j).getCount() < sackInv.getSlotLimit(j)) {
+					ItemStack result = sackInv.insertItem(j, itemPickup, false);
+					int numPickedUp = itemPickup.getCount() - result.getCount();
+					event.getItem().setItem(result);
+
+					if (numPickedUp > 0) {
+						playPickupSound(event);
+						((EntityPlayerMP) event.getEntityPlayer()).connection.sendPacket(new SPacketCollectItem(
+								event.getItem().getEntityId(), event.getEntityPlayer().getEntityId(), numPickedUp));
+
+						event.getEntityPlayer().openContainer.detectAndSendChanges();
+						return;
 					}
 				}
 			}
@@ -82,7 +76,7 @@ public class PickupHandler {
 					inventoryStack.grow(stack.getCount());
 					stack.setCount(0);
 					playPickupSound(event);
-					return false;
+					return true;
 				} else {
 					// Only part can be added
 					inventoryStack.setCount(inventoryStack.getMaxStackSize());
@@ -90,13 +84,14 @@ public class PickupHandler {
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 	
 	// Take a guess
 	private static void playPickupSound(EntityItemPickupEvent event) {
 		event.setCanceled(true);
 		if (!event.getItem().isSilent()) {
+			// These next three lines are in reality one line. Luckilly I was able to yoink it from Botania, I don't think they'll mind :p
 			event.getItem().world.playSound(null, event.getEntityPlayer().posX, event.getEntityPlayer().posY, event.getEntityPlayer().posZ,
 					SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F,
 					((event.getItem().world.rand.nextFloat() - event.getItem().world.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);

@@ -1,5 +1,6 @@
 package mod.traister101.sacks.util.handlers;
 
+import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.items.ItemsSNS;
 import mod.traister101.sacks.util.helper.IConfigurable;
@@ -11,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.config.Config;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,15 +28,16 @@ public class RegistryHandler {
 	
 	@SubscribeEvent
 	public static void onItemRegister(RegistryEvent.Register<Item> event) {
-//		event.getRegistry().registerAll(ItemsSNS.ITEMS.toArray(new Item[0]));
 		IForgeRegistry<Item> registry = event.getRegistry();
-		for (Item item : ItemsSNS.ITEMS) {
-			if (item instanceof IConfigurable) {
-				if (((IConfigurable) item).isEnabled()) {
+		if (ConfigSNS.Global.enabled) {
+			for (Item item : ItemsSNS.ITEMS) {
+				if (item instanceof IConfigurable) {
+					if (((IConfigurable) item).isEnabled()) {
+						registry.register(item);
+					}
+				} else {
 					registry.register(item);
 				}
-			} else {
-			registry.register(item);
 			}
 		}
 	}
