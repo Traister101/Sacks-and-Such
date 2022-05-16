@@ -1,6 +1,7 @@
 package mod.traister101.sacks.util.handlers;
 
 import mod.traister101.sacks.objects.items.ItemSack;
+import mod.traister101.sacks.util.SackType;
 import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,19 +27,24 @@ public class PickupHandler {
 		if (!((IItemSize) itemPickup.getItem()).getSize(itemPickup).isSmallerThan(Size.NORMAL)) return;
 		// Player inventory is toped off with none left over
 		if (topOffPlayerInventory(event, itemPickup)) return;
-
+		
 		for (int i = 0; i < event.getEntityPlayer().inventory.getSizeInventory(); i++) {
-			ItemStack sack = event.getEntityPlayer().inventory.getStackInSlot(i);
-
-			if (!(sack.getItem() instanceof ItemSack)) continue;
+			ItemStack slotStack = event.getEntityPlayer().inventory.getStackInSlot(i);
 			
-			IItemHandler sackInv = sack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if (!(slotStack.getItem() instanceof ItemSack)) continue;
+			ItemSack sack = (ItemSack) slotStack.getItem();
+			SackType type = sack.getType();
+			
+			// Pickup disabled for sack type
+			if (SackType.getPickupConfig(type)) continue;
+			
+			IItemHandler sackInv = slotStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 			for (int j = 0; j < sackInv.getSlots(); j++) {
 				if (sackInv.getStackInSlot(j).getCount() < sackInv.getSlotLimit(j)) {
 					ItemStack result = sackInv.insertItem(j, itemPickup, false);
 					int numPickedUp = itemPickup.getCount() - result.getCount();
 					event.getItem().setItem(result);
-
+					
 					if (numPickedUp > 0) {
 						playPickupSound(event);
 						((EntityPlayerMP) event.getEntityPlayer()).connection.sendPacket(new SPacketCollectItem(
@@ -91,7 +97,7 @@ public class PickupHandler {
 	private static void playPickupSound(EntityItemPickupEvent event) {
 		event.setCanceled(true);
 		if (!event.getItem().isSilent()) {
-			// These next three lines are in reality one line. Luckilly I was able to yoink it from Botania, I don't think they'll mind :p
+			// These next three lines are in reality one line. Luckily I was able to yoink it from Botania, I don't think they'll mind :p
 			event.getItem().world.playSound(null, event.getEntityPlayer().posX, event.getEntityPlayer().posY, event.getEntityPlayer().posZ,
 					SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F,
 					((event.getItem().world.rand.nextFloat() - event.getItem().world.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);

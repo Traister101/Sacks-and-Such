@@ -3,6 +3,7 @@ package mod.traister101.sacks;
 import static mod.traister101.sacks.SacksNSuch.MODID;
 import static mod.traister101.sacks.SacksNSuch.NAME;
 
+import mod.traister101.sacks.util.SackType;
 import mod.traister101.sacks.util.config.*;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Type;
@@ -49,9 +50,9 @@ public final class ConfigSNS {
 	@Config(modid = MODID, type = Type.INSTANCE, name = NAME + " - Global")
 	public static final class Global {
 		
-		@Config.Comment("Global toggle for all mod features \n Why not?")
-		@Config.LangKey(LANG_GLOBAL + ".enabled")
-		public static boolean enabled = true;
+		@Config.Comment("Enable auto pickup for other sack like items such as the TFC vessel. This may not always work as expected enable at your own discretion")
+		@Config.LangKey(LANG_GLOBAL + ".all_pickup")
+		public static boolean allPickup = false;
 		
 		@Config.RequiresMcRestart
 		@Config.Comment("A global toggle for auto pickup. This will not force enable for every type")

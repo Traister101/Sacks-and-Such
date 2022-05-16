@@ -21,23 +21,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
 // TODO figure out good way to have sack item parts go away too
-
 @Mod.EventBusSubscriber
 public class RegistryHandler {
-	
 	
 	@SubscribeEvent
 	public static void onItemRegister(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
-		if (ConfigSNS.Global.enabled) {
-			for (Item item : ItemsSNS.ITEMS) {
-				if (item instanceof IConfigurable) {
-					if (((IConfigurable) item).isEnabled()) {
-						registry.register(item);
-					}
-				} else {
+		for (Item item : ItemsSNS.ITEMS) {
+			if (item instanceof IConfigurable) {
+				if (((IConfigurable) item).isEnabled()) {
 					registry.register(item);
 				}
+			} else {
+				registry.register(item);
 			}
 		}
 	}

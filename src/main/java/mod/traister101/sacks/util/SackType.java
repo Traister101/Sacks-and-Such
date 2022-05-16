@@ -3,6 +3,7 @@ package mod.traister101.sacks.util;
 import javax.annotation.Nonnull;
 
 import mod.traister101.sacks.ConfigSNS;
+import mod.traister101.sacks.ConfigSNS.General;
 
 public enum SackType {
 	THATCH(4),
@@ -61,6 +62,27 @@ public enum SackType {
 		default:
 			return false;
 		}
+	}
+	
+	// Should always always have a type
+	@SuppressWarnings("incomplete-switch")
+	public static boolean getPickupConfig(SackType type) {
+		boolean bool = false;
+		switch (type) {
+		case THATCH:
+			bool = General.THATCHSACK.pickup;
+			break;
+		case BURLAP:
+			bool = General.BURLAPSACK.pickup;
+			break;
+		case LEATHER:
+			bool = General.LEATHERSACK.pickup;
+			break;
+		case MINER:
+			bool = General.MINERSACK.pickup;
+			break;
+		}
+		return !bool;
 	}
 	
 	@Nonnull

@@ -16,7 +16,6 @@ public class ConditionalFactory implements IConditionFactory {
 	public BooleanSupplier parse(JsonContext context, JsonObject json) {
 		String type = JsonUtils.getString(json, "config");
 		
-		if (ConfigSNS.Global.enabled) return () -> false;
 		if (type == "thatch_sack") return () -> ConfigSNS.General.THATCHSACK.enabled;
 		if (type == "leather_sack") return () -> ConfigSNS.General.LEATHERSACK.enabled;
 		if (type == "burlap_sack") return () -> ConfigSNS.General.BURLAPSACK.enabled;
