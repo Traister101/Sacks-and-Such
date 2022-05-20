@@ -15,6 +15,10 @@ public class ItemsSNS {
 	public static Item LEATHER_SACK = new ItemSack("leather_sack", SackType.LEATHER);
 	public static Item BURLAP_SACK = new ItemSack("burlap_sack", SackType.BURLAP);
 	public static Item MINERS_SACK = new ItemSack("miners_sack", SackType.MINER);
-	public static Item UNFINISHED_LEATHER_SACK = new ItemBase("unfinished_leather_sack");
+	
+//	public static Item FOOD_SACK = new FoodSack();
+//	public static Item THROWABLE_VESSEL = new ItemThrowableVessel();
+	
+	public static Item UNFINISHED_LEATHER_SACK = new ItemSNS("unfinished_leather_sack");
 
 }

@@ -11,9 +11,9 @@ import net.dries007.tfc.objects.CreativeTabsTFC;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class ItemBase extends Item implements IItemSize {
+public class ItemSNS extends Item implements IItemSize {
 
-	public ItemBase(String name) {
+	public ItemSNS(String name) {
 		setTranslationKey(MODID + "." + name);
 		setRegistryName(name);
 		setCreativeTab(CreativeTabsTFC.CT_MISC);

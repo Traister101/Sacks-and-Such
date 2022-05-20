@@ -18,7 +18,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class ItemSack extends ItemBase implements IConfigurable {
+public class ItemSack extends ItemSNS implements IConfigurable {
 	
 	private final SackType type;
 	private Size size;
@@ -36,11 +36,7 @@ public class ItemSack extends ItemBase implements IConfigurable {
 		return 1;
 	}
 	
-	@Override
-	public boolean canStack(ItemStack stack) {
-		return false;
-	}
-		
+	@Nonnull
 	public SackType getType() {
 		return type;
 	}
@@ -55,7 +51,7 @@ public class ItemSack extends ItemBase implements IConfigurable {
 	@Nonnull
 	@Override
 	public Weight getWeight(ItemStack stack) {
-		// TODO variable weight depending on how filled contaienr is
+		// TODO variable weight depending on how filled container is
 		return weight;
 	}
 	
