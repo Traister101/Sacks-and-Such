@@ -3,6 +3,8 @@ package mod.traister101.sacks.objects.container;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import org.apache.commons.lang3.StringUtils;
+
 import mod.traister101.sacks.util.SackType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -10,17 +12,19 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 @ParametersAreNonnullByDefault
 public abstract class AbstractContainerSack extends Container {
 	
-    protected final ItemStack stack;
     protected final EntityPlayer player;
     protected final SackType type;
+    protected ItemStack stack;
     protected int itemIndex;
     protected int itemDragIndex;
     protected boolean isOffhand;
     protected int slotAmount;
+    protected String name;
     
     protected AbstractContainerSack(InventoryPlayer playerInv, ItemStack stack, SackType type) {
         this.player = playerInv.player;
@@ -45,17 +49,17 @@ public abstract class AbstractContainerSack extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(index);
+		Slot slot = inventorySlots.get(index);
 		
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 			
 			if (index < slotAmount) {
-				if (!this.mergeItemStack(itemstack1, slotAmount, this.inventorySlots.size(), true)) {
+				if (!mergeItemStack(itemstack1, slotAmount, inventorySlots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 0, slotAmount, false)) {
+			} else if (!mergeItemStack(itemstack1, 0, slotAmount, false)) {
 				return ItemStack.EMPTY;
 			}
 			
@@ -86,7 +90,7 @@ public abstract class AbstractContainerSack extends Container {
 					break;
 			}
 			
-			Slot slot = this.inventorySlots.get(i);
+			Slot slot = inventorySlots.get(i);
 			ItemStack itemStack = slot.getStack();
 			
 			if (!itemStack.isEmpty() && itemStack.getItem() == stack.getItem()
@@ -127,7 +131,7 @@ public abstract class AbstractContainerSack extends Container {
 						break;
 				}
 				
-				Slot slot1 = this.inventorySlots.get(i);
+				Slot slot1 = inventorySlots.get(i);
 				ItemStack itemstack1 = slot1.getStack();
 				
 				if (itemstack1.isEmpty() && slot1.isItemValid(stack)) {
@@ -158,7 +162,7 @@ public abstract class AbstractContainerSack extends Container {
  		// Shift click, vanilla method works fine
  		if (clickType == ClickType.QUICK_MOVE) return super.slotClick(slotID, dragType, clickType, player);
 		
-		Slot slot = this.inventorySlots.get(slotID);
+		Slot slot = inventorySlots.get(slotID);
 		ItemStack slotStack = slot.getStack();
 		// Slot is empty give to vanilla
 		if (slotStack.isEmpty()) return super.slotClick(slotID, dragType, clickType, player);
@@ -192,7 +196,6 @@ public abstract class AbstractContainerSack extends Container {
 		return slotStack;
 	}
 	
-	
 	protected ItemStack addToStack(ItemStack slotStack, InventoryPlayer playerInventory, int dragType) {
 		if (!slotStack.isStackable()) return slotStack;
 		// Slot stack less or equal to slot cap
@@ -210,6 +213,28 @@ public abstract class AbstractContainerSack extends Container {
 			}
 		}
 		return slotStack;
+	}
+	
+	public final void updateItemName(String newName) {
+		name = newName;
+		
+		ItemStack itemStack = getSlot(itemIndex).getStack();
+		
+		if (StringUtils.isBlank(newName)) {
+			itemStack.clearCustomName();
+		} else {
+			// Sets name with no italics 
+			itemStack.setStackDisplayName(TextFormatting.RESET + name);
+		}
+		updateSackName(itemStack);
+	}
+	
+	private final void updateSackName(ItemStack itemStack) {
+		ItemStack stack = itemStack.copy();
+		
+		Slot slot = inventorySlots.get(itemIndex);
+		slot.inventory.setInventorySlotContents(slot.getSlotIndex(), stack);
+		detectAndSendChanges();
 	}
 	
     @Override
@@ -230,5 +255,12 @@ public abstract class AbstractContainerSack extends Container {
         for (int k = 0; k < 9; k++) {
             addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 142));
         }
+    }
+    public final int getContainerItemIndex() {
+    	return itemIndex;
+    }
+    public final int getOpenContainerItemIndex() {
+    	Slot slot = inventorySlots.get(itemIndex);
+    	return slot.getSlotIndex();
     }
 }

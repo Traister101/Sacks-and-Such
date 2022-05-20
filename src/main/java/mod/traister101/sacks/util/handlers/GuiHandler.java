@@ -39,6 +39,7 @@ public class GuiHandler implements IGuiHandler {
 	@Nullable
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		Container container = getServerGuiElement(ID, player, world, x, y, z);
+		ItemStack stack = player.getHeldItemMainhand();
 		SackType type = SackType.valueOf(ID);
 		BlockPos pos = new BlockPos(x, y, z);
 		
@@ -46,9 +47,9 @@ public class GuiHandler implements IGuiHandler {
 		case THATCH:
 		case LEATHER:
 		case BURLAP:
-			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4);
+			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case MINER:
-			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_1);
+			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_1, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		default:
 			return null;
 		}
