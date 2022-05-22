@@ -1,35 +1,27 @@
 package mod.traister101.sacks.objects.container;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.apache.commons.lang3.StringUtils;
 
 import mod.traister101.sacks.util.SackType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
 
-@ParametersAreNonnullByDefault
-public abstract class AbstractContainerSack extends Container {
+abstract class AbstractContainerSack extends AbstractContainerRenameable {
 	
     protected final EntityPlayer player;
     protected final SackType type;
-    protected ItemStack stack;
-    protected int itemIndex;
+    protected final int slotAmount;
+    protected final ItemStack stack;
     protected int itemDragIndex;
     protected boolean isOffhand;
-    protected int slotAmount;
-    protected String name;
     
     protected AbstractContainerSack(InventoryPlayer playerInv, ItemStack stack, SackType type) {
         this.player = playerInv.player;
-        this.stack = stack;
         this.itemDragIndex = playerInv.currentItem;
+        this.stack = stack;
         this.type = type;
         this.slotAmount = SackType.getSlotCount(type);
         
@@ -215,33 +207,6 @@ public abstract class AbstractContainerSack extends Container {
 		return slotStack;
 	}
 	
-	public final void updateItemName(String newName) {
-		name = newName;
-		
-		ItemStack itemStack = getSlot(itemIndex).getStack();
-		
-		if (StringUtils.isBlank(newName)) {
-			itemStack.clearCustomName();
-		} else {
-			// Sets name with no italics 
-			itemStack.setStackDisplayName(TextFormatting.RESET + name);
-		}
-		updateSackName(itemStack);
-	}
-	
-	private final void updateSackName(ItemStack itemStack) {
-		ItemStack stack = itemStack.copy();
-		
-		Slot slot = inventorySlots.get(itemIndex);
-		slot.inventory.setInventorySlotContents(slot.getSlotIndex(), stack);
-		detectAndSendChanges();
-	}
-	
-    @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
-        return true;
-    }
-    
     protected abstract void addContainerSlots();
     
     protected void addPlayerInventorySlots(InventoryPlayer playerInv) {
@@ -256,11 +221,9 @@ public abstract class AbstractContainerSack extends Container {
             addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 142));
         }
     }
-    public final int getContainerItemIndex() {
-    	return itemIndex;
-    }
-    public final int getOpenContainerItemIndex() {
-    	Slot slot = inventorySlots.get(itemIndex);
-    	return slot.getSlotIndex();
+    
+    @Override
+    public boolean canInteractWith(EntityPlayer playerIn) {
+    	return true;
     }
 }

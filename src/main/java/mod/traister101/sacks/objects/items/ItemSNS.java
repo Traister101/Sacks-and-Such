@@ -12,7 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class ItemSNS extends Item implements IItemSize {
-
+	
 	public ItemSNS(String name) {
 		setTranslationKey(MODID + "." + name);
 		setRegistryName(name);
