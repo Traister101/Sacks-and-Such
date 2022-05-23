@@ -3,6 +3,7 @@ package mod.traister101.sacks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import mod.traister101.sacks.network.RenamePacket;
 import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.PickupHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,6 +12,8 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = SacksNSuch.MODID, name = SacksNSuch.NAME, version = SacksNSuch.VERSION, acceptedMinecraftVersions = SacksNSuch.MCVERSION, dependencies = "required-after:tfc")
 public final class SacksNSuch {
@@ -24,6 +27,11 @@ public final class SacksNSuch {
 	private static SacksNSuch INSTANCE;
 	
 	private final Logger log = LogManager.getLogger(MODID);
+    private SimpleNetworkWrapper network;
+	
+	public static SimpleNetworkWrapper getNetwork() {
+		return INSTANCE.network;
+	}
 	
 	public static Logger getLog() {
 		return INSTANCE.log;
@@ -37,7 +45,8 @@ public final class SacksNSuch {
     public void preInit(FMLPreInitializationEvent event) {
     	log.info(MODID + " is loading");
     	NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-    	
+        network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+    	network.registerMessage(new RenamePacket.Handler(), RenamePacket.class, 1, Side.SERVER);
     	// Only register pickup handler if auto pickup is enabled
     	if (ConfigSNS.Global.pickup) {
     		MinecraftForge.EVENT_BUS.register(new PickupHandler());

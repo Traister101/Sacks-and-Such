@@ -5,8 +5,9 @@ import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
-import io.netty.buffer.Unpooled;
+import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonSack;
+import mod.traister101.sacks.network.RenamePacket;
 import mod.traister101.sacks.objects.container.ContainerSack;
 import net.dries007.tfc.client.button.IButtonTooltip;
 import net.minecraft.client.gui.FontRenderer;
@@ -18,28 +19,26 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
-abstract class GuiRenameable extends GuiContainer {
+public abstract class GuiRenameable extends GuiContainer {
 	
 	protected final ResourceLocation background;
 	protected final InventoryPlayer playerInv;
 	protected final ContainerSack container;
-	protected ItemStack stack;
 	
 	private GuiTextField nameField;
-	private boolean renamed = false;
 	private boolean renaming;
+	private boolean renamed;
+	private String name;
 	
 	public GuiRenameable(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack stack) {
 		super(container);
 		this.container = (ContainerSack) inventorySlots;
 		this.background = background;
 		this.playerInv = playerInv;
-		this.stack = stack;
+		this.name = stack.getDisplayName();
 	}
 	
 	@Override
@@ -52,15 +51,16 @@ abstract class GuiRenameable extends GuiContainer {
 		nameField.setDisabledTextColour(-1);
 		nameField.setMaxStringLength(25);
 		nameField.setEnableBackgroundDrawing(false);
-		nameField.setText(stack.getDisplayName());
+		nameField.setText(name);
 		nameField.setEnabled(true);
+		renaming = false;
+		renamed = false;
 	}
 	
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
-		if (renamed) renameItem();
 	}
 	
 	@Override
@@ -85,11 +85,13 @@ abstract class GuiRenameable extends GuiContainer {
 		if (button.id == 0) {
 			// Toggle text box
 			if (renaming) {
-				setRename(false);
-			} else setRename(true);
+				setRenaming(false);
+			} else setRenaming(true);
 		}
 	}
 	
+	// TODO clean this up so enter and escape close the text box then if hit again close GUI. 
+	// Figure out how to do TextFormatting as well
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		// Can't be focused if we aren't renaming
@@ -109,33 +111,33 @@ abstract class GuiRenameable extends GuiContainer {
 			// Name is the same
 			if (StringUtils.equals(TextFormatting.RESET + nameField.getText(), container.getOpenContainerItemStack().getDisplayName())) {
 				super.keyTyped(typedChar, keyCode);
-				setRename(false);
+				setRenaming(false);
 				return;
 			}
 			renameItem();
-			setRename(false);
+			setRenaming(false);
 		}
 		nameField.textboxKeyTyped(typedChar, keyCode);
 	}
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
 		if (renaming) nameField.mouseClicked(mouseX, mouseY, mouseButton);
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
 	// Toggles renaming and the text field
-	private final void setRename(boolean toggle) {
-		if (toggle) {
+	private final void setRenaming(boolean rename) {
+		if (rename) {
 			renaming = true;
-			nameField.setEnabled(true);
 			nameField.setFocused(true);
+			nameField.setEnabled(true);
 			Keyboard.enableRepeatEvents(true);
 			nameField.setEnableBackgroundDrawing(true);
 		} else {
 			renaming = false;
-			nameField.setEnabled(false);
 			nameField.setFocused(false);
+			nameField.setEnabled(false);
 			Keyboard.enableRepeatEvents(false);
 			nameField.setEnableBackgroundDrawing(false);
 		}
@@ -143,13 +145,9 @@ abstract class GuiRenameable extends GuiContainer {
 	
 	private final void renameItem() {
 		String name = nameField.getText();
-		// TODO Probably right here is the problem code
-		Slot slot = container.getOpenContainerSlot();
+		if (name == this.name) return;
 		
-		if (name == slot.getStack().getDisplayName()) return;
-		
-		container.updateItemName(name);
-		mc.player.connection.sendPacket(new CPacketCustomPayload("MC|ItemName", (new PacketBuffer(Unpooled.buffer())).writeString(name)));
+		SacksNSuch.getNetwork().sendToServer(new RenamePacket(name));
 		renamed = true;
 	}
 	

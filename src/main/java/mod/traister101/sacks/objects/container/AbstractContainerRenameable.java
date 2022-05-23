@@ -7,9 +7,9 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
-abstract class AbstractContainerRenameable extends Container {
+public abstract class AbstractContainerRenameable extends Container {
 	
-    protected int itemIndex;
+	protected int itemIndex;
     
 	public final void updateItemName(String newName) {
 		
@@ -31,10 +31,6 @@ abstract class AbstractContainerRenameable extends Container {
 		slot.inventory.setInventorySlotContents(slot.getSlotIndex(), stack);
 		detectAndSendChanges();
 	}
-	
-    public final Slot getOpenContainerSlot() {
-    	return getSlot(itemIndex);
-    }
     
     public final ItemStack getOpenContainerItemStack() {
     	return getSlot(itemIndex).getStack();
