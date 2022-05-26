@@ -3,9 +3,11 @@ package mod.traister101.sacks.network;
 import java.nio.charset.Charset;
 
 import io.netty.buffer.ByteBuf;
+import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.container.AbstractContainerRenameable;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

@@ -21,18 +21,18 @@ public abstract class AbstractContainerRenameable extends Container {
 			// Sets new name with no italics 
 			itemStack.setStackDisplayName(TextFormatting.RESET + newName);
 		}
-		updateSackName(itemStack);
+		updateStack(itemStack);
 	}
 	
-	private final void updateSackName(ItemStack itemStack) {
+	private final void updateStack(ItemStack itemStack) {
 		ItemStack stack = itemStack.copy();
 		
 		Slot slot = inventorySlots.get(itemIndex);
 		slot.inventory.setInventorySlotContents(slot.getSlotIndex(), stack);
 		detectAndSendChanges();
 	}
-    
-    public final ItemStack getOpenContainerItemStack() {
-    	return getSlot(itemIndex).getStack();
-    }
+	
+	public final int getItemIndex() {
+		return itemIndex;
+	}
 }

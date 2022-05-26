@@ -8,7 +8,7 @@ import org.lwjgl.input.Keyboard;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonSack;
 import mod.traister101.sacks.network.RenamePacket;
-import mod.traister101.sacks.objects.container.ContainerSack;
+import mod.traister101.sacks.objects.container.AbstractContainerRenameable;
 import net.dries007.tfc.client.button.IButtonTooltip;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -20,22 +20,20 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
 
 public abstract class GuiRenameable extends GuiContainer {
 	
+	protected final AbstractContainerRenameable container;
 	protected final ResourceLocation background;
 	protected final InventoryPlayer playerInv;
-	protected final ContainerSack container;
 	
 	private GuiTextField nameField;
 	private boolean renaming;
-	private boolean renamed;
 	private String name;
 	
 	public GuiRenameable(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack stack) {
 		super(container);
-		this.container = (ContainerSack) inventorySlots;
+		this.container = (AbstractContainerRenameable) inventorySlots;
 		this.background = background;
 		this.playerInv = playerInv;
 		this.name = stack.getDisplayName();
@@ -45,16 +43,15 @@ public abstract class GuiRenameable extends GuiContainer {
 	public void initGui() {
 		super.initGui();
         Keyboard.enableRepeatEvents(true);
-		addButton(new GuiButtonSack(0, guiLeft + 151, guiTop + 4, 15, 15, "rename"));
-		nameField = new GuiTextField(0, fontRenderer, guiLeft + 8, guiTop + 6, 150, 15);
+		addButton(new GuiButtonSack(0, guiLeft + 155, guiTop + 6, 15, 15, "rename"));
+		nameField = new GuiTextField(0, fontRenderer, guiLeft + 8, guiTop + 6, 140, 15);
 		nameField.setTextColor(-1);
 		nameField.setDisabledTextColour(-1);
-		nameField.setMaxStringLength(25);
+		nameField.setMaxStringLength(22);
 		nameField.setEnableBackgroundDrawing(false);
 		nameField.setText(name);
-		nameField.setEnabled(true);
+		nameField.setEnabled(false);
 		renaming = false;
-		renamed = false;
 	}
 	
 	@Override
@@ -90,34 +87,37 @@ public abstract class GuiRenameable extends GuiContainer {
 		}
 	}
 	
-	// TODO clean this up so enter and escape close the text box then if hit again close GUI. 
-	// Figure out how to do TextFormatting as well
+	// TODO Text formating (colors and stuff) from player input
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		// Can't be focused if we aren't renaming
-		if (!renaming) {
-			super.keyTyped(typedChar, keyCode);
-			return;
-		}
-		// Enter key
-		if (keyCode == 28) {
-			// Field text is empty
-			if (StringUtils.equals(nameField.getText(), "")) {
-				super.keyTyped(typedChar, keyCode);
-				mc.player.closeScreen();
-				renameItem();
-				return;
-			}
-			// Name is the same
-			if (StringUtils.equals(TextFormatting.RESET + nameField.getText(), container.getOpenContainerItemStack().getDisplayName())) {
-				super.keyTyped(typedChar, keyCode);
+		
+		switch (keyCode) {
+		// Escape key
+		case 1:
+			// Text box is enabled when escape is pressed
+			if (renaming) {
 				setRenaming(false);
-				return;
+			} else {
+				mc.player.closeScreen();
 			}
-			renameItem();
-			setRenaming(false);
+			return;
+		// Enter key
+		case 28:
+			// Text box is enabled when enter is pressed
+			if (renaming) {
+				setRenaming(false);
+				renameItem();
+			} else {
+				mc.player.closeScreen();
+			}
+			return;
+		// Not enter or escape
+		default:
+			// Not entered into text box
+			if (!nameField.textboxKeyTyped(typedChar, keyCode)) {
+				super.keyTyped(typedChar, keyCode);
+			}
 		}
-		nameField.textboxKeyTyped(typedChar, keyCode);
 	}
 	
 	@Override
@@ -132,23 +132,28 @@ public abstract class GuiRenameable extends GuiContainer {
 			renaming = true;
 			nameField.setFocused(true);
 			nameField.setEnabled(true);
-			Keyboard.enableRepeatEvents(true);
 			nameField.setEnableBackgroundDrawing(true);
 		} else {
 			renaming = false;
 			nameField.setFocused(false);
 			nameField.setEnabled(false);
-			Keyboard.enableRepeatEvents(false);
 			nameField.setEnableBackgroundDrawing(false);
 		}
 	}
 	
 	private final void renameItem() {
 		String name = nameField.getText();
-		if (name == this.name) return;
 		
+		if (StringUtils.equals(name, this.name)) return;
 		SacksNSuch.getNetwork().sendToServer(new RenamePacket(name));
-		renamed = true;
+		if (StringUtils.isBlank(name)) {
+			// Best way I've figured out to set the text box to the default stack name 
+			ItemStack heldStack = container.getSlot(container.getItemIndex()).getStack();
+			ItemStack itemStack = heldStack.copy();
+			itemStack.clearCustomName();
+			this.name = itemStack.getDisplayName();
+			nameField.setText(this.name);
+		}
 	}
 	
 	@Override
