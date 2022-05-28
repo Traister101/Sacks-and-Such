@@ -10,15 +10,15 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ContainerSack extends AbstractContainerSack {
 	
-	public ContainerSack(InventoryPlayer playerInv, ItemStack stack, SackType type) {
-		super(playerInv, stack, type);
+	public ContainerSack(InventoryPlayer playerInv, ItemStack stack) {
+		super(playerInv, stack);
 	}
 	
 	// Don't care about warning, needs a type to make the container
 	@Override
 	@SuppressWarnings(value = "incomplete-switch")
 	protected void addContainerSlots() {
-		IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		IItemHandler inventory = heldStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		if (inventory instanceof SackHandler) {
 			SackHandler handler = (SackHandler) inventory;
 			switch (type) {
