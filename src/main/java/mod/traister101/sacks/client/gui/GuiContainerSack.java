@@ -13,7 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-// TODO probably need to implement IContainerListener sack doesn't get properly renamed unless another container is opened before this one
 @SideOnly(Side.CLIENT)
 public class GuiContainerSack extends GuiRenameable {
 
@@ -24,7 +23,7 @@ public class GuiContainerSack extends GuiRenameable {
 	@Override
 	public void initGui() {
 		super.initGui();
-		addButton(new GuiButtonSack(1, guiLeft + 20, guiTop + 60, 18, 18, "filter"));
+		addButton(new GuiButtonSack(1, guiLeft + 20, guiTop + 60, 18, 18, "filter", background));
 	}
 	
 	@Override
@@ -50,6 +49,7 @@ public class GuiContainerSack extends GuiRenameable {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		// Rename button
 		super.actionPerformed(button);
+		// TODO filter button as well as some way to filter the allowed items
 		// Filter button when here
 		if (button.id == 1) {
 			SacksNSuch.getLog().info("Filter button clicked");
