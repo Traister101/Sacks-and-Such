@@ -25,6 +25,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class ItemSack extends ItemSNS implements IConfigurable {
 	
+	private SackHandler handler;
 	private final SackType type;
 	
 	public ItemSack(String name, SackType type) {
@@ -74,7 +75,12 @@ public class ItemSack extends ItemSNS implements IConfigurable {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-		return new SackHandler(nbt, type, stack);
+		handler = new SackHandler(nbt, type);
+		return handler;
+	}
+	
+	public SackHandler getHandler() {
+		return handler;
 	}
 	
 	@Override

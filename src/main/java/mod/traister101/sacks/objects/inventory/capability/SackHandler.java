@@ -3,6 +3,7 @@ package mod.traister101.sacks.objects.inventory.capability;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SackType;
 import net.dries007.tfc.api.capability.size.CapabilityItemSize;
 import net.dries007.tfc.api.capability.size.IItemSize;
@@ -24,13 +25,11 @@ public class SackHandler extends ItemStackHandler implements ICapabilityProvider
 	
 	private final SackType type;
 	private final int stacklimit;
-	private final ItemStack sack;
 	
-	public SackHandler(@Nullable NBTTagCompound nbt, SackType type, ItemStack sack) {
+	public SackHandler(@Nullable NBTTagCompound nbt, SackType type) {
 		super(SackType.getSlotCount(type));
 		this.type = type;
 		this.stacklimit = SackType.getStackCap(type);
-		this.sack = sack;
 		if (nbt != null) {
 			deserializeNBT(nbt);
 		}
@@ -55,7 +54,7 @@ public class SackHandler extends ItemStackHandler implements ICapabilityProvider
 		if (amount == 0) return ItemStack.EMPTY;
 		
 		validateSlotIndex(slot);
-		ItemStack existing = this.stacks.get(slot);
+		ItemStack existing = stacks.get(slot);
 		if (existing.isEmpty()) return ItemStack.EMPTY;
 		
 		int toExtract = Math.min(amount, stacklimit);
@@ -64,25 +63,36 @@ public class SackHandler extends ItemStackHandler implements ICapabilityProvider
 		
 		if (existing.getCount() <= toExtract) {
 			if (!simulate) {
-				this.stacks.set(slot, ItemStack.EMPTY);
+				stacks.set(slot, ItemStack.EMPTY);
 				onContentsChanged(slot);
 			}
 			return existing;
 		} else {
 			if (!simulate) {
-				this.stacks.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
+				stacks.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
 				onContentsChanged(slot);
 			}
 			return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
 		}
 	}
 	
+	// TODO Sack type should determine what types of items are valid. Example: Miner should only pick up ore
 	public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-		IItemSize size = CapabilityItemSize.getIItemSize(stack);
-		if (size != null) {
-			return size.getSize(stack).isSmallerThan(Size.NORMAL);
+		if (stack.isEmpty()) return false;
+		if (!stack.isStackable()) return false;
+		// Stack is a sack, no sack-ception
+		if (stack.getItem() instanceof ItemSack) return false;
+		// If the item is larger than normal
+		if (stack.getItem() instanceof IItemSize) {
+			if (!((IItemSize) stack.getItem()).getSize(stack).isSmallerThan(Size.NORMAL)) return false;
 		}
-		return false;
+		
+		ItemStack currentStack = getStackInSlot(slot);
+		setStackInSlot(slot, ItemStack.EMPTY);
+		ItemStack remainder = insertItem(slot, stack, true);
+		setStackInSlot(slot, currentStack);
+		
+		return remainder.isEmpty() || remainder.getCount() < stack.getCount();
 	}
 	
 	@Override

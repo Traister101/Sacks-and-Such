@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = SacksNSuch.MODID, name = SacksNSuch.NAME, version = SacksNSuch.VERSION, acceptedMinecraftVersions = SacksNSuch.MCVERSION, dependencies = "required-after:tfc")
+@Mod(modid = SacksNSuch.MODID, name = SacksNSuch.NAME, version = SacksNSuch.VERSION, acceptedMinecraftVersions = SacksNSuch.MCVERSION, dependencies = "required-after:tfc@1.7.18.176")
 public final class SacksNSuch {
 	
 	public static final String MODID = "sns";

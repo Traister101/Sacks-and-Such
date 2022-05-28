@@ -2,8 +2,6 @@ package mod.traister101.sacks.util.handlers;
 
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SackType;
-import net.dries007.tfc.api.capability.size.IItemSize;
-import net.dries007.tfc.api.capability.size.Size;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -14,29 +12,25 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class PickupHandler {
+public final class PickupHandler {
 	
-	// TODO depending on sack type automatically pick up different types of items. Example: Miner should only pick up ore
 	@SubscribeEvent
 	public void onPickupItem(EntityItemPickupEvent event) {
 		ItemStack itemPickup = event.getItem().getItem();
 		
-		// Does not implement IItemSize
-		if (!(itemPickup.getItem() instanceof IItemSize)) return;
-		// Not smaller than normal
-		if (!((IItemSize) itemPickup.getItem()).getSize(itemPickup).isSmallerThan(Size.NORMAL)) return;
-		// Player inventory is toped off with none left over
 		if (topOffPlayerInventory(event, itemPickup)) return;
 		
 		for (int i = 0; i < event.getEntityPlayer().inventory.getSizeInventory(); i++) {
 			ItemStack slotStack = event.getEntityPlayer().inventory.getStackInSlot(i);
-			
+			// Not a sack
 			if (!(slotStack.getItem() instanceof ItemSack)) continue;
 			ItemSack sack = (ItemSack) slotStack.getItem();
 			SackType type = sack.getType();
 			
 			// Pickup disabled for sack type
 			if (SackType.getPickupConfig(type)) continue;
+			// Can't place in sack for any number of reasons
+			if (!canPlaceInSack(type, sack, itemPickup)) continue;
 			
 			IItemHandler sackInv = slotStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 			for (int j = 0; j < sackInv.getSlots(); j++) {
@@ -56,6 +50,13 @@ public class PickupHandler {
 				}
 			}
 		}
+	}
+	
+	private static boolean canPlaceInSack(SackType type, ItemSack sack, ItemStack itemPickup) {
+		for (int j = 0; j < SackType.getSlotCount(type); j++) {
+			if (!sack.getHandler().isItemValid(j, itemPickup)) return false;
+		}
+		return true;
 	}
 	
 	// Tops off stuff in player inventory
