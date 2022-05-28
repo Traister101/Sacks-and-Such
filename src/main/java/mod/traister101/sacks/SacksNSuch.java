@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import mod.traister101.sacks.network.RenamePacket;
+import mod.traister101.sacks.objects.entity.EntitiesSNS;
 import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.PickupHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,7 +51,8 @@ public final class SacksNSuch {
     	// Only register pickup handler if auto pickup is enabled
     	if (ConfigSNS.Global.pickup) {
     		MinecraftForge.EVENT_BUS.register(new PickupHandler());
-    		log.warn("Sacks of all types won't have autopickup");
+    		log.info("Sacks of all types won't have autopickup");
     	}
+    	EntitiesSNS.preInit();
     }
 }

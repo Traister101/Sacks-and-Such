@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mod.traister101.sacks.util.SackType;
+import mod.traister101.sacks.util.VesselType;
 import net.minecraft.item.Item;
 
 public class ItemsSNS {
@@ -17,7 +18,7 @@ public class ItemsSNS {
 	public static Item MINERS_SACK = new ItemSack("miners_sack", SackType.MINER);
 	
 //	public static Item FOOD_SACK = new FoodSack();
-//	public static Item THROWABLE_VESSEL = new ItemThrowableVessel();
+	public static Item EXPLOSIVE_VESSEL = new ItemThrowableVessel("explosive_vessel", VesselType.EXPLOSIVE);
 	
 	public static Item UNFINISHED_LEATHER_SACK = new ItemSNS("unfinished_leather_sack");
 

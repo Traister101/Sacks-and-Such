@@ -4,6 +4,8 @@ import javax.annotation.Nonnull;
 
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.ConfigSNS.General;
+import mod.traister101.sacks.util.handlers.GuiHandler;
+import mod.traister101.sacks.util.handlers.GuiHandler.Type;
 
 public enum SackType {
 	THATCH(4),
@@ -13,7 +15,6 @@ public enum SackType {
 	NULL(0);
 	
 	private int slots;
-	private static final SackType[] values = values();
 	
 	SackType(int slots) {
 		this.slots = slots;
@@ -67,7 +68,7 @@ public enum SackType {
 	// Should always always have a type
 	@SuppressWarnings("incomplete-switch")
 	public static boolean getPickupConfig(SackType type) {
-		boolean bool = false;
+		boolean bool;
 		switch (type) {
 		case THATCH:
 			bool = General.THATCHSACK.pickup;
@@ -81,12 +82,24 @@ public enum SackType {
 		case MINER:
 			bool = General.MINERSACK.pickup;
 			break;
+		default:
+			bool = false;
 		}
 		return !bool;
 	}
 	
-	@Nonnull
-	public static SackType valueOf(int id) {
-		return id < 0 || id >= values.length ? NULL : values[id];
+	public static Type getGui(SackType type) {
+		switch (type) {
+		case THATCH:
+			return GuiHandler.Type.SACK_THATCH;
+		case BURLAP:
+			return GuiHandler.Type.SACK_BURLAP;
+		case LEATHER:
+			return GuiHandler.Type.SACK_LEATHER;
+		case MINER:
+			return GuiHandler.Type.SACK_MINER;
+		default:
+			return GuiHandler.Type.NULL;
+		}
 	}
 }

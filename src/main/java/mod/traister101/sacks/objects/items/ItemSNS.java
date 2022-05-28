@@ -13,20 +13,25 @@ import net.minecraft.item.ItemStack;
 
 public class ItemSNS extends Item implements IItemSize {
 	
+	protected Weight weight;
+	protected Size size;
+	
 	public ItemSNS(String name) {
 		setTranslationKey(MODID + "." + name);
 		setRegistryName(name);
 		setCreativeTab(CreativeTabsTFC.CT_MISC);
 		ItemsSNS.ITEMS.add(this);
-	}
-	
-	@Nonnull
-	public Size getSize(@Nonnull ItemStack stack) {
-		return Size.NORMAL;
+		this.weight = Weight.LIGHT;
+		this.size = Size.NORMAL;
 	}
 	
 	@Nonnull
 	public Weight getWeight(@Nonnull ItemStack stack) {
-		return Weight.LIGHT;
+		return weight;
+	}
+	
+	@Nonnull
+	public Size getSize(@Nonnull ItemStack stack) {
+		return size;
 	}
 }
