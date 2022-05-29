@@ -3,18 +3,15 @@ package mod.traister101.sacks.objects.container;
 import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
 public abstract class AbstractContainerRenameable extends AbstractContainer {
 	
-	public AbstractContainerRenameable(InventoryPlayer playerInv, ItemStack heldStack) {
-		super(playerInv, heldStack);
+	protected AbstractContainerRenameable(InventoryPlayer playerInv, ItemStack heldStack, int slotAmount) {
+		super(playerInv, heldStack, slotAmount);
 	}
-
-	protected int itemIndex;
     
 	public final void updateItemName(String newName) {
 		

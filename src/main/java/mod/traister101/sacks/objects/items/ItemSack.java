@@ -36,11 +36,6 @@ public class ItemSack extends ItemSNS implements IConfigurable {
 		this.maxStackSize = 1;
 	}
 	
-	@Override
-	public boolean canStack(ItemStack stack) {
-		return false;
-	}
-	
 	@Nonnull
 	public SackType getType() {
 		return type;
