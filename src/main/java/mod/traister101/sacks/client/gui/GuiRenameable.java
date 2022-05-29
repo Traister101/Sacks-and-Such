@@ -21,22 +21,20 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public abstract class GuiRenameable extends GuiContainer {
+public abstract class GuiRenameable extends AbstractGuiContainer {
 	
 	protected final AbstractContainerRenameable container;
-	protected final ResourceLocation background;
 	protected final InventoryPlayer playerInv;
 	
 	private GuiTextField nameField;
 	private boolean renaming;
 	private String name;
 	
-	public GuiRenameable(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack stack) {
-		super(container);
+	protected GuiRenameable(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack heldStack) {
+		super(container, background, heldStack);
 		this.container = (AbstractContainerRenameable) inventorySlots;
-		this.background = background;
+		this.name = heldStack.getDisplayName();
 		this.playerInv = playerInv;
-		this.name = stack.getDisplayName();
 	}
 	
 	@Override
@@ -62,18 +60,8 @@ public abstract class GuiRenameable extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 		nameField.drawTextBox();
-	}
-	
-	protected final void drawItemStack(ItemStack stack, int x, int y, String altText) {
-		zLevel = 200.0F;
-		itemRender.zLevel = 200.0F;
-		FontRenderer font = stack.getItem().getFontRenderer(stack);
-		if (font == null) font = fontRenderer;
-		itemRender.renderItemAndEffectIntoGUI(stack, x, y);
-		itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
-		zLevel = 0.0F;
-		itemRender.zLevel = 0.0F;
 	}
 	
 	@Override
@@ -154,29 +142,5 @@ public abstract class GuiRenameable extends GuiContainer {
 			this.name = itemStack.getDisplayName();
 			nameField.setText(this.name);
 		}
-	}
-	
-	@Override
-	protected void renderHoveredToolTip(int mouseX, int mouseY) {
-		super.renderHoveredToolTip(mouseX, mouseY);
-		// Button Tooltips
-		for (GuiButton button : buttonList) {
-			if (button instanceof IButtonTooltip && button.isMouseOver()) {
-				IButtonTooltip tooltip = (IButtonTooltip) button;
-				if (tooltip.hasTooltip()) {
-					drawHoveringText(I18n.format(tooltip.getTooltip()), mouseX, mouseY);
-				}
-				int x = button.x;
-				int y = button.y;
-				drawGradientRect(x, y, x + button.width, y + button.height, 0x75FFFFFF, 0x75FFFFFF);
-			}
-		}
-	}
-	
-	protected void drawSlotOverlay(Slot slot) {
-		int xPos = slot.xPos - 1;
-		int yPos = slot.yPos - 1;
-
-		drawGradientRect(xPos, yPos, xPos + 18, yPos + 18, 0x75FFFFFF, 0x75FFFFFF);
 	}
 }

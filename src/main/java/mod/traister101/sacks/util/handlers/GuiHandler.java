@@ -7,10 +7,11 @@ import javax.annotation.Nullable;
 
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.gui.GuiContainerSack;
+import mod.traister101.sacks.client.gui.GuiContainerThrowableVessel;
 import mod.traister101.sacks.objects.container.ContainerSack;
 import mod.traister101.sacks.objects.container.ContainerVessel;
 import mod.traister101.sacks.objects.items.ItemSack;
-import mod.traister101.sacks.util.SackType;
+import mod.traister101.sacks.objects.items.ItemThrowableVessel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -41,7 +42,7 @@ public class GuiHandler implements IGuiHandler {
 		case SACK_MINER:
 			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case VESSEL_EXPLOSIVE:
-			return new ContainerVessel(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+			return new ContainerVessel(player.inventory, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
 		default:
 			return null;
 		}
@@ -63,7 +64,7 @@ public class GuiHandler implements IGuiHandler {
 		case SACK_MINER:
 			return new GuiContainerSack(container, player.inventory, SLOTS_1, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case VESSEL_EXPLOSIVE:
-			return new GuiContainerSack(container, player.inventory, SLOTS_1, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+			return new GuiContainerThrowableVessel(container, player.inventory, SLOTS_1, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
 		default:
 			return null;
 		}
