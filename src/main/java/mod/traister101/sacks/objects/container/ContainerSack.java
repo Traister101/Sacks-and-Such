@@ -28,21 +28,20 @@ public class ContainerSack extends AbstractContainerRenameable {
 	protected void addContainerSlots() {
 		IItemHandler inventory = heldStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		if (inventory instanceof SackHandler) {
-			SackHandler handler = (SackHandler) inventory;
 			switch (type) {
 			case THATCH:
 			case LEATHER:
 			case BURLAP:
 				// 4 slot container 
-				addSlotToContainer(new SackSlot(inventory, 0, 71, 23, handler, 0));
-				addSlotToContainer(new SackSlot(inventory, 1, 89, 23, handler, 1));
-				addSlotToContainer(new SackSlot(inventory, 2, 71, 41, handler, 2));
-				addSlotToContainer(new SackSlot(inventory, 3, 89, 41, handler, 3));
+				addSlotToContainer(new SackSlot(inventory, 0, 71, 23));
+				addSlotToContainer(new SackSlot(inventory, 1, 89, 23));
+				addSlotToContainer(new SackSlot(inventory, 2, 71, 41));
+				addSlotToContainer(new SackSlot(inventory, 3, 89, 41));
 				break;
 				
 			case MINER:
 				// 1 slot container (
-				addSlotToContainer(new SackSlot(inventory, 0, 80, 32, handler, 0));
+				addSlotToContainer(new SackSlot(inventory, 0, 80, 32));
 			}
 		}
 	}
