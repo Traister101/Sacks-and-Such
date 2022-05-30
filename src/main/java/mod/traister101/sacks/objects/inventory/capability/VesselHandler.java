@@ -7,16 +7,13 @@ import mod.traister101.sacks.util.VesselType;
 import net.dries007.tfc.util.OreDictionaryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class VesselHandler extends AbstractHandler {
 	
 	private final VesselType type;
 	
 	public VesselHandler(@Nullable NBTTagCompound nbt, VesselType type) {
-		super(nbt, 1, 512);
+		super(nbt, 1, 256);
 		this.type = type;
 	}
 	
@@ -25,10 +22,5 @@ public class VesselHandler extends AbstractHandler {
 		if (OreDictionaryHelper.doesStackMatchOre(stack, "gunpowder")) return true;
 		
 		return false;
-	}
-	
-	@Override
-	public void onContentsChanged(int slot) {
-		
 	}
 }

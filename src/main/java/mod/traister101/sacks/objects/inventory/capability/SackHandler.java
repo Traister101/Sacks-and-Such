@@ -9,9 +9,6 @@ import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class SackHandler extends AbstractHandler {
 	
@@ -39,10 +36,5 @@ public class SackHandler extends AbstractHandler {
 		setStackInSlot(slot, currentStack);
 		
 		return remainder.isEmpty() || remainder.getCount() < stack.getCount();
-	}
-	
-	@Override
-	public void onContentsChanged(int slot) {
-		
 	}
 }
