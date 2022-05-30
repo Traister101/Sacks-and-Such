@@ -9,7 +9,7 @@ import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.gui.GuiContainerSack;
 import mod.traister101.sacks.client.gui.GuiContainerThrowableVessel;
 import mod.traister101.sacks.objects.container.ContainerSack;
-import mod.traister101.sacks.objects.container.ContainerVessel;
+import mod.traister101.sacks.objects.container.ContainerThrowableVessel;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.objects.items.ItemThrowableVessel;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,8 +25,8 @@ public class GuiHandler implements IGuiHandler {
 	public static final ResourceLocation SLOTS_1 = new ResourceLocation(MODID, "textures/gui/sack_1.png");
 	public static final ResourceLocation SLOTS_4 = new ResourceLocation(MODID, "textures/gui/sack_4.png");
 
-	public static void openGui(World world, EntityPlayer player, Type type) {
-		player.openGui(SacksNSuch.getInstance(), type.ordinal(), world, 0, 0, 0);
+	public static void openGui(World world, EntityPlayer player, GuiType guiType) {
+		player.openGui(SacksNSuch.getInstance(), guiType.ordinal(), world, 0, 0, 0);
 	}
 
 	@Override
@@ -34,15 +34,15 @@ public class GuiHandler implements IGuiHandler {
 	public Container getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		BlockPos pos = new BlockPos(x, y, z);
 		ItemStack stack = player.getHeldItemMainhand();
-		Type type = Type.valueOf(ID);
-		switch (type) {
+		GuiType guiType = GuiType.valueOf(ID);
+		switch (guiType) {
 		case SACK_THATCH:
 		case SACK_LEATHER:
 		case SACK_BURLAP:
 		case SACK_MINER:
 			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case VESSEL_EXPLOSIVE:
-			return new ContainerVessel(player.inventory, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
+			return new ContainerThrowableVessel(player.inventory, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
 		default:
 			return null;
 		}
@@ -53,10 +53,10 @@ public class GuiHandler implements IGuiHandler {
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		Container container = getServerGuiElement(ID, player, world, x, y, z);
 		ItemStack stack = player.getHeldItemMainhand();
-		Type type = Type.valueOf(ID);
+		GuiType guiType = GuiType.valueOf(ID);
 		BlockPos pos = new BlockPos(x, y, z);
 		
-		switch (type) {
+		switch (guiType) {
 		case SACK_THATCH:
 		case SACK_LEATHER:
 		case SACK_BURLAP:
@@ -70,7 +70,7 @@ public class GuiHandler implements IGuiHandler {
 		}
 	}
 	
-	public enum Type {
+	public enum GuiType {
 		SACK_THATCH,
 		SACK_LEATHER,
 		SACK_BURLAP,
@@ -78,10 +78,10 @@ public class GuiHandler implements IGuiHandler {
 		VESSEL_EXPLOSIVE,
 		NULL;
 		
-		private static final Type[] values = values();
+		private static final GuiType[] values = values();
 		
 		@Nonnull
-		public static Type valueOf(int id) {
+		public static GuiType valueOf(int id) {
 			return id < 0 || id >= values.length ? NULL : values[id];
 		}
 	}

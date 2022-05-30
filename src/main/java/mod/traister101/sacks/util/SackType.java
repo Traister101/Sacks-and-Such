@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.ConfigSNS.General;
 import mod.traister101.sacks.util.handlers.GuiHandler;
-import mod.traister101.sacks.util.handlers.GuiHandler.Type;
+import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 
 public enum SackType {
 	THATCH(4),
@@ -88,18 +88,18 @@ public enum SackType {
 		return !bool;
 	}
 	
-	public static Type getGui(SackType type) {
+	public static GuiType getGui(SackType type) {
 		switch (type) {
 		case THATCH:
-			return GuiHandler.Type.SACK_THATCH;
+			return GuiHandler.GuiType.SACK_THATCH;
 		case BURLAP:
-			return GuiHandler.Type.SACK_BURLAP;
+			return GuiHandler.GuiType.SACK_BURLAP;
 		case LEATHER:
-			return GuiHandler.Type.SACK_LEATHER;
+			return GuiHandler.GuiType.SACK_LEATHER;
 		case MINER:
-			return GuiHandler.Type.SACK_MINER;
+			return GuiHandler.GuiType.SACK_MINER;
 		default:
-			return GuiHandler.Type.NULL;
+			return GuiHandler.GuiType.NULL;
 		}
 	}
 }

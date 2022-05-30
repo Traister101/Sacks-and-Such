@@ -2,18 +2,18 @@ package mod.traister101.sacks.util;
 
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.util.handlers.GuiHandler;
-import mod.traister101.sacks.util.handlers.GuiHandler.Type;
+import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 
 public enum VesselType {
 	EXPLOSIVE;
 	
 	
-	public static Type getGui(VesselType type) {
+	public static GuiType getGui(VesselType type) {
 		switch (type) {
 		case EXPLOSIVE:
-			return GuiHandler.Type.VESSEL_EXPLOSIVE;
+			return GuiHandler.GuiType.VESSEL_EXPLOSIVE;
 		default:
-			return GuiHandler.Type.NULL;
+			return GuiHandler.GuiType.NULL;
 		}
 	}
 

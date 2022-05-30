@@ -5,6 +5,7 @@ import static mod.traister101.sacks.SacksNSuch.MODID;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.LangKey;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
+import net.minecraftforge.common.config.Config.SlidingOption;
 
 public class ExplosiveVessel {
 
@@ -15,4 +16,9 @@ public class ExplosiveVessel {
 	@LangKey(LANGKEY + ".enabled")
 	public boolean enabled = true;
 	
+	
+	@SlidingOption
+	@Comment("Multiplier for explosion power")
+	@LangKey(LANGKEY + ".multiplier")
+	public float explosionMultiplier = 1;
 }

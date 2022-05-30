@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.entity.projectile.EntityExplosiveVessel;
 import mod.traister101.sacks.objects.inventory.capability.VesselHandler;
 import mod.traister101.sacks.util.VesselType;
 import mod.traister101.sacks.util.handlers.GuiHandler;
+import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 import mod.traister101.sacks.util.helper.IConfigurable;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -42,15 +44,29 @@ public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
 	}
 	
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-		ItemStack heldStack = playerIn.getHeldItem(handIn);
-		
+		final ItemStack heldStack = playerIn.getHeldItem(handIn);
+		final GuiType gui = VesselType.getGui(type);
 		// TODO not being sealed should always open the gui so no empty vessels can be thrown
 		if (!sealed) {
-			if (!worldIn.isRemote && !playerIn.isSneaking()) GuiHandler.openGui(worldIn, playerIn, VesselType.getGui(type));
+			if (!worldIn.isRemote && !playerIn.isSneaking()) {
+				GuiHandler.openGui(worldIn, playerIn, gui);
+				return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+			}
+		}
+		
+		if (playerIn.isSneaking()) {
+			if (!worldIn.isRemote) {
+				GuiHandler.openGui(worldIn, playerIn, gui);
+			}
 			return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
-		} else if (playerIn.isSneaking()) {
-			if (!worldIn.isRemote) GuiHandler.openGui(worldIn, playerIn, VesselType.getGui(type));
-			return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+		}
+		
+		final float strength = calculateStrength();
+		if (strength <= 0) {
+			if (!worldIn.isRemote) {
+				GuiHandler.openGui(worldIn, playerIn, gui);
+			}
+			return new ActionResult<>(EnumActionResult.FAIL, heldStack);
 		}
 		
 		if (!playerIn.capabilities.isCreativeMode) {
@@ -62,8 +78,7 @@ public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
 				0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 		
 		if (!worldIn.isRemote) {
-			final float strength = calculateStrength();
-			EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, 5);
+			EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, strength);
 			entityVessel.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
 			worldIn.spawnEntity(entityVessel);
 		}
@@ -72,7 +87,10 @@ public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
 	}
 	
 	private float calculateStrength() {
-		return 10;
+		final int count = handler.getStackInSlot(0).getCount();
+		final float multiplier = ConfigSNS.General.EXPLOSIVE_VESSEL.explosionMultiplier;
+		final float strength = (count / 10) * multiplier;
+		return strength;
 	}
 
 	@Override
