@@ -9,15 +9,10 @@ import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonSack;
 import mod.traister101.sacks.network.RenamePacket;
 import mod.traister101.sacks.objects.container.AbstractContainerRenameable;
-import net.dries007.tfc.client.button.IButtonTooltip;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 

@@ -1,6 +1,5 @@
 package mod.traister101.sacks.client.button;
 
-
 import static mod.traister101.sacks.SacksNSuch.MODID;
 
 import javax.annotation.Nonnull;

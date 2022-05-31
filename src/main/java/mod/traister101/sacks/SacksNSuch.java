@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import mod.traister101.sacks.network.RenamePacket;
+import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.entity.EntitiesSNS;
 import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.PickupHandler;
@@ -47,7 +48,9 @@ public final class SacksNSuch {
     	log.info(MODID + " is loading");
     	NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
-    	network.registerMessage(new RenamePacket.Handler(), RenamePacket.class, 1, Side.SERVER);
+        int id = 0;
+    	network.registerMessage(new RenamePacket.Handler(), RenamePacket.class, ++id, Side.SERVER);
+    	network.registerMessage(new TogglePacket.Handler(), TogglePacket.class, ++id, Side.SERVER);
     	// Only register pickup handler if auto pickup is enabled
     	if (ConfigSNS.Global.pickup) {
     		MinecraftForge.EVENT_BUS.register(new PickupHandler());

@@ -1,7 +1,5 @@
 package mod.traister101.sacks.util;
 
-import javax.annotation.Nonnull;
-
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.ConfigSNS.General;
 import mod.traister101.sacks.util.handlers.GuiHandler;

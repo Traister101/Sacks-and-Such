@@ -3,11 +3,9 @@ package mod.traister101.sacks.network;
 import java.nio.charset.Charset;
 
 import io.netty.buffer.ByteBuf;
-import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.container.AbstractContainerRenameable;
-import net.dries007.tfc.TerraFirmaCraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -38,16 +36,16 @@ public class RenamePacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(RenamePacket message, MessageContext ctx) {
-			// Why not tfc is already a dependency
-			EntityPlayer player = TerraFirmaCraft.getProxy().getPlayer(ctx);
-			if (player != null) {
-				TerraFirmaCraft.getProxy().getThreadListener(ctx).addScheduledTask(() -> {
-					if (player.openContainer instanceof AbstractContainerRenameable) {
-						((AbstractContainerRenameable) player.openContainer).updateItemName(message.name);
-					}
-				});
-			}
+			EntityPlayer player = ctx.getServerHandler().player;
+			if (player == null) return null;
+			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx, player));
 			return null;
+		}
+		
+		private void handle(RenamePacket message, MessageContext ctx, EntityPlayer player) {
+			if (player.openContainer instanceof AbstractContainerRenameable) {
+				((AbstractContainerRenameable) player.openContainer).updateItemName(message.name);
+			}
 		}
 	}
 }

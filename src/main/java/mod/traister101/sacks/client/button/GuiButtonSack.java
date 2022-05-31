@@ -5,7 +5,6 @@ import static mod.traister101.sacks.SacksNSuch.MODID;
 
 import javax.annotation.Nonnull;
 
-import mod.traister101.sacks.util.handlers.GuiHandler;
 import net.dries007.tfc.client.button.IButtonTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -28,7 +27,7 @@ public class GuiButtonSack extends GuiButton implements IButtonTooltip {
     
     @Override
     public String getTooltip() {
-        return MODID + ".tooltip.sack." + buttonText;
+        return MODID + ".gui_sack.tooltip." + buttonText;
     }
     
     @Override

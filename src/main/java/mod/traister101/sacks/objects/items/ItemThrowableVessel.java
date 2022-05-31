@@ -2,16 +2,21 @@ package mod.traister101.sacks.objects.items;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import mod.traister101.sacks.ConfigSNS;
+import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.entity.projectile.EntityExplosiveVessel;
 import mod.traister101.sacks.objects.inventory.capability.VesselHandler;
 import mod.traister101.sacks.util.VesselType;
 import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 import mod.traister101.sacks.util.helper.IConfigurable;
+import mod.traister101.sacks.util.helper.IToggleAble;
+import mod.traister101.sacks.util.helper.Utils;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -22,36 +27,41 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
+public class ItemThrowableVessel extends ItemSNS implements IConfigurable, IToggleAble {
+	
+	private final boolean isSticky;
+	private final VesselType type;
 	
 	private VesselHandler handler;
-	private final VesselType type;
-	private EntityPlayer player;
-	private boolean sealed;
 	
 	public ItemThrowableVessel(String name, VesselType type) {
 		super(name);
 		this.type = type;
 		this.maxStackSize = 1;
+		if (type == VesselType.STICKY) {
+			this.isSticky = true;
+		} else this.isSticky = false;
 	}
 	
 	public VesselType getType() {
 		return type;
 	}
 	
+	@Nonnull
+	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		final ItemStack heldStack = playerIn.getHeldItem(handIn);
 		final GuiType gui = VesselType.getGui(type);
+		
 		// TODO not being sealed should always open the gui so no empty vessels can be thrown
-		if (!sealed) {
-			if (!worldIn.isRemote && !playerIn.isSneaking()) {
+		if (!Utils.isSealed(heldStack)) {
+			if (!worldIn.isRemote) {
 				GuiHandler.openGui(worldIn, playerIn, gui);
-				return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
 			}
+			return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
 		}
 		
 		if (playerIn.isSneaking()) {
@@ -78,7 +88,7 @@ public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
 				0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 		
 		if (!worldIn.isRemote) {
-			EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, strength);
+			EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, strength, isSticky);
 			entityVessel.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
 			worldIn.spawnEntity(entityVessel);
 		}
@@ -95,11 +105,14 @@ public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		String text = TextFormatting.GRAY + getTranslationKey() + ".tooltip";
+		String text = SacksNSuch.MODID + ".explosive_vessel.tooltip";
 		if (GuiScreen.isShiftKeyDown()) {
-			text = text + ".shift";
+			if (Utils.isSealed(stack)) {
+				text += ".sealed";
+			}
+			text += ".shift";
 		}
-		tooltip.add(text);
+		tooltip.add(I18n.format(text));
 	}
 	
 	@Nullable
@@ -109,16 +122,13 @@ public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
 		return handler;
 	}
 	
+	@Override
+	public boolean hasEffect(ItemStack stack) {
+		return stack.hasTagCompound() && Utils.isSealed(stack);
+	}
+	
 	public VesselHandler getHandler() {
 		return handler;
-	}
-	
-	public boolean isSealed() {
-		return sealed;
-	}
-	
-	public void setSeal(boolean newSeal) {
-		this.sealed = newSeal;
 	}
 	
 	@Override

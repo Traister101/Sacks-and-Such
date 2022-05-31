@@ -2,8 +2,11 @@ package mod.traister101.sacks.client.gui;
 
 import java.io.IOException;
 
+import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonSack;
-import mod.traister101.sacks.objects.items.ItemThrowableVessel;
+import mod.traister101.sacks.network.TogglePacket;
+import mod.traister101.sacks.util.helper.Utils;
+import mod.traister101.sacks.util.helper.Utils.ToggleType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -31,9 +34,8 @@ public class GuiContainerThrowableVessel extends AbstractGuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			ItemThrowableVessel vessel = (ItemThrowableVessel) heldStack.getItem();
-			final boolean seal = vessel.isSealed();
-			vessel.setSeal(!seal);
+			SacksNSuch.getNetwork().sendToServer(new TogglePacket(!Utils.isSealed(heldStack), ToggleType.SEAL));
+			mc.player.closeScreen();
 		}
 	}
 }
