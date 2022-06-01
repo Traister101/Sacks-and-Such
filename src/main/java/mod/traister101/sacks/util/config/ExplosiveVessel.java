@@ -4,6 +4,7 @@ import static mod.traister101.sacks.SacksNSuch.MODID;
 
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.LangKey;
+import net.minecraftforge.common.config.Config.RangeDouble;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.common.config.Config.SlidingOption;
 
@@ -16,9 +17,14 @@ public class ExplosiveVessel {
 	@LangKey(LANGKEY + ".enabled")
 	public boolean enabled = true;
 	
+	@RequiresMcRestart
+	@Comment("Enable or disable sticky explosive vessel")
+	@LangKey(LANGKEY + ".stickyEnabled")
+	public boolean stickyEnabled = true;
 	
 	@SlidingOption
-	@Comment("Multiplier for explosion power")
+	@RangeDouble(min = .1, max = 10)
+	@Comment("Multiplier for explosion power" + "Use high values with caution the multiplier is applied last")
 	@LangKey(LANGKEY + ".multiplier")
-	public float explosionMultiplier = 1;
+	public double explosionMultiplier = 1;
 }

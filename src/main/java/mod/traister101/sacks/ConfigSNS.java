@@ -64,5 +64,9 @@ public final class ConfigSNS {
 		@Comment("A global toggle for auto pickup. This will not force enable for every type")
 		@LangKey(LANG_GLOBAL + ".pickup")
 		public static boolean pickup = true;
+		
+		@Comment("This swaps the enchant glint from showing when a sack is voiding to when it's on autopickup")
+		@LangKey(LANG_GLOBAL + ".glint_toggle")
+		public static boolean voidGlint = true;
 	}
 }
