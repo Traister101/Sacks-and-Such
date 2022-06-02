@@ -60,12 +60,11 @@ public class ItemSack extends ItemSNS implements IConfigurable {
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		String text = SacksNSuch.MODID + ".sack.tooltip";
-		
 		if (GuiScreen.isShiftKeyDown()) {
 			if (Utils.isAutoVoid(stack)) {
 				text += ".void";
 			}
-			if (Utils.isAutoPickup(stack)) {
+			if (!Utils.isAutoPickup(stack)) {
 				text += ".pickup";
 			}
 			text += ".shift";

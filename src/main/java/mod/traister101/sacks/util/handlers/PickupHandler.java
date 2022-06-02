@@ -1,7 +1,13 @@
 package mod.traister101.sacks.util.handlers;
 
+import java.util.Random;
+
+import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SackType;
+import mod.traister101.sacks.util.helper.Utils;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -18,67 +24,69 @@ public final class PickupHandler {
 	public void onPickupItem(EntityItemPickupEvent event) {
 		ItemStack itemPickup = event.getItem().getItem();
 		
-		if (topOffPlayerInventory(event, itemPickup)) return;
+		if (topsOffPlayerInventory(event, itemPickup)) return;
 		
 		for (int i = 0; i < event.getEntityPlayer().inventory.getSizeInventory(); i++) {
-			ItemStack slotStack = event.getEntityPlayer().inventory.getStackInSlot(i);
+			ItemStack sackStack = event.getEntityPlayer().inventory.getStackInSlot(i);
 			// Not a sack
-			if (!(slotStack.getItem() instanceof ItemSack)) continue;
-			ItemSack sack = (ItemSack) slotStack.getItem();
+			if (!(sackStack.getItem() instanceof ItemSack)) continue;
+			ItemSack sack = (ItemSack) sackStack.getItem();
 			SackType type = sack.getType();
-			
-			// Pickup disabled for sack type
-			if (SackType.getPickupConfig(type)) continue;
+			// Config pickup disabled for sack type
+			if (SackType.canTypeDoAutoPickup(type)) continue;
+			// This sack in particular has auto pickup disabled
+			if (!Utils.isAutoPickup(sackStack)) continue;
 			// Can't place in sack for any number of reasons
 			if (!canPlaceInSack(type, sack, itemPickup)) continue;
 			
-			IItemHandler sackInv = slotStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			IItemHandler sackInv = sackStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 			for (int j = 0; j < sackInv.getSlots(); j++) {
 				if (sackInv.getStackInSlot(j).getCount() < sackInv.getSlotLimit(j)) {
-					ItemStack result = sackInv.insertItem(j, itemPickup, false);
-					int numPickedUp = itemPickup.getCount() - result.getCount();
-					event.getItem().setItem(result);
+					ItemStack pickupResult = sackInv.insertItem(j, itemPickup, false);
+					int numPickedUp = itemPickup.getCount() - pickupResult.getCount();
+					event.getItem().setItem(pickupResult);
 					
 					if (numPickedUp > 0) {
 						playPickupSound(event);
-						((EntityPlayerMP) event.getEntityPlayer()).connection.sendPacket(new SPacketCollectItem(
-								event.getItem().getEntityId(), event.getEntityPlayer().getEntityId(), numPickedUp));
-
-						event.getEntityPlayer().openContainer.detectAndSendChanges();
+						EntityPlayer player = event.getEntityPlayer();
+						SPacketCollectItem packet = new SPacketCollectItem(event.getItem().getEntityId(), player.getEntityId(), numPickedUp);
+						((EntityPlayerMP) player).connection.sendPacket(packet);
+						player.openContainer.detectAndSendChanges();
 						return;
 					}
 				}
+			}
+			// If this sack has voiding enabled empty the picked up stack and finish.
+			// This means the first valid sack that has voiding enabled will void the pickup stack
+			if (Utils.isAutoVoid(sackStack)) {
+				itemPickup.setCount(0);
+				playPickupSound(event);
+				return;
 			}
 		}
 	}
 	
 	private static boolean canPlaceInSack(SackType type, ItemSack sack, ItemStack itemPickup) {
 		for (int j = 0; j < SackType.getSlotCount(type); j++) {
-			if (!sack.getHandler().isItemValid(j, itemPickup)) return false;
+			if (sack.getHandler().isItemValid(j, itemPickup)) return true;
 		}
-		return true;
+		return false;
 	}
 	
 	// Tops off stuff in player inventory
-	private static boolean topOffPlayerInventory(EntityItemPickupEvent event, ItemStack stack) {
-
+	private static boolean topsOffPlayerInventory(EntityItemPickupEvent event, ItemStack stack) {
 		// Add to player inventory first, if there is an incomplete stack in there.
 		for (int i = 0; i < event.getEntityPlayer().inventory.getSizeInventory(); i++) {
 			ItemStack inventoryStack = event.getEntityPlayer().inventory.getStackInSlot(i);
 			// We only add to existing stacks.
-			if (inventoryStack.isEmpty()) {
-				continue;
-			}
-
+			if (inventoryStack.isEmpty()) continue;
 			// Already full
-			if (inventoryStack.getCount() >= inventoryStack.getMaxStackSize()) {
-				continue;
-			}
-
+			if (inventoryStack.getCount() >= inventoryStack.getMaxStackSize()) continue;
+			
 			if (inventoryStack.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(inventoryStack, stack)) {
 				int space = inventoryStack.getMaxStackSize() - inventoryStack.getCount();
-
-				if (space > stack.getCount()) {
+				
+				if (space >= stack.getCount()) {
 					// Enough space to add all
 					inventoryStack.grow(stack.getCount());
 					stack.setCount(0);
@@ -97,11 +105,15 @@ public final class PickupHandler {
 	// Take a guess
 	private static void playPickupSound(EntityItemPickupEvent event) {
 		event.setCanceled(true);
-		if (!event.getItem().isSilent()) {
-			// These next three lines are in reality one line. Luckily I was able to yoink it from Botania, I don't think they'll mind :p
-			event.getItem().world.playSound(null, event.getEntityPlayer().posX, event.getEntityPlayer().posY, event.getEntityPlayer().posZ,
-					SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F,
-					((event.getItem().world.rand.nextFloat() - event.getItem().world.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+		EntityItem itemEntity = event.getItem();
+		if (!itemEntity.isSilent()) {
+			final EntityPlayer player = event.getEntityPlayer();
+			final double posX = player.posX;
+			final double posY = player.posY;
+			final double posZ = player.posZ;
+			Random itemRand = itemEntity.world.rand;
+			itemEntity.world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, 
+					((itemRand.nextFloat() - itemRand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 		}
 	}
 }

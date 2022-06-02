@@ -2,13 +2,14 @@ package mod.traister101.sacks.util.config;
 
 import static mod.traister101.sacks.SacksNSuch.MODID;
 
+import net.dries007.tfc.api.capability.size.Size;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.LangKey;
 import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.common.config.Config.RequiresWorldRestart;
 
-public class ThatchSack {
+public final class ThatchSack {
 	
 	private static final String LANGKEY = "config." + MODID + ".general.thatch_sack";
 	
@@ -27,4 +28,7 @@ public class ThatchSack {
 	@RangeInt(min = 1, max = 512)
 	public int slotCap = 32;
 	
+	@Comment("TFC does this kinda weird so it's actually one size lower ie this by default is anything smaller than normal")
+	@LangKey(LANGKEY + ".allowed_size")
+	public String allowedSize = "small";
 }

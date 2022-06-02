@@ -8,7 +8,7 @@ import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.common.config.Config.RequiresWorldRestart;
 
-public class MinerSack {
+public final class MinerSack {
 	
 	private static final String LANGKEY = "config." + MODID + ".general.miner_sack";
 	
@@ -21,10 +21,17 @@ public class MinerSack {
 	@LangKey(LANGKEY + ".pickup")
 	public boolean pickup = true;
 	
+	@Comment("Allow non ore items inside the miner sack")
+	@LangKey(LANGKEY + ".allow_non_ore")
+	public boolean allowNonOre = false;
+	
 	@RequiresWorldRestart
 	@Comment("Item stack max for the type of sack")
 	@LangKey(LANGKEY + ".slot_cap")
 	@RangeInt(min = 1, max = 512)
 	public int slotCap = 512;
 	
+	@Comment("TFC does this kinda weird so it's actually one size lower ie this by default is anything smaller than large")
+	@LangKey(LANGKEY + ".allowed_size")
+	public String allowedSize = "large";
 }

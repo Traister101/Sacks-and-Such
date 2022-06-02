@@ -8,7 +8,7 @@ import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.common.config.Config.RequiresWorldRestart;
 
-public class LeatherSack {
+public final class LeatherSack {
 	
 	private static final String LANGKEY = "config." + MODID + ".general.leather_sack";
 	
@@ -27,4 +27,7 @@ public class LeatherSack {
 	@RangeInt(min = 1, max = 512)
 	public int slotCap = 64;
 	
+	@Comment("TFC does this kinda weird so it's actually one size lower ie this by default is anything smaller than normal")
+	@LangKey(LANGKEY + ".allowed_size")
+	public String allowedSize = "normal";
 }
