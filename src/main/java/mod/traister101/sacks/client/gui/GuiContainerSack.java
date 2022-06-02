@@ -23,8 +23,7 @@ public class GuiContainerSack extends GuiRenameable {
 	@Override
 	public void initGui() {
 		super.initGui();
-		addButton(new GuiButtonSack(1, guiLeft + 155, guiTop + 22, 16, 16, "filter", background));
-		addButton(new GuiButtonSack(2, guiLeft + 155, guiTop + 38, 16, 16, "void", background));
+		addButton(new GuiButtonSack(1, guiLeft + 155, guiTop + 22, 16, 16, Utils.isAutoVoid(heldStack) ? "un-void" : "void", background));
 	}
 	
 	@Override
@@ -32,12 +31,10 @@ public class GuiContainerSack extends GuiRenameable {
 		// TODO filter button as well as some way to filter the allowed items
 		SimpleNetworkWrapper network = SacksNSuch.getNetwork();
 		switch (button.id) {
-		case 0: super.actionPerformed(button);
-		case 1:
-			SacksNSuch.getLog().info("Filter button clicked");
-//			network.sendToServer(new TogglePacket(allowUserInput, null));
+		case 0: 
+			super.actionPerformed(button);
 			break;
-		case 2:
+		case 1:
 			network.sendToServer(new TogglePacket(!Utils.isAutoVoid(heldStack), ToggleType.VOID));
 			mc.player.closeScreen();
 			break;

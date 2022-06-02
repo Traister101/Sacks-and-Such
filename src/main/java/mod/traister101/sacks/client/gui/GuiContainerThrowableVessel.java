@@ -2,8 +2,9 @@ package mod.traister101.sacks.client.gui;
 
 import java.io.IOException;
 
+import akka.japi.Util;
 import mod.traister101.sacks.SacksNSuch;
-import mod.traister101.sacks.client.button.GuiButtonSack;
+import mod.traister101.sacks.client.button.GuiButtonVessel;
 import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.util.helper.Utils;
 import mod.traister101.sacks.util.helper.Utils.ToggleType;
@@ -22,7 +23,7 @@ public class GuiContainerThrowableVessel extends AbstractGuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		addButton(new GuiButtonSack(0, guiLeft + 155, guiTop + 6, 15, 15, "seal", background));
+		addButton(new GuiButtonVessel(0, guiLeft + 155, guiTop + 6, 15, 15, "seal", background));
 	}
 	
 	@Override
