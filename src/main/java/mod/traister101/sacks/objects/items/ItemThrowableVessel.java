@@ -14,7 +14,6 @@ import mod.traister101.sacks.util.VesselType;
 import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 import mod.traister101.sacks.util.helper.IConfigurable;
-import mod.traister101.sacks.util.helper.IToggleAble;
 import mod.traister101.sacks.util.helper.Utils;
 import mod.traister101.sacks.util.helper.Utils.ToggleType;
 import net.minecraft.client.Minecraft;
@@ -34,7 +33,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class ItemThrowableVessel extends ItemSNS implements IConfigurable, IToggleAble {
+public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
 	
 	private final boolean isSticky;
 	private final VesselType type;
