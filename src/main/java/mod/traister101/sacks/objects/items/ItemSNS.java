@@ -16,11 +16,7 @@ public class ItemSNS extends Item implements IItemSize {
 	protected Weight weight;
 	protected Size size;
 	
-	public ItemSNS(String name) {
-		setTranslationKey(MODID + "." + name);
-		setRegistryName(name);
-		setCreativeTab(CreativeTabsTFC.CT_MISC);
-		ItemsSNS.ITEMS.add(this);
+	public ItemSNS() {
 		this.weight = Weight.LIGHT;
 		this.size = Size.NORMAL;
 	}

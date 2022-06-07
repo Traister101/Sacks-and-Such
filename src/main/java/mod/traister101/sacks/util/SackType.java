@@ -5,8 +5,6 @@ import static mod.traister101.sacks.ConfigSNS.General.LEATHERSACK;
 import static mod.traister101.sacks.ConfigSNS.General.MINERSACK;
 import static mod.traister101.sacks.ConfigSNS.General.THATCHSACK;
 
-import mod.traister101.sacks.SacksNSuch;
-import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 import net.dries007.tfc.api.capability.size.Size;
 
@@ -14,8 +12,7 @@ public enum SackType {
 	THATCH(4),
 	LEATHER(4),
 	BURLAP(4),
-	MINER(1),
-	NULL(0);
+	MINER(1);
 	
 	private int slots;
 	
@@ -26,13 +23,13 @@ public enum SackType {
 	public static int getSlotCount(SackType type) {
 		switch (type) {
 		case THATCH:
-			return SackType.THATCH.slots;
+			return THATCH.slots;
 		case LEATHER:
-			return SackType.LEATHER.slots;
+			return LEATHER.slots;
 		case BURLAP:
-			return SackType.BURLAP.slots;
+			return BURLAP.slots;
 		case MINER:
-			return SackType.MINER.slots;
+			return MINER.slots;
 		default:
 			return 0;
 		}
@@ -92,15 +89,15 @@ public enum SackType {
 	public static GuiType getGui(SackType type) {
 		switch (type) {
 		case THATCH:
-			return GuiHandler.GuiType.SACK_THATCH;
+			return GuiType.SACK_THATCH;
 		case BURLAP:
-			return GuiHandler.GuiType.SACK_BURLAP;
+			return GuiType.SACK_BURLAP;
 		case LEATHER:
-			return GuiHandler.GuiType.SACK_LEATHER;
+			return GuiType.SACK_LEATHER;
 		case MINER:
-			return GuiHandler.GuiType.SACK_MINER;
+			return GuiType.SACK_MINER;
 		default:
-			return GuiHandler.GuiType.NULL;
+			return GuiType.NULL;
 		}
 	}
 

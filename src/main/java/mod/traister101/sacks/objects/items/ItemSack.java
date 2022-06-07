@@ -11,7 +11,6 @@ import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.util.SackType;
 import mod.traister101.sacks.util.handlers.GuiHandler;
-import mod.traister101.sacks.util.helper.IConfigurable;
 import mod.traister101.sacks.util.helper.Utils;
 import mod.traister101.sacks.util.helper.Utils.ToggleType;
 import net.dries007.tfc.api.capability.size.Size;
@@ -30,13 +29,12 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class ItemSack extends ItemSNS implements IConfigurable {
+public class ItemSack extends ItemSNS {
 	
 	private SackHandler handler;
 	private final SackType type;
 	
-	public ItemSack(String name, SackType type) {
-		super(name);
+	public ItemSack(SackType type) {
 		this.type = type;
 		this.size = Size.NORMAL;
 		this.weight = Weight.VERY_HEAVY;
@@ -89,7 +87,6 @@ public class ItemSack extends ItemSNS implements IConfigurable {
 		return handler;
 	}
 	
-	@Override
 	public boolean isEnabled() {
 		return SackType.isEnabled(type);
 	}

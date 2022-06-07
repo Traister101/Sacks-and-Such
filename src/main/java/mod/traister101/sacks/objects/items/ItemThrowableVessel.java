@@ -13,7 +13,6 @@ import mod.traister101.sacks.objects.inventory.capability.VesselHandler;
 import mod.traister101.sacks.util.VesselType;
 import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
-import mod.traister101.sacks.util.helper.IConfigurable;
 import mod.traister101.sacks.util.helper.Utils;
 import mod.traister101.sacks.util.helper.Utils.ToggleType;
 import net.minecraft.client.Minecraft;
@@ -33,15 +32,13 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
+public class ItemThrowableVessel extends ItemSNS {
 	
 	private final boolean isSticky;
 	private final VesselType type;
-	
 	private VesselHandler handler;
 	
-	public ItemThrowableVessel(String name, VesselType type) {
-		super(name);
+	public ItemThrowableVessel(VesselType type) {
 		this.type = type;
 		this.maxStackSize = 1;
 		if (type == VesselType.STICKY) {
@@ -121,7 +118,6 @@ public class ItemThrowableVessel extends ItemSNS implements IConfigurable {
 		return handler;
 	}
 	
-	@Override
 	public boolean isEnabled() {
 		return VesselType.isEnabled(type);
 	}

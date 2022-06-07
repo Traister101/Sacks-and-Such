@@ -44,10 +44,14 @@ public final class Utils {
 			return name().toLowerCase();
 		}
 		
-		
 		@Nonnull
 		public static ToggleType valueOf(int id) {
 			return id < 0 || id >= values.length ? NULL : values[id];
 		}
+	}
+	
+    @Nonnull
+	public static <T> T getNull() {
+		return null;
 	}
 }
