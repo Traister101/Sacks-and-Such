@@ -1,9 +1,9 @@
 package mod.traister101.sacks.util;
 
-import static mod.traister101.sacks.ConfigSNS.General.BURLAPSACK;
-import static mod.traister101.sacks.ConfigSNS.General.LEATHERSACK;
-import static mod.traister101.sacks.ConfigSNS.General.MINERSACK;
-import static mod.traister101.sacks.ConfigSNS.General.THATCHSACK;
+import static mod.traister101.sacks.ConfigSNS.BURLAPSACK;
+import static mod.traister101.sacks.ConfigSNS.LEATHERSACK;
+import static mod.traister101.sacks.ConfigSNS.MINERSACK;
+import static mod.traister101.sacks.ConfigSNS.THATCHSACK;
 
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 import net.dries007.tfc.api.capability.size.Size;
@@ -53,13 +53,13 @@ public enum SackType {
 	public static boolean isEnabled(SackType type) {
 		switch (type) {
 		case THATCH:
-			return THATCHSACK.enabled;
+			return THATCHSACK.isEnabled;
 		case LEATHER:
-			return LEATHERSACK.enabled;
+			return LEATHERSACK.isEnabled;
 		case BURLAP:
-			return BURLAPSACK.enabled;
+			return BURLAPSACK.isEnabled;
 		case MINER:
-			return MINERSACK.enabled;
+			return MINERSACK.isEnabled;
 		default:
 			return false;
 		}
@@ -69,16 +69,16 @@ public enum SackType {
 		boolean bool;
 		switch (type) {
 		case THATCH:
-			bool = THATCHSACK.pickup;
+			bool = THATCHSACK.doPickup;
 			break;
 		case BURLAP:
-			bool = BURLAPSACK.pickup;
+			bool = BURLAPSACK.doPickup;
 			break;
 		case LEATHER:
-			bool = LEATHERSACK.pickup;
+			bool = LEATHERSACK.doPickup;
 			break;
 		case MINER:
-			bool = MINERSACK.pickup;
+			bool = MINERSACK.doPickup;
 			break;
 		default:
 			bool = false;
@@ -102,24 +102,17 @@ public enum SackType {
 	}
 
 	public static Size getSlotSize(SackType type) {
-		String size = "";
 		switch (type) {
 		case THATCH:
-			size = THATCHSACK.allowedSize;
-			break;
+			return THATCHSACK.allowedSize;
 		case BURLAP:
-			size = BURLAPSACK.allowedSize;
-			break;
+			return BURLAPSACK.allowedSize;
 		case LEATHER:
-			size = LEATHERSACK.allowedSize;
-			break;
+			return LEATHERSACK.allowedSize;
 		case MINER:
-			size = MINERSACK.allowedSize;
-			break;
+			return MINERSACK.allowedSize;
 		default:
-			size = "normal";
-			break;
+			return Size.NORMAL;
 		}
-		return Size.valueOf(size.toUpperCase());
 	}
 }

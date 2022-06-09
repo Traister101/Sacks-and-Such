@@ -85,7 +85,7 @@ public class ItemThrowableVessel extends ItemSNS {
 	
 	private final float calculateStrength() {
 		final int count = handler.getStackInSlot(0).getCount();
-		final double multiplier = ConfigSNS.General.EXPLOSIVE_VESSEL.explosionMultiplier;
+		final double multiplier = ConfigSNS.EXPLOSIVE_VESSEL.explosionMultiplier;
 		final float strength = (float) ((count / 14) * multiplier);
 		return strength;
 	}
@@ -116,10 +116,6 @@ public class ItemThrowableVessel extends ItemSNS {
 	
 	public VesselHandler getHandler() {
 		return handler;
-	}
-	
-	public boolean isEnabled() {
-		return VesselType.isEnabled(type);
 	}
 	
 	public VesselType getType() {

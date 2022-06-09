@@ -1,6 +1,7 @@
 package mod.traister101.sacks.util;
 
-import mod.traister101.sacks.ConfigSNS;
+import static mod.traister101.sacks.ConfigSNS.EXPLOSIVE_VESSEL;
+
 import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 
@@ -22,9 +23,9 @@ public enum VesselType {
 	public static boolean isEnabled(VesselType type) {
 		switch (type) {
 		case EXPLOSIVE:
-			return ConfigSNS.General.EXPLOSIVE_VESSEL.enabled;
+			return EXPLOSIVE_VESSEL.enabled;
 		case STICKY:
-			return ConfigSNS.General.EXPLOSIVE_VESSEL.stickyEnabled;
+			return EXPLOSIVE_VESSEL.stickyEnabled && EXPLOSIVE_VESSEL.enabled;
 		default:
 			return false;
 		}

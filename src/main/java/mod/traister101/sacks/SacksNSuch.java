@@ -52,7 +52,7 @@ public final class SacksNSuch {
     	network.registerMessage(new RenamePacket.Handler(), RenamePacket.class, ++id, Side.SERVER);
     	network.registerMessage(new TogglePacket.Handler(), TogglePacket.class, ++id, Side.SERVER);
     	// Only register pickup handler if auto pickup is enabled
-    	if (ConfigSNS.Global.pickup) {
+    	if (ConfigSNS.GLOBAL.doPickup) {
     		MinecraftForge.EVENT_BUS.register(new PickupHandler());
     		log.info("Sacks of all types won't have autopickup");
     	}

@@ -33,27 +33,37 @@ public final class ItemsSNS {
 		return allThrowableVessels;
 	}
 	
-	public static Item UNFINISHED_LEATHER_SACK = getNull();
+	public static final Item UNFINISHED_LEATHER_SACK = getNull();
 	
 	@SubscribeEvent
 	public static void registerItems(Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
 		Builder<ItemSack> sacks = ImmutableList.builder();
 		Builder<ItemThrowableVessel> throwableVessels = ImmutableList.builder();
-		sacks.add(register(registry, "thatch_sack", new ItemSack(SackType.THATCH), CT_MISC));
-//		sacks.add(register(registry, "food_sack", new ItemSack(SackType.FOOD), CT_MISC));
-		if (ConfigSNS.General.LEATHERSACK.enabled) {
-			sacks.add(register(registry, "leather_sack", new ItemSack(SackType.LEATHER), CT_MISC));
+		
+		registerSack(registry, sacks, "thatch", SackType.THATCH);
+		registerSack(registry, sacks, "leather", SackType.LEATHER);
+//		registerSack(registry, sacks, "food", SackType.FOOD);
+		registerSack(registry, sacks, "burlap", SackType.BURLAP);
+		registerSack(registry, sacks, "miners", SackType.MINER);
+		
+		registerVessel(registry, throwableVessels, "explosive", VesselType.EXPLOSIVE);
+		registerVessel(registry, throwableVessels, "sticky", VesselType.STICKY);
+		
+		if (ConfigSNS.LEATHERSACK.isEnabled) {
 			register(registry, "unfinished_leather_sack", new ItemSNS(), CT_MISC);
 		}
-		sacks.add(register(registry, "burlap_sack", new ItemSack(SackType.BURLAP), CT_MISC));
-		sacks.add(register(registry, "miners_sack", new ItemSack(SackType.MINER), CT_MISC));
-		
-		throwableVessels.add(register(registry, "explosive_vessel", new ItemThrowableVessel(VesselType.EXPLOSIVE), CT_MISC));
-		throwableVessels.add(register(registry, "sticky_vessel", new ItemThrowableVessel(VesselType.STICKY), CT_MISC));
 		
 		allSacks = sacks.build();
 		allThrowableVessels = throwableVessels.build();
+	}
+	
+	private static void registerSack(IForgeRegistry<Item> registry, Builder<ItemSack> sacks, String name, SackType type) {
+		if (SackType.isEnabled(type)) sacks.add(register(registry, name + "_sack", new ItemSack(type), CT_MISC));
+	}
+	
+	private static void registerVessel(IForgeRegistry<Item> registry, Builder<ItemThrowableVessel> throwableVessels, String name, VesselType type) {
+		if (VesselType.isEnabled(type)) throwableVessels.add(register(registry, name + "_vessel", new ItemThrowableVessel(type), CT_MISC));
 	}
 	
 	private static <T extends Item> T register(IForgeRegistry<Item> registry, String name, T item, CreativeTabs ct) {

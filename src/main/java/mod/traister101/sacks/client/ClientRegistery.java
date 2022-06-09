@@ -6,6 +6,8 @@ import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.objects.items.ItemThrowableVessel;
 import mod.traister101.sacks.objects.items.ItemsSNS;
+import mod.traister101.sacks.util.SackType;
+import mod.traister101.sacks.util.VesselType;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -22,15 +24,11 @@ public final class ClientRegistery {
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
 		// ITEMS //
-		for (ItemSack item : ItemsSNS.getAllSacks()) {
-			if (item.isEnabled()) registerItemRenderer(item, 0, "inventory");
-		}
+		for (ItemSack sack : ItemsSNS.getAllSacks()) registerItemRenderer(sack, 0, "inventory");
 		
-		for (ItemThrowableVessel item : ItemsSNS.getAllThrowableVessels()) {
-			if (item.isEnabled()) registerItemRenderer(item, 0, "inventory");
-		}
+		for (ItemThrowableVessel vessel : ItemsSNS.getAllThrowableVessels()) registerItemRenderer(vessel, 0, "inventory");
 		
-		if (ConfigSNS.General.LEATHERSACK.enabled) {
+		if (ConfigSNS.LEATHERSACK.isEnabled) {
 			registerItemRenderer(ItemsSNS.UNFINISHED_LEATHER_SACK, 0, "inventory");
 		}
 	}
@@ -38,5 +36,4 @@ public final class ClientRegistery {
 	private static void registerItemRenderer(Item item, int meta, String id) {
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
 	}
-	
 }

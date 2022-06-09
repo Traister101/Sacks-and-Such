@@ -69,10 +69,10 @@ public class ItemSack extends ItemSNS {
 		}
 		tooltip.add(I18n.format(text));
 	}
-
+	
 	@Override
 	public boolean hasEffect(ItemStack stack) {
-		if (ConfigSNS.Global.voidGlint) return Utils.isAutoVoid(stack);
+		if (ConfigSNS.GLOBAL.voidGlint) return Utils.isAutoVoid(stack);
 		return Utils.isAutoPickup(stack);
 	}
 	
@@ -85,10 +85,6 @@ public class ItemSack extends ItemSNS {
 	
 	public SackHandler getHandler() {
 		return handler;
-	}
-	
-	public boolean isEnabled() {
-		return SackType.isEnabled(type);
 	}
 	
 	@Nonnull
