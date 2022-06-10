@@ -1,7 +1,7 @@
 package mod.traister101.sacks.objects.items;
 
 import static mod.traister101.sacks.SacksNSuch.MODID;
-import static mod.traister101.sacks.util.helper.Utils.getNull;
+import static mod.traister101.sacks.util.SNSUtils.getNull;
 import static net.dries007.tfc.objects.CreativeTabsTFC.CT_MISC;
 
 import com.google.common.collect.ImmutableList;
@@ -49,6 +49,7 @@ public final class ItemsSNS {
 		
 		registerVessel(registry, throwableVessels, "explosive", VesselType.EXPLOSIVE);
 		registerVessel(registry, throwableVessels, "sticky", VesselType.STICKY);
+		registerVessel(registry, throwableVessels, "tiny", VesselType.TINY);
 		
 		if (ConfigSNS.LEATHERSACK.isEnabled) {
 			register(registry, "unfinished_leather_sack", new ItemSNS(), CT_MISC);

@@ -6,8 +6,6 @@ import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.objects.items.ItemThrowableVessel;
 import mod.traister101.sacks.objects.items.ItemsSNS;
-import mod.traister101.sacks.util.SackType;
-import mod.traister101.sacks.util.VesselType;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;

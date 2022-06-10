@@ -6,8 +6,8 @@ import akka.japi.Util;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonVessel;
 import mod.traister101.sacks.network.TogglePacket;
-import mod.traister101.sacks.util.helper.Utils;
-import mod.traister101.sacks.util.helper.Utils.ToggleType;
+import mod.traister101.sacks.util.SNSUtils;
+import mod.traister101.sacks.util.SNSUtils.ToggleType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -35,7 +35,7 @@ public class GuiContainerThrowableVessel extends AbstractGuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			SacksNSuch.getNetwork().sendToServer(new TogglePacket(!Utils.isSealed(heldStack), ToggleType.SEAL));
+			SacksNSuch.getNetwork().sendToServer(new TogglePacket(!SNSUtils.isSealed(heldStack), ToggleType.SEAL));
 			mc.player.closeScreen();
 		}
 	}

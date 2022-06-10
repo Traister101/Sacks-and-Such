@@ -10,17 +10,20 @@ import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.entity.projectile.EntityExplosiveVessel;
 import mod.traister101.sacks.objects.inventory.capability.VesselHandler;
+import mod.traister101.sacks.util.SNSUtils;
+import mod.traister101.sacks.util.SNSUtils.ToggleType;
 import mod.traister101.sacks.util.VesselType;
 import mod.traister101.sacks.util.handlers.GuiHandler;
-import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
-import mod.traister101.sacks.util.helper.Utils;
-import mod.traister101.sacks.util.helper.Utils.ToggleType;
+import net.dries007.tfc.api.capability.size.IItemSize;
+import net.dries007.tfc.api.capability.size.Size;
+import net.dries007.tfc.api.capability.size.Weight;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
@@ -32,41 +35,32 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class ItemThrowableVessel extends ItemSNS {
+public class ItemThrowableVessel extends Item implements IItemSize {
 	
 	private final boolean isSticky;
 	private final VesselType type;
 	private VesselHandler handler;
 	
-	public ItemThrowableVessel(VesselType type) {
-		this.type = type;
-		this.maxStackSize = 1;
+	public ItemThrowableVessel(@Nonnull VesselType type) {
 		if (type == VesselType.STICKY) {
 			this.isSticky = true;
 		} else this.isSticky = false;
+		this.type = type;
 	}
 	
 	@Nonnull
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		final ItemStack heldStack = playerIn.getHeldItem(handIn);
-		final GuiType gui = VesselType.getGui(type);
+		// Tiny vessel has no gui so throw it immediately
+		if (type == VesselType.TINY) {
+			throwVessel(worldIn, playerIn, heldStack);
+			return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+		}
 		
 		if (!playerIn.isSneaking()) {
-			if (Utils.isSealed(heldStack)) {
-				
-				if (!playerIn.capabilities.isCreativeMode) {
-					heldStack.shrink(1);
-				}
-				
-				worldIn.playSound((EntityPlayer) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW,
-						SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-				
-				if (!worldIn.isRemote) {
-					EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, calculateStrength(), isSticky);
-					entityVessel.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-					worldIn.spawnEntity(entityVessel);
-				}
+			if (SNSUtils.isSealed(heldStack)) {
+				throwVessel(worldIn, playerIn, heldStack);
 				playerIn.addStat(StatList.getObjectUseStats(this));
 				return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
 			}
@@ -74,16 +68,41 @@ public class ItemThrowableVessel extends ItemSNS {
 		
 		if (!worldIn.isRemote) {
 			if (playerIn.isSneaking()) {
-				SacksNSuch.getNetwork().sendToServer(new TogglePacket(!Utils.isSealed(heldStack), ToggleType.SEAL));
-				TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".explosive_vessel.seal." + (Utils.isSealed(heldStack) ? "disabled" : "enabled"));
+				SacksNSuch.getNetwork().sendToServer(new TogglePacket(!SNSUtils.isSealed(heldStack), ToggleType.SEAL));
+				TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".explosive_vessel.seal." + (SNSUtils.isSealed(heldStack) ? "disabled" : "enabled"));
 				Minecraft.getMinecraft().player.sendStatusMessage(statusMessage, true);
+				return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
 			}
-			if (!playerIn.isSneaking()) GuiHandler.openGui(worldIn, playerIn, gui);
+			if (!playerIn.isSneaking()) {
+				openContainer(worldIn, playerIn);
+				return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+			}
 		}
-		return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+		return new ActionResult<>(EnumActionResult.FAIL, heldStack);
+	}
+	
+	private final void throwVessel(World worldIn, EntityPlayer playerIn, ItemStack heldStack) {
+		if (!playerIn.capabilities.isCreativeMode) {
+			heldStack.shrink(1);
+		}
+		
+		worldIn.playSound((EntityPlayer) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW,
+				SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+		
+		if (!worldIn.isRemote) {
+			EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, calculateStrength(), isSticky);
+			entityVessel.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+			worldIn.spawnEntity(entityVessel);
+		}
+	}
+
+	private void openContainer(World worldIn, EntityPlayer playerIn) {
+		GuiHandler.openGui(worldIn, playerIn, VesselType.getGui(type));
 	}
 	
 	private final float calculateStrength() {
+		if (type == VesselType.TINY) return 2;
+		
 		final int count = handler.getStackInSlot(0).getCount();
 		final double multiplier = ConfigSNS.EXPLOSIVE_VESSEL.explosionMultiplier;
 		final float strength = (float) ((count / 14) * multiplier);
@@ -94,7 +113,7 @@ public class ItemThrowableVessel extends ItemSNS {
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		String text = SacksNSuch.MODID + ".explosive_vessel.tooltip";
 		if (GuiScreen.isShiftKeyDown()) {
-			if (Utils.isSealed(stack)) {
+			if (SNSUtils.isSealed(stack)) {
 				text += ".sealed";
 			}
 			text += ".shift";
@@ -105,20 +124,33 @@ public class ItemThrowableVessel extends ItemSNS {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-		handler = new VesselHandler(nbt, type);
-		return handler;
+		return new VesselHandler(nbt, type);
 	}
 	
 	@Override
 	public boolean hasEffect(ItemStack stack) {
-		return Utils.isSealed(stack);
+		return SNSUtils.isSealed(stack);
 	}
 	
-	public VesselHandler getHandler() {
-		return handler;
-	}
-	
+	@Nonnull
 	public VesselType getType() {
 		return type;
+	}
+	
+	@Nonnull
+	@Override
+	public Size getSize(@Nonnull ItemStack stack) {
+		return type == VesselType.TINY ? Size.LARGE : Size.NORMAL;
+	}
+	
+	@Nonnull
+	@Override
+	public Weight getWeight(@Nonnull ItemStack stack) {
+		return type == VesselType.TINY ? Weight.VERY_HEAVY : Weight.MEDIUM;
+	}
+	
+	@Override
+	public boolean canStack(@Nonnull ItemStack stack) {
+		return type == VesselType.TINY ? false : true;
 	}
 }

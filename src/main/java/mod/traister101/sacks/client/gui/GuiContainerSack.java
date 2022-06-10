@@ -5,8 +5,8 @@ import java.io.IOException;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonSack;
 import mod.traister101.sacks.network.TogglePacket;
-import mod.traister101.sacks.util.helper.Utils;
-import mod.traister101.sacks.util.helper.Utils.ToggleType;
+import mod.traister101.sacks.util.SNSUtils;
+import mod.traister101.sacks.util.SNSUtils.ToggleType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -23,7 +23,7 @@ public class GuiContainerSack extends GuiRenameable {
 	@Override
 	public void initGui() {
 		super.initGui();
-		addButton(new GuiButtonSack(1, guiLeft + 155, guiTop + 22, 16, 16, Utils.isAutoVoid(heldStack) ? "un-void" : "void", background));
+		addButton(new GuiButtonSack(1, guiLeft + 155, guiTop + 22, 16, 16, SNSUtils.isAutoVoid(heldStack) ? "un-void" : "void", background));
 	}
 	
 	@Override
@@ -35,7 +35,7 @@ public class GuiContainerSack extends GuiRenameable {
 			super.actionPerformed(button);
 			break;
 		case 1:
-			network.sendToServer(new TogglePacket(!Utils.isAutoVoid(heldStack), ToggleType.VOID));
+			network.sendToServer(new TogglePacket(!SNSUtils.isAutoVoid(heldStack), ToggleType.VOID));
 			mc.player.closeScreen();
 			break;
 		default:

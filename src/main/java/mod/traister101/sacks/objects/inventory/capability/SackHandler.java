@@ -1,10 +1,10 @@
 package mod.traister101.sacks.objects.inventory.capability;
 
-import static mod.traister101.sacks.ConfigSNS.General.MINERSACK;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SackType;
 import net.dries007.tfc.api.capability.size.IItemSize;
@@ -30,7 +30,7 @@ public class SackHandler extends AbstractHandler {
 		if (stack.getItem() instanceof ItemSack) return false;
 		
 		// Is the miner sack and it can't pickup non ore items
-		if (type == SackType.MINER && !MINERSACK.allowNonOre) {
+		if (type == SackType.MINER && !ConfigSNS.MINERSACK.allowNonOre) {
 			if (!(stack.getItem() instanceof ItemOreTFC || stack.getItem() instanceof ItemSmallOre)) return false;
 		}
 		// If the item is larger than normal

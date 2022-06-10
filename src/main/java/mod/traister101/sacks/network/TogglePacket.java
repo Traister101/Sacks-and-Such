@@ -3,8 +3,8 @@ package mod.traister101.sacks.network;
 import io.netty.buffer.ByteBuf;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.objects.items.ItemThrowableVessel;
-import mod.traister101.sacks.util.helper.Utils;
-import mod.traister101.sacks.util.helper.Utils.ToggleType;
+import mod.traister101.sacks.util.SNSUtils;
+import mod.traister101.sacks.util.SNSUtils.ToggleType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -64,7 +64,7 @@ public class TogglePacket implements IMessage {
 				}
 			}
 			
-			Utils.toggle(stack, message.type, message.toggle);
+			SNSUtils.toggle(stack, message.type, message.toggle);
 		}
 	}
 }

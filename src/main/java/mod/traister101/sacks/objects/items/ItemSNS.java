@@ -22,11 +22,13 @@ public class ItemSNS extends Item implements IItemSize {
 	}
 	
 	@Nonnull
+	@Override
 	public Weight getWeight(@Nonnull ItemStack stack) {
 		return weight;
 	}
 	
 	@Nonnull
+	@Override
 	public Size getSize(@Nonnull ItemStack stack) {
 		return size;
 	}

@@ -2,10 +2,9 @@ package mod.traister101.sacks.util.handlers;
 
 import java.util.Random;
 
-import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.items.ItemSack;
+import mod.traister101.sacks.util.SNSUtils;
 import mod.traister101.sacks.util.SackType;
-import mod.traister101.sacks.util.helper.Utils;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,7 +14,6 @@ import net.minecraft.network.play.server.SPacketCollectItem;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public final class PickupHandler {
@@ -30,16 +28,19 @@ public final class PickupHandler {
 			ItemStack sackStack = event.getEntityPlayer().inventory.getStackInSlot(i);
 			// Not a sack
 			if (!(sackStack.getItem() instanceof ItemSack)) continue;
+			
 			ItemSack sack = (ItemSack) sackStack.getItem();
 			SackType type = sack.getType();
+			
 			// Config pickup disabled for sack type
 			if (SackType.canTypeDoAutoPickup(type)) continue;
 			// This sack in particular has auto pickup disabled
-			if (!Utils.isAutoPickup(sackStack)) continue;
-			// Can't place in sack for any number of reasons
-			if (!canPlaceInSack(type, sack, itemPickup)) continue;
+			if (!SNSUtils.isAutoPickup(sackStack)) continue;
 			
-			IItemHandler sackInv = sackStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			IItemHandler sackInv = SNSUtils.getHandler(sackStack);
+			// Can't place in sack for any number of reasons
+			if (!canPlaceInSack(type, sackInv, itemPickup)) continue;
+			
 			for (int j = 0; j < sackInv.getSlots(); j++) {
 				if (sackInv.getStackInSlot(j).getCount() < sackInv.getSlotLimit(j)) {
 					ItemStack pickupResult = sackInv.insertItem(j, itemPickup, false);
@@ -58,7 +59,7 @@ public final class PickupHandler {
 			}
 			// If this sack has voiding enabled empty the picked up stack and finish.
 			// This means the first valid sack that has voiding enabled will void the pickup stack
-			if (Utils.isAutoVoid(sackStack)) {
+			if (SNSUtils.isAutoVoid(sackStack)) {
 				itemPickup.setCount(0);
 				playPickupSound(event);
 				return;
@@ -66,9 +67,9 @@ public final class PickupHandler {
 		}
 	}
 	
-	private static boolean canPlaceInSack(SackType type, ItemSack sack, ItemStack itemPickup) {
+	private static boolean canPlaceInSack(SackType type, IItemHandler sackInv, ItemStack itemPickup) {
 		for (int j = 0; j < SackType.getSlotCount(type); j++) {
-			if (sack.getHandler().isItemValid(j, itemPickup)) return true;
+			if (sackInv.isItemValid(j, itemPickup)) return true;
 		}
 		return false;
 	}

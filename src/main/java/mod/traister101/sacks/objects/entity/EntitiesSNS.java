@@ -13,14 +13,14 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.DataSerializerEntry;
 
-@Mod.EventBusSubscriber(modid = MODID)
-public class EntitiesSNS {
+@EventBusSubscriber(modid = MODID)
+public final class EntitiesSNS {
 	@ObjectHolder("sns:long")
 	public static final DataSerializerEntry LONG_DATA_SERIALIZER_ENTRY = Helpers.getNull();
 	
@@ -60,7 +60,6 @@ public class EntitiesSNS {
 	}
 	
 	private static void register(String name, Class<? extends Entity> cls) {
-		EntityRegistry.registerModEntity(new ResourceLocation(MODID, name), cls, name, id++,
-				SacksNSuch.getInstance(), 160, 20, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(MODID, name), cls, name, id++, SacksNSuch.getInstance(), 160, 20, true);
 	}
 }

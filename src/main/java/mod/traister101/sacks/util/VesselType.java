@@ -7,7 +7,8 @@ import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 
 public enum VesselType {
 	EXPLOSIVE,
-	STICKY;
+	STICKY,
+	TINY;
 	
 	
 	public static GuiType getGui(VesselType type) {
@@ -15,6 +16,7 @@ public enum VesselType {
 		case EXPLOSIVE:
 		case STICKY:
 			return GuiHandler.GuiType.VESSEL_EXPLOSIVE;
+		case TINY:
 		default:
 			return GuiHandler.GuiType.NULL;
 		}
@@ -26,6 +28,8 @@ public enum VesselType {
 			return EXPLOSIVE_VESSEL.enabled;
 		case STICKY:
 			return EXPLOSIVE_VESSEL.stickyEnabled && EXPLOSIVE_VESSEL.enabled;
+		case TINY:
+			return EXPLOSIVE_VESSEL.smallEnabled;
 		default:
 			return false;
 		}
