@@ -10,6 +10,9 @@ import com.google.common.collect.ImmutableList.Builder;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.util.SackType;
 import mod.traister101.sacks.util.VesselType;
+import net.dries007.tfc.objects.items.ItemsTFC;
+import net.dries007.tfc.objects.items.ceramics.ItemPottery;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent.Register;
@@ -33,7 +36,19 @@ public final class ItemsSNS {
 		return allThrowableVessels;
 	}
 	
+	// Sack items
 	public static final Item UNFINISHED_LEATHER_SACK = getNull();
+	
+	// Unfired explosive vessels
+	public static final Item UNFIRED_TINY_EXPLOSIVE_VESSEL = getNull();
+	public static final Item UNFIRED_EXPLOSIVE_VESSEL = getNull();
+	
+	// Fired explosive vessels
+	public static final Item TINY_EXPLOSIVE_VESSEL = getNull();
+	public static final Item EXPLOSIVE_VESSEL = getNull();
+	
+	
+	public static final Item STICKY_EXPLOSIVE_VESSEL = getNull();
 	
 	@SubscribeEvent
 	public static void registerItems(Register<Item> event) {
@@ -48,11 +63,19 @@ public final class ItemsSNS {
 		registerSack(registry, sacks, "miners", SackType.MINER);
 		
 		registerVessel(registry, throwableVessels, "explosive", VesselType.EXPLOSIVE);
-		registerVessel(registry, throwableVessels, "sticky", VesselType.STICKY);
-		registerVessel(registry, throwableVessels, "tiny", VesselType.TINY);
+		registerVessel(registry, throwableVessels, "sticky_explosive", VesselType.STICKY);
 		
 		if (ConfigSNS.LEATHERSACK.isEnabled) {
 			register(registry, "unfinished_leather_sack", new ItemSNS(), CT_MISC);
+		}
+		
+		if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
+			register(registry, "unfired_explosive_vessel", new ItemPottery(), CT_MISC);
+		}
+		
+		if (ConfigSNS.EXPLOSIVE_VESSEL.smallEnabled) {
+			register(registry, "unfired_tiny_explosive_vessel", new ItemPottery(), CT_MISC);
+			registerVessel(registry, throwableVessels, "tiny_explosive", VesselType.TINY);
 		}
 		
 		allSacks = sacks.build();

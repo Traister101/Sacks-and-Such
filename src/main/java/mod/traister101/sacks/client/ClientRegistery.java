@@ -22,13 +22,24 @@ public final class ClientRegistery {
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
 		// ITEMS //
-		for (ItemSack sack : ItemsSNS.getAllSacks()) registerItemRenderer(sack, 0, "inventory");
+		for (ItemSack sack : ItemsSNS.getAllSacks()) registerBasicItemRenderer(sack);
 		
-		for (ItemThrowableVessel vessel : ItemsSNS.getAllThrowableVessels()) registerItemRenderer(vessel, 0, "inventory");
+		for (ItemThrowableVessel vessel : ItemsSNS.getAllThrowableVessels()) registerBasicItemRenderer(vessel);
 		
-		if (ConfigSNS.LEATHERSACK.isEnabled) {
-			registerItemRenderer(ItemsSNS.UNFINISHED_LEATHER_SACK, 0, "inventory");
+		if (ConfigSNS.LEATHERSACK.isEnabled) registerBasicItemRenderer(ItemsSNS.UNFINISHED_LEATHER_SACK);
+		
+		if (ConfigSNS.EXPLOSIVE_VESSEL.smallEnabled) {
+			registerBasicItemRenderer(ItemsSNS.UNFIRED_TINY_EXPLOSIVE_VESSEL);
+			registerBasicItemRenderer(ItemsSNS.TINY_EXPLOSIVE_VESSEL);
 		}
+		
+		if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
+			registerBasicItemRenderer(ItemsSNS.UNFIRED_EXPLOSIVE_VESSEL);
+		}
+	}
+	
+	private static void registerBasicItemRenderer(Item item) {
+		registerItemRenderer(item, 0, "inventory");
 	}
 	
 	private static void registerItemRenderer(Item item, int meta, String id) {

@@ -13,12 +13,17 @@ import net.minecraft.item.ItemStack;
 
 public class ItemSNS extends Item implements IItemSize {
 	
-	protected Weight weight;
-	protected Size size;
+	protected final Weight weight;
+	protected final Size size;
 	
 	public ItemSNS() {
 		this.weight = Weight.LIGHT;
 		this.size = Size.NORMAL;
+	}
+	
+	public ItemSNS(Weight weight, Size size) {
+		this.weight = weight;
+		this.size = size;
 	}
 	
 	@Nonnull

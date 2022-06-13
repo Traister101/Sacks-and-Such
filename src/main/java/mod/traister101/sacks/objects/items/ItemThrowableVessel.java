@@ -37,14 +37,13 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class ItemThrowableVessel extends Item implements IItemSize {
 	
-	private final boolean isSticky;
 	private final VesselType type;
 	private VesselHandler handler;
 	
 	public ItemThrowableVessel(@Nonnull VesselType type) {
-		if (type == VesselType.STICKY) {
-			this.isSticky = true;
-		} else this.isSticky = false;
+		if (type == VesselType.TINY) {
+			setMaxStackSize(16);
+		} else setMaxStackSize(1);
 		this.type = type;
 	}
 	
@@ -90,7 +89,7 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 				SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 		
 		if (!worldIn.isRemote) {
-			EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, calculateStrength(), isSticky);
+			EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, calculateStrength(), type);
 			entityVessel.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
 			worldIn.spawnEntity(entityVessel);
 		}
@@ -124,7 +123,8 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-		return new VesselHandler(nbt, type);
+		handler = new VesselHandler(nbt, type);
+		return handler;
 	}
 	
 	@Override
@@ -140,17 +140,17 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 	@Nonnull
 	@Override
 	public Size getSize(@Nonnull ItemStack stack) {
-		return type == VesselType.TINY ? Size.LARGE : Size.NORMAL;
+		return type == VesselType.TINY ? Size.NORMAL : Size.LARGE;
 	}
 	
 	@Nonnull
 	@Override
 	public Weight getWeight(@Nonnull ItemStack stack) {
-		return type == VesselType.TINY ? Weight.VERY_HEAVY : Weight.MEDIUM;
+		return type == VesselType.TINY ? Weight.LIGHT : Weight.VERY_HEAVY;
 	}
 	
 	@Override
 	public boolean canStack(@Nonnull ItemStack stack) {
-		return type == VesselType.TINY ? false : true;
+		return type == VesselType.TINY ? true : false;
 	}
 }

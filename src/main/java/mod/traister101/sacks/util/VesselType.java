@@ -25,9 +25,9 @@ public enum VesselType {
 	public static boolean isEnabled(VesselType type) {
 		switch (type) {
 		case EXPLOSIVE:
-			return EXPLOSIVE_VESSEL.enabled;
+			return EXPLOSIVE_VESSEL.isEnabled;
 		case STICKY:
-			return EXPLOSIVE_VESSEL.stickyEnabled && EXPLOSIVE_VESSEL.enabled;
+			return EXPLOSIVE_VESSEL.stickyEnabled && EXPLOSIVE_VESSEL.isEnabled;
 		case TINY:
 			return EXPLOSIVE_VESSEL.smallEnabled;
 		default:

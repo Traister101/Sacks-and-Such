@@ -15,7 +15,7 @@ public final class ExplosiveVessel {
 	@RequiresMcRestart
 	@LangKey(LANG_KEY + ".enabled")
 	@Comment("Enable or disable the explosive vessel")
-	public boolean enabled = true;
+	public boolean isEnabled = true;
 	
 	@RequiresMcRestart
 	@LangKey(LANG_KEY + ".sticky")
