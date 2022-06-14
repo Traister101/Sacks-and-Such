@@ -18,7 +18,6 @@ import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
 import net.dries007.tfc.api.capability.size.Weight;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -100,7 +99,7 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 	}
 	
 	private final float calculateStrength() {
-		if (type == VesselType.TINY) return 2;
+		if (type == VesselType.TINY) return (float) ConfigSNS.EXPLOSIVE_VESSEL.smallPower;
 		
 		final int count = handler.getStackInSlot(0).getCount();
 		final double multiplier = ConfigSNS.EXPLOSIVE_VESSEL.explosionMultiplier;
@@ -110,12 +109,11 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 	
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		if (type == VesselType.TINY) return;
+		
 		String text = SacksNSuch.MODID + ".explosive_vessel.tooltip";
-		if (GuiScreen.isShiftKeyDown()) {
-			if (SNSUtils.isSealed(stack)) {
-				text += ".sealed";
-			}
-			text += ".shift";
+		if (SNSUtils.isSealed(stack)) {
+			text += ".sealed";
 		}
 		tooltip.add(I18n.format(text));
 	}

@@ -2,7 +2,8 @@ package mod.traister101.sacks.client;
 
 import static mod.traister101.sacks.SacksNSuch.MODID;
 
-import mod.traister101.sacks.ConfigSNS;
+import mod.traister101.sacks.client.render.projectile.RenderThrownVessel;
+import mod.traister101.sacks.objects.entity.projectile.EntityExplosiveVessel;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.objects.items.ItemThrowableVessel;
 import mod.traister101.sacks.objects.items.ItemsSNS;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,6 +21,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @EventBusSubscriber(value = Side.CLIENT, modid = MODID)
 public final class ClientRegistery {
 	
+	public static void preInit() {
+		RenderingRegistry.registerEntityRenderingHandler(EntityExplosiveVessel.class, RenderThrownVessel::new);
+	}
+	
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
 		// ITEMS //
@@ -26,16 +32,19 @@ public final class ClientRegistery {
 		
 		for (ItemThrowableVessel vessel : ItemsSNS.getAllThrowableVessels()) registerBasicItemRenderer(vessel);
 		
-		if (ConfigSNS.LEATHERSACK.isEnabled) registerBasicItemRenderer(ItemsSNS.UNFINISHED_LEATHER_SACK);
+		for (Item item : ItemsSNS.getAllSimpleItems()) registerBasicItemRenderer(item);
 		
-		if (ConfigSNS.EXPLOSIVE_VESSEL.smallEnabled) {
-			registerBasicItemRenderer(ItemsSNS.UNFIRED_TINY_EXPLOSIVE_VESSEL);
-			registerBasicItemRenderer(ItemsSNS.TINY_EXPLOSIVE_VESSEL);
-		}
-		
-		if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
-			registerBasicItemRenderer(ItemsSNS.UNFIRED_EXPLOSIVE_VESSEL);
-		}
+//		if (ConfigSNS.LEATHERSACK.isEnabled) registerBasicItemRenderer(ItemsSNS.UNFINISHED_LEATHER_SACK);
+//		
+//		if (ConfigSNS.EXPLOSIVE_VESSEL.smallEnabled) {
+//			registerBasicItemRenderer(ItemsSNS.UNFIRED_TINY_VESSEL);
+//			registerBasicItemRenderer(ItemsSNS.FIRED_TINY_VESSEL);
+//			registerBasicItemRenderer(ItemsSNS.TINY_EXPLOSIVE_VESSEL);
+//		}
+//		
+//		if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
+//			registerBasicItemRenderer(ItemsSNS.UNFIRED_EXPLOSIVE_VESSEL);
+//		}
 	}
 	
 	private static void registerBasicItemRenderer(Item item) {

@@ -25,8 +25,10 @@ public class ConditionalFactory implements IConditionFactory {
 			return () -> BURLAPSACK.isEnabled;
 		case "miner_sack":
 			return () -> MINERSACK.isEnabled;
-		case "tiny_explosive_vessel":
+		case "tiny_vessel":
 			return () -> EXPLOSIVE_VESSEL.isEnabled && EXPLOSIVE_VESSEL.smallEnabled;
+		case "sticky_vessel":
+			return () -> EXPLOSIVE_VESSEL.isEnabled && EXPLOSIVE_VESSEL.stickyEnabled;
 		// If a recipe uses the mod conditional but doesn't have a valid config key it won't work
 		default:
 			return () -> false;

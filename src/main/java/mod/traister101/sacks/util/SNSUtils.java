@@ -1,9 +1,7 @@
 package mod.traister101.sacks.util;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.objects.items.ItemThrowableVessel;
 import net.minecraft.item.ItemStack;

@@ -10,9 +10,7 @@ import com.google.common.collect.ImmutableList.Builder;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.util.SackType;
 import mod.traister101.sacks.util.VesselType;
-import net.dries007.tfc.objects.items.ItemsTFC;
 import net.dries007.tfc.objects.items.ceramics.ItemPottery;
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent.Register;
@@ -26,7 +24,12 @@ import net.minecraftforge.registries.IForgeRegistry;
 public final class ItemsSNS {
 	
 	private static ImmutableList<ItemSack> allSacks;
+	private static ImmutableList<Item> allSimpleItems;
 	private static ImmutableList<ItemThrowableVessel> allThrowableVessels;
+	
+	public static ImmutableList<Item> getAllSimpleItems() {
+		return allSimpleItems;
+	}
 	
 	public static ImmutableList<ItemSack> getAllSacks() {
 		return allSacks;
@@ -40,20 +43,22 @@ public final class ItemsSNS {
 	public static final Item UNFINISHED_LEATHER_SACK = getNull();
 	
 	// Unfired explosive vessels
-	public static final Item UNFIRED_TINY_EXPLOSIVE_VESSEL = getNull();
+	public static final Item UNFIRED_TINY_VESSEL = getNull();
 	public static final Item UNFIRED_EXPLOSIVE_VESSEL = getNull();
 	
 	// Fired explosive vessels
+	public static final Item FIRED_TINY_VESSEL = getNull();
+	
+	// Vessels
 	public static final Item TINY_EXPLOSIVE_VESSEL = getNull();
 	public static final Item EXPLOSIVE_VESSEL = getNull();
-	
-	
 	public static final Item STICKY_EXPLOSIVE_VESSEL = getNull();
 	
 	@SubscribeEvent
 	public static void registerItems(Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
 		Builder<ItemSack> sacks = ImmutableList.builder();
+		Builder<Item> simpleItems = ImmutableList.builder();
 		Builder<ItemThrowableVessel> throwableVessels = ImmutableList.builder();
 		
 		registerSack(registry, sacks, "thatch", SackType.THATCH);
@@ -66,19 +71,21 @@ public final class ItemsSNS {
 		registerVessel(registry, throwableVessels, "sticky_explosive", VesselType.STICKY);
 		
 		if (ConfigSNS.LEATHERSACK.isEnabled) {
-			register(registry, "unfinished_leather_sack", new ItemSNS(), CT_MISC);
+			registerSimpleItem(registry, simpleItems, "unfinished_leather_sack", new ItemSNS());
 		}
 		
 		if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
-			register(registry, "unfired_explosive_vessel", new ItemPottery(), CT_MISC);
+			registerSimpleItem(registry, simpleItems, "unfired_explosive_vessel", new ItemPottery());
 		}
 		
 		if (ConfigSNS.EXPLOSIVE_VESSEL.smallEnabled) {
-			register(registry, "unfired_tiny_explosive_vessel", new ItemPottery(), CT_MISC);
+			registerSimpleItem(registry, simpleItems, "unfired_tiny_vessel", new ItemPottery());
 			registerVessel(registry, throwableVessels, "tiny_explosive", VesselType.TINY);
+			registerSimpleItem(registry, simpleItems, "fired_tiny_vessel", new ItemPottery());
 		}
 		
 		allSacks = sacks.build();
+		allSimpleItems = simpleItems.build();
 		allThrowableVessels = throwableVessels.build();
 	}
 	
@@ -88,6 +95,10 @@ public final class ItemsSNS {
 	
 	private static void registerVessel(IForgeRegistry<Item> registry, Builder<ItemThrowableVessel> throwableVessels, String name, VesselType type) {
 		if (VesselType.isEnabled(type)) throwableVessels.add(register(registry, name + "_vessel", new ItemThrowableVessel(type), CT_MISC));
+	}
+	
+	private static void registerSimpleItem(IForgeRegistry<Item> registry, Builder<Item> simpleItems, String name, Item item) {
+		simpleItems.add(register(registry, name, item, CT_MISC));
 	}
 	
 	private static <T extends Item> T register(IForgeRegistry<Item> registry, String name, T item, CreativeTabs ct) {

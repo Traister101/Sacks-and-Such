@@ -1,11 +1,10 @@
-package mod.traister101.sacks.util.handlers;
+package mod.traister101.sacks.util;
 
 import static mod.traister101.sacks.SacksNSuch.MODID;
 
 import javax.annotation.Nonnull;
 
 import mod.traister101.sacks.ConfigSNS;
-import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.items.ItemsSNS;
 import net.dries007.tfc.api.recipes.heat.HeatRecipe;
 import net.dries007.tfc.api.recipes.heat.HeatRecipeSimple;
@@ -56,10 +55,8 @@ public final class RecipeRegistry {
 	public static void onRegisterHeatRecipeEvent(Register<HeatRecipe> event) {
 		IForgeRegistry<HeatRecipe> recipeRegistry = event.getRegistry();
 		
-		heatRecipe(recipeRegistry, ItemsSNS.UNFIRED_TINY_EXPLOSIVE_VESSEL, ItemsSNS.TINY_EXPLOSIVE_VESSEL);
-		SacksNSuch.getLog().info("First heat recipe");
+		heatRecipe(recipeRegistry, ItemsSNS.UNFIRED_TINY_VESSEL, ItemsSNS.FIRED_TINY_VESSEL);
 		heatRecipe(recipeRegistry, ItemsSNS.UNFIRED_EXPLOSIVE_VESSEL, ItemsSNS.EXPLOSIVE_VESSEL);
-		SacksNSuch.getLog().info("Second heat recipe");
 	}
 	
 	private static void heatRecipe (IForgeRegistry<HeatRecipe> recipeRegistry, @Nonnull Item itemInput, @Nonnull Item itemOutput) {

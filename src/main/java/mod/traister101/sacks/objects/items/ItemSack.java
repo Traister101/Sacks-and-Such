@@ -66,7 +66,7 @@ public class ItemSack extends Item implements IItemSize {
 			if (SNSUtils.isAutoVoid(stack)) {
 				text += ".void";
 			}
-			if (!SNSUtils.isAutoPickup(stack)) {
+			if (SNSUtils.isAutoPickup(stack)) {
 				text += ".pickup";
 			}
 			text += ".shift";

@@ -3,6 +3,7 @@ package mod.traister101.sacks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import mod.traister101.sacks.client.ClientRegistery;
 import mod.traister101.sacks.network.RenamePacket;
 import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.entity.EntitiesSNS;
@@ -45,7 +46,6 @@ public final class SacksNSuch {
     
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-    	log.info(MODID + " is loading");
     	NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
         int id = 0;
@@ -54,8 +54,12 @@ public final class SacksNSuch {
     	// Only register pickup handler if auto pickup is enabled
     	if (ConfigSNS.GLOBAL.doPickup) {
     		MinecraftForge.EVENT_BUS.register(new PickupHandler());
-    		log.info("Sacks of all types won't have autopickup");
-    	}
+    	} else log.info("Sacks of all types won't have autopickup");
+    	
     	EntitiesSNS.preInit();
+    	
+    	if (event.getSide().isClient()) {
+    		ClientRegistery.preInit();
+    	}
     }
 }

@@ -33,4 +33,9 @@ public final class ExplosiveVessel {
 	@Comment("Multiplier for explosion power" + "Use high values with caution the multiplier is applied last")
 	public double explosionMultiplier = 1;
 	
+	@SlidingOption
+	@RangeDouble(min = 0, max = 5)
+	@LangKey(LANG_KEY + ".small_power")
+	@Comment("The explosion power of the tiny vessel")
+	public double smallPower = 2;
 }

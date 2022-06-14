@@ -2,14 +2,18 @@ package mod.traister101.sacks.util;
 
 import static mod.traister101.sacks.ConfigSNS.EXPLOSIVE_VESSEL;
 
+import javax.annotation.Nonnull;
+
 import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 
 public enum VesselType {
 	EXPLOSIVE,
 	STICKY,
-	TINY;
+	TINY,
+	NULL;
 	
+	private static final VesselType[] values = values();
 	
 	public static GuiType getGui(VesselType type) {
 		switch (type) {
@@ -33,5 +37,10 @@ public enum VesselType {
 		default:
 			return false;
 		}
+	}
+	
+	@Nonnull
+	public static VesselType valueOf(int id) {
+		return id < 0 || id >= values.length ? NULL : values[id];
 	}
 }
