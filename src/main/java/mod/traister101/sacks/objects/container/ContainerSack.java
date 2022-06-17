@@ -22,9 +22,7 @@ public class ContainerSack extends AbstractContainerRenameable {
         addPlayerInventorySlots(playerInv);
     }
 	
-	// Don't care about warning, needs a type to make the container
 	@Override
-	@SuppressWarnings(value = "incomplete-switch")
 	protected void addContainerSlots() {
 		IItemHandler inventory = heldStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		if (inventory instanceof SackHandler) {

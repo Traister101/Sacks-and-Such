@@ -2,6 +2,8 @@ package mod.traister101.sacks.util.handlers;
 
 import java.util.Random;
 
+import javax.annotation.Nonnull;
+
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SNSUtils;
 import mod.traister101.sacks.util.SackType;
@@ -44,7 +46,7 @@ public final class PickupHandler {
 			for (int j = 0; j < sackInv.getSlots(); j++) {
 				if (sackInv.getStackInSlot(j).getCount() < sackInv.getSlotLimit(j)) {
 					ItemStack pickupResult = sackInv.insertItem(j, itemPickup, false);
-					int numPickedUp = itemPickup.getCount() - pickupResult.getCount();
+					final int numPickedUp = itemPickup.getCount() - pickupResult.getCount();
 					event.getItem().setItem(pickupResult);
 					
 					if (numPickedUp > 0) {
@@ -67,7 +69,7 @@ public final class PickupHandler {
 		}
 	}
 	
-	private static boolean canPlaceInSack(SackType type, IItemHandler sackInv, ItemStack itemPickup) {
+	private static boolean canPlaceInSack(@Nonnull SackType type, @Nonnull IItemHandler sackInv, @Nonnull ItemStack itemPickup) {
 		for (int j = 0; j < SackType.getSlotCount(type); j++) {
 			if (sackInv.isItemValid(j, itemPickup)) return true;
 		}
@@ -75,7 +77,7 @@ public final class PickupHandler {
 	}
 	
 	// Tops off stuff in player inventory
-	private static boolean topsOffPlayerInventory(EntityItemPickupEvent event, ItemStack stack) {
+	private static boolean topsOffPlayerInventory(@Nonnull EntityItemPickupEvent event, @Nonnull ItemStack stack) {
 		// Add to player inventory first, if there is an incomplete stack in there.
 		for (int i = 0; i < event.getEntityPlayer().inventory.getSizeInventory(); i++) {
 			ItemStack inventoryStack = event.getEntityPlayer().inventory.getStackInSlot(i);
@@ -104,7 +106,7 @@ public final class PickupHandler {
 	}
 	
 	// Take a guess
-	private static void playPickupSound(EntityItemPickupEvent event) {
+	private static void playPickupSound(@Nonnull EntityItemPickupEvent event) {
 		event.setCanceled(true);
 		EntityItem itemEntity = event.getItem();
 		if (!itemEntity.isSilent()) {

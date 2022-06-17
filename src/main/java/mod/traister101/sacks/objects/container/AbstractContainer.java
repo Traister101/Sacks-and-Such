@@ -37,38 +37,21 @@ public abstract class AbstractContainer extends Container {
 		boolean flag = false;
 		int i = startIndex;
 		
-		if (reverseDirection) {
-			i = endIndex - 1;
-		}
+		if (reverseDirection) i = endIndex - 1;
 		
 		while (!stackIn.isEmpty()) {
 			if (reverseDirection) {
-				if (i < startIndex)
-					break;
-			} else {
-				if (i >= endIndex)
-					break;
-			}
+				if (i < startIndex) break;
+			} else if (i >= endIndex) break;
 			
 			Slot slot = inventorySlots.get(i);
 			ItemStack itemStack = slot.getStack();
 			
 			if (!itemStack.isEmpty() && itemStack.getItem() == stackIn.getItem() && (stackIn.getMetadata() == itemStack.getMetadata()) && ItemStack.areItemStackTagsEqual(stackIn, itemStack)) {
-				int totalSize = itemStack.getCount() + stackIn.getCount();
-				int maxSize = slot.getItemStackLimit(itemStack);
-				// TODO max size should split stacks into smaller stacks
-//				if (maxSize > itemStack.getMaxStackSize()) maxSize = itemStack.getMaxStackSize();
 				
-				if (totalSize <= maxSize) {
-					stackIn.setCount(0);
-					itemStack.setCount(totalSize);
-					slot.onSlotChanged();
+				if (fillStack(stackIn, slot)) {
 					flag = true;
-				} else if (itemStack.getCount() < maxSize) {
-					stackIn.shrink(maxSize - itemStack.getCount());
-					itemStack.setCount(maxSize);
-					slot.onSlotChanged();
-					flag = true;
+					break;
 				}
 			}
 			i += (reverseDirection) ? -1 : 1;
@@ -77,28 +60,15 @@ public abstract class AbstractContainer extends Container {
 		if (!stackIn.isEmpty()) {
 			if (reverseDirection) {
 				i = endIndex - 1;
-			} else {
-				i = startIndex;
-			}
+			} else i = startIndex;
+			
 			while (true) {
 				if (reverseDirection) {
-					if (i < startIndex)
-						break;
-				} else {
-					if (i >= endIndex)
-						break;
-				}
+					if (i < startIndex) break;
+				} else if (i >= endIndex) break;
 				
-				Slot slot1 = inventorySlots.get(i);
-				ItemStack itemstack1 = slot1.getStack();
-				
-				if (itemstack1.isEmpty() && slot1.isItemValid(stackIn)) {
-					if (stackIn.getCount() > slot1.getItemStackLimit(stackIn)) {
-						slot1.putStack(stackIn.splitStack(slot1.getItemStackLimit(stackIn)));
-					} else {
-						slot1.putStack(stackIn.splitStack(stackIn.getCount()));
-					}
-					slot1.onSlotChanged();
+				Slot slot = getSlot(i);
+				if (moveStack(stackIn, slot)) {
 					flag = true;
 					break;
 				}
@@ -106,6 +76,51 @@ public abstract class AbstractContainer extends Container {
 			}
 		}
 		return flag;
+	}
+	
+	// Splits input stack, and returns a stack of the max size
+	private ItemStack splitStack(ItemStack stackIn, int maxStackSize) {
+		ItemStack returnStack;
+		returnStack = stackIn.copy();
+		returnStack.setCount(maxStackSize);
+		stackIn.shrink(maxStackSize);
+		return returnStack;
+	}
+	
+	// Private method to easily move a stack to a slot
+	private boolean moveStack(ItemStack stackIn, Slot slot) {
+		ItemStack itemstack = slot.getStack();
+		
+		boolean bool = false;
+		if (itemstack.isEmpty() && slot.isItemValid(stackIn)) {
+			if (stackIn.getCount() > slot.getItemStackLimit(stackIn)) {
+				slot.putStack(stackIn.splitStack(slot.getItemStackLimit(stackIn)));
+			} else slot.putStack(stackIn.splitStack(stackIn.getCount()));
+			slot.onSlotChanged();
+			bool = true;
+		}
+		return bool;
+	}
+	
+	// Private method to easily fill a container item stack
+	private boolean fillStack(ItemStack stackIn, Slot slot) {
+		ItemStack itemStack = slot.getStack();
+		int totalSize = itemStack.getCount() + stackIn.getCount();
+		int maxSize = slot.getItemStackLimit(itemStack);
+		
+		boolean bool = false;
+		if (totalSize <= maxSize) {
+			stackIn.setCount(0);
+			itemStack.setCount(totalSize);
+			slot.onSlotChanged();
+			bool = true;
+		} else if (itemStack.getCount() < maxSize) {
+			stackIn.shrink(maxSize - itemStack.getCount());
+			itemStack.setCount(maxSize);
+			slot.onSlotChanged();
+			bool = true;
+		}
+		return bool;
 	}
 	
 	@Nonnull
@@ -116,11 +131,11 @@ public abstract class AbstractContainer extends Container {
 		// Prevent moving of the item stack that is currently open
 		if (slotID == itemIndex) return ItemStack.EMPTY;
 		// Vanilla slot
-		if (slotID > slotAmount) return super.slotClick(slotID, dragType, clickType, player);
+		if (slotID > slotAmount - 1) return super.slotClick(slotID, dragType, clickType, player);
  		// Shift click, vanilla method works fine
  		if (clickType == ClickType.QUICK_MOVE) return super.slotClick(slotID, dragType, clickType, player);
 		
-		Slot slot = inventorySlots.get(slotID);
+		Slot slot = getSlot(slotID);
 		ItemStack slotStack = slot.getStack();
 		// Slot is empty give to vanilla
 		if (slotStack.isEmpty()) return super.slotClick(slotID, dragType, clickType, player);
@@ -169,7 +184,8 @@ public abstract class AbstractContainer extends Container {
 		return itemstack;
 	}
 	
-	private ItemStack takeFromStack(ItemStack slotStack, InventoryPlayer playerInventory, int dragType) {
+	@Nonnull
+	private ItemStack takeFromStack(@Nonnull ItemStack slotStack, @Nonnull InventoryPlayer playerInventory, int dragType) {
 		int amount = slotStack.getMaxStackSize();
 		if (dragType == 1) amount = amount / 2;
 		
@@ -180,7 +196,8 @@ public abstract class AbstractContainer extends Container {
 		return slotStack;
 	}
 	
-	private ItemStack addToStack(ItemStack slotStack, InventoryPlayer playerInventory, int dragType, int stackCap) {
+	@Nonnull
+	private ItemStack addToStack(@Nonnull ItemStack slotStack, @Nonnull InventoryPlayer playerInventory, int dragType, int stackCap) {
 		if (!slotStack.isStackable()) return slotStack;
 		// Slot stack less or equal to slot cap
 		if (slotStack.getCount() <= stackCap) {

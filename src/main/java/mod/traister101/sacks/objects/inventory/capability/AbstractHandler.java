@@ -141,7 +141,5 @@ public abstract class AbstractHandler extends ItemStackHandler implements ICapab
 	public abstract boolean isItemValid(int slot, @Nonnull ItemStack stack);
 	
 	@Override
-	public void onContentsChanged(int slot) {
-		
-	}
+	public void onContentsChanged(int slot) {}
 }

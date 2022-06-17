@@ -22,4 +22,8 @@ public final class Global {
 	@LangKey(LANG_KEY + ".glint_toggle")
 	@Comment("This swaps the enchant glint from showing when a sack is voiding to when it's on autopickup")
 	public boolean voidGlint = true;
+	
+	@LangKey(LANG_KEY + ".all_pickup_ore")
+	@Comment("This makes all sack types capable of holding ore")
+	public boolean allAllowOre = false;
 }

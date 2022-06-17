@@ -38,7 +38,7 @@ public class ItemSack extends Item implements IItemSize {
 	private Weight weight;
 	private Size size;
 	
-	public ItemSack(SackType type) {
+	public ItemSack(@Nonnull SackType type) {
 		setWeight(Weight.MEDIUM);
 		setSize(Size.NORMAL);
 		setMaxStackSize(1);
