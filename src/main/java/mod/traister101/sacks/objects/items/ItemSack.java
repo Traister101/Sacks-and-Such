@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.SacksNSuch;
-import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.util.SNSUtils;
 import mod.traister101.sacks.util.SNSUtils.ToggleType;
@@ -16,7 +15,6 @@ import mod.traister101.sacks.util.handlers.GuiHandler;
 import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
 import net.dries007.tfc.api.capability.size.Weight;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -27,7 +25,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
@@ -49,14 +46,16 @@ public class ItemSack extends Item implements IItemSize {
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		ItemStack heldStack = playerIn.getHeldItem(handIn);
 		if (!worldIn.isRemote) {
+			
 			if (playerIn.isSneaking()) {
-				SacksNSuch.getNetwork().sendToServer(new TogglePacket(!SNSUtils.isAutoPickup(heldStack), ToggleType.PICKUP));
-				TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".sack.auto_pickup." + (SNSUtils.isAutoPickup(heldStack) ? "disabled" : "enabled"));
-				Minecraft.getMinecraft().player.sendStatusMessage(statusMessage, true);
-			}
-			if (!playerIn.isSneaking()) GuiHandler.openGui(worldIn, playerIn, SackType.getGui(type));
+				if (ConfigSNS.GLOBAL.shiftClickTogglesVoid) {
+					SNSUtils.sendPacketAndStatus(SNSUtils.isAutoVoid(heldStack), ToggleType.VOID);
+				} else {
+					SNSUtils.sendPacketAndStatus(SNSUtils.isAutoPickup(heldStack), ToggleType.PICKUP);
+				}
+			} else GuiHandler.openGui(worldIn, playerIn, SackType.getGui(type));
 		}
-		return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+		return new ActionResult<>(EnumActionResult.FAIL, heldStack);
 	}
 	
 	@Override

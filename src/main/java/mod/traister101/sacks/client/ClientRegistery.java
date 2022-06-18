@@ -33,18 +33,6 @@ public final class ClientRegistery {
 		for (ItemThrowableVessel vessel : ItemsSNS.getAllThrowableVessels()) registerBasicItemRenderer(vessel);
 		
 		for (Item item : ItemsSNS.getAllSimpleItems()) registerBasicItemRenderer(item);
-		
-//		if (ConfigSNS.LEATHERSACK.isEnabled) registerBasicItemRenderer(ItemsSNS.UNFINISHED_LEATHER_SACK);
-//		
-//		if (ConfigSNS.EXPLOSIVE_VESSEL.smallEnabled) {
-//			registerBasicItemRenderer(ItemsSNS.UNFIRED_TINY_VESSEL);
-//			registerBasicItemRenderer(ItemsSNS.FIRED_TINY_VESSEL);
-//			registerBasicItemRenderer(ItemsSNS.TINY_EXPLOSIVE_VESSEL);
-//		}
-//		
-//		if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
-//			registerBasicItemRenderer(ItemsSNS.UNFIRED_EXPLOSIVE_VESSEL);
-//		}
 	}
 	
 	private static void registerBasicItemRenderer(Item item) {

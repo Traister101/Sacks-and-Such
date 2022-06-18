@@ -12,7 +12,7 @@ public class VesselHandler extends AbstractHandler {
 	
 	private final VesselType type;
 	
-	public VesselHandler(@Nullable NBTTagCompound nbt, VesselType type) {
+	public VesselHandler(@Nullable NBTTagCompound nbt, @Nonnull VesselType type) {
 		super(nbt, 1, 256);
 		this.type = type;
 	}

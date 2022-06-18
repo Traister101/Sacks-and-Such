@@ -26,4 +26,8 @@ public final class Global {
 	@LangKey(LANG_KEY + ".all_pickup_ore")
 	@Comment("This makes all sack types capable of holding ore")
 	public boolean allAllowOre = false;
+	
+	@LangKey(LANG_KEY + "shift_toggles_void")
+	@Comment("This determins wheather shift right click toggles item voiding or item pickup for sacks")
+	public boolean shiftClickTogglesVoid = false;
 }

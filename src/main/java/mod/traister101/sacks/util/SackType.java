@@ -1,9 +1,9 @@
 package mod.traister101.sacks.util;
 
-import static mod.traister101.sacks.ConfigSNS.BURLAPSACK;
-import static mod.traister101.sacks.ConfigSNS.LEATHERSACK;
-import static mod.traister101.sacks.ConfigSNS.MINERSACK;
-import static mod.traister101.sacks.ConfigSNS.THATCHSACK;
+import static mod.traister101.sacks.ConfigSNS.BURLAP_SACK;
+import static mod.traister101.sacks.ConfigSNS.LEATHER_SACK;
+import static mod.traister101.sacks.ConfigSNS.MINER_SACK;
+import static mod.traister101.sacks.ConfigSNS.THATCH_SACK;
 
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 import net.dries007.tfc.api.capability.size.Size;
@@ -38,30 +38,15 @@ public enum SackType {
 	public static int getStackCap(SackType type) {
 		switch (type) {
 		case THATCH:
-			return THATCHSACK.slotCap;
+			return THATCH_SACK.slotCap;
 		case LEATHER:
-			return LEATHERSACK.slotCap;
+			return LEATHER_SACK.slotCap;
 		case BURLAP:
-			return BURLAPSACK.slotCap;
+			return BURLAP_SACK.slotCap;
 		case MINER:
-			return MINERSACK.slotCap;
+			return MINER_SACK.slotCap;
 		default:
 			return 0;
-		}
-	}
-	
-	public static boolean isEnabled(SackType type) {
-		switch (type) {
-		case THATCH:
-			return THATCHSACK.isEnabled;
-		case LEATHER:
-			return LEATHERSACK.isEnabled;
-		case BURLAP:
-			return BURLAPSACK.isEnabled;
-		case MINER:
-			return MINERSACK.isEnabled;
-		default:
-			return false;
 		}
 	}
 	
@@ -69,16 +54,16 @@ public enum SackType {
 		boolean bool;
 		switch (type) {
 		case THATCH:
-			bool = THATCHSACK.doPickup;
+			bool = THATCH_SACK.doPickup;
 			break;
 		case BURLAP:
-			bool = BURLAPSACK.doPickup;
+			bool = BURLAP_SACK.doPickup;
 			break;
 		case LEATHER:
-			bool = LEATHERSACK.doPickup;
+			bool = LEATHER_SACK.doPickup;
 			break;
 		case MINER:
-			bool = MINERSACK.doPickup;
+			bool = MINER_SACK.doPickup;
 			break;
 		default:
 			bool = false;
@@ -100,17 +85,17 @@ public enum SackType {
 			return GuiType.NULL;
 		}
 	}
-
+	
 	public static Size getSlotSize(SackType type) {
 		switch (type) {
 		case THATCH:
-			return THATCHSACK.allowedSize;
+			return THATCH_SACK.allowedSize;
 		case BURLAP:
-			return BURLAPSACK.allowedSize;
+			return BURLAP_SACK.allowedSize;
 		case LEATHER:
-			return LEATHERSACK.allowedSize;
+			return LEATHER_SACK.allowedSize;
 		case MINER:
-			return MINERSACK.allowedSize;
+			return MINER_SACK.allowedSize;
 		default:
 			return Size.NORMAL;
 		}

@@ -28,19 +28,19 @@ public final class ConfigSNS {
 	
 	@Comment("Config for thatch sack")
 	@LangKey(LANG_KEY + ".thatch_sack")
-	public static final ThatchSack THATCHSACK = new ThatchSack();
+	public static final ThatchSack THATCH_SACK = new ThatchSack();
 	
 	@Comment("Config for burlap sack")
 	@LangKey(LANG_KEY + ".burlap_sack")
-	public static final BurlapSack BURLAPSACK = new BurlapSack();
+	public static final BurlapSack BURLAP_SACK = new BurlapSack();
 	
 	@Comment("Config for leather sack")
 	@LangKey(LANG_KEY + ".leather_sack")
-	public static final LeatherSack LEATHERSACK = new LeatherSack();
+	public static final LeatherSack LEATHER_SACK = new LeatherSack();
 	
 	@Comment("Config for miners sack")
 	@LangKey(LANG_KEY + ".miner_sack")
-	public static final MinerSack MINERSACK = new MinerSack();
+	public static final MinerSack MINER_SACK = new MinerSack();
 	
 	@Comment("Explosive vessel config")
 	@LangKey(LANG_KEY + ".explosive_vessel")

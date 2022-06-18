@@ -1,7 +1,5 @@
 package mod.traister101.sacks.util;
 
-import static mod.traister101.sacks.ConfigSNS.EXPLOSIVE_VESSEL;
-
 import javax.annotation.Nonnull;
 
 import mod.traister101.sacks.util.handlers.GuiHandler;
@@ -23,19 +21,6 @@ public enum VesselType {
 		case TINY:
 		default:
 			return GuiHandler.GuiType.NULL;
-		}
-	}
-
-	public static boolean isEnabled(VesselType type) {
-		switch (type) {
-		case EXPLOSIVE:
-			return EXPLOSIVE_VESSEL.isEnabled;
-		case STICKY:
-			return EXPLOSIVE_VESSEL.stickyEnabled && EXPLOSIVE_VESSEL.isEnabled;
-		case TINY:
-			return EXPLOSIVE_VESSEL.smallEnabled;
-		default:
-			return false;
 		}
 	}
 	

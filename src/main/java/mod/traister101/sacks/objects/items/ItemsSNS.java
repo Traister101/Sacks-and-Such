@@ -2,7 +2,6 @@ package mod.traister101.sacks.objects.items;
 
 import static mod.traister101.sacks.SacksNSuch.MODID;
 import static mod.traister101.sacks.util.SNSUtils.getNull;
-import static net.dries007.tfc.objects.CreativeTabsTFC.CT_MISC;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -10,6 +9,7 @@ import com.google.common.collect.ImmutableList.Builder;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.util.SackType;
 import mod.traister101.sacks.util.VesselType;
+import net.dries007.tfc.objects.CreativeTabsTFC;
 import net.dries007.tfc.objects.items.ceramics.ItemPottery;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -61,27 +61,35 @@ public final class ItemsSNS {
 		Builder<Item> simpleItems = ImmutableList.builder();
 		Builder<ItemThrowableVessel> throwableVessels = ImmutableList.builder();
 		
-		registerSack(registry, sacks, "thatch", SackType.THATCH);
-		registerSack(registry, sacks, "leather", SackType.LEATHER);
-//		registerSack(registry, sacks, "food", SackType.FOOD);
-		registerSack(registry, sacks, "burlap", SackType.BURLAP);
-		registerSack(registry, sacks, "miners", SackType.MINER);
-		
-		registerVessel(registry, throwableVessels, "explosive", VesselType.EXPLOSIVE);
-		registerVessel(registry, throwableVessels, "sticky_explosive", VesselType.STICKY);
-		
-		if (ConfigSNS.LEATHERSACK.isEnabled) {
-			registerSimpleItem(registry, simpleItems, "unfinished_leather_sack", new ItemSNS());
+		if (ConfigSNS.THATCH_SACK.isEnabled) {
+			sacks.add(registerSack(registry, "thatch", SackType.THATCH));
 		}
 		
+		if (ConfigSNS.LEATHER_SACK.isEnabled) {
+			sacks.add(registerSack(registry, "leather", SackType.LEATHER));
+			simpleItems.add(register(registry, "unfinished_leather_sack"));
+		}
+		
+		if (ConfigSNS.BURLAP_SACK.isEnabled) {
+			sacks.add(registerSack(registry, "burlap", SackType.BURLAP));
+		}
+		
+		if (ConfigSNS.MINER_SACK.isEnabled) {
+			sacks.add(registerSack(registry, "miners", SackType.MINER));
+		}
+		
+//		registerSack(registry, sacks, "food", SackType.FOOD);
+		
 		if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
-			registerSimpleItem(registry, simpleItems, "unfired_explosive_vessel", new ItemPottery());
+			throwableVessels.add(registerVessel(registry, "explosive", VesselType.EXPLOSIVE));
+			simpleItems.add(registerPottery(registry, "unfired_explosive_vessel"));
+			if (ConfigSNS.EXPLOSIVE_VESSEL.stickyEnabled) throwableVessels.add(registerVessel(registry, "sticky_explosive", VesselType.STICKY));
 		}
 		
 		if (ConfigSNS.EXPLOSIVE_VESSEL.smallEnabled) {
-			registerSimpleItem(registry, simpleItems, "unfired_tiny_vessel", new ItemPottery());
-			registerVessel(registry, throwableVessels, "tiny_explosive", VesselType.TINY);
-			registerSimpleItem(registry, simpleItems, "fired_tiny_vessel", new ItemPottery());
+			simpleItems.add(registerPottery(registry, "unfired_tiny_vessel"));
+			simpleItems.add(registerPottery(registry, "fired_tiny_vessel"));
+			throwableVessels.add(registerVessel(registry, "tiny_explosive", VesselType.TINY));
 		}
 		
 		allSacks = sacks.build();
@@ -89,16 +97,25 @@ public final class ItemsSNS {
 		allThrowableVessels = throwableVessels.build();
 	}
 	
-	private static void registerSack(IForgeRegistry<Item> registry, Builder<ItemSack> sacks, String name, SackType type) {
-		if (SackType.isEnabled(type)) sacks.add(register(registry, name + "_sack", new ItemSack(type), CT_MISC));
+
+	private static ItemSack registerSack(IForgeRegistry<Item> registry, String name, SackType type) {
+		return register(registry, name + "_sack", new ItemSack(type), CreativeTabsTFC.CT_MISC);
 	}
 	
-	private static void registerVessel(IForgeRegistry<Item> registry, Builder<ItemThrowableVessel> throwableVessels, String name, VesselType type) {
-		if (VesselType.isEnabled(type)) throwableVessels.add(register(registry, name + "_vessel", new ItemThrowableVessel(type), CT_MISC));
+	private static ItemThrowableVessel registerVessel(IForgeRegistry<Item> registry, String name, VesselType type) {
+		return register(registry, name + "_vessel", new ItemThrowableVessel(type), CreativeTabsTFC.CT_MISC);
 	}
 	
-	private static void registerSimpleItem(IForgeRegistry<Item> registry, Builder<Item> simpleItems, String name, Item item) {
-		simpleItems.add(register(registry, name, item, CT_MISC));
+	private static ItemPottery registerPottery(IForgeRegistry<Item> registry, String string) {
+		return register(registry, string, new ItemPottery(), CreativeTabsTFC.CT_POTTERY);
+	}
+	
+	private static ItemSNS register(IForgeRegistry<Item> registry, String name) {
+		return register(registry, name, new ItemSNS(), CreativeTabsTFC.CT_MISC);
+	}
+	
+	private static <T extends Item> T register(IForgeRegistry<Item> registry, String name, T item) {
+		return register(registry, name, item, CreativeTabsTFC.CT_MISC);
 	}
 	
 	private static <T extends Item> T register(IForgeRegistry<Item> registry, String name, T item, CreativeTabs ct) {

@@ -2,7 +2,6 @@ package mod.traister101.sacks.client.gui;
 
 import java.io.IOException;
 
-import akka.japi.Util;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonVessel;
 import mod.traister101.sacks.network.TogglePacket;
@@ -29,7 +28,7 @@ public class GuiContainerThrowableVessel extends AbstractGuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-		fontRenderer.drawString(heldStack.getDisplayName(), guiLeft + 6, guiTop + 4, 4210752);
+		fontRenderer.drawString(heldStack.getDisplayName(), guiLeft + 6, guiTop + 4, 0xFFFFFF);
 	}
 	
 	@Override

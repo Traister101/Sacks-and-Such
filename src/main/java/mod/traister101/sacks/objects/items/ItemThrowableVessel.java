@@ -79,7 +79,7 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 		return new ActionResult<>(EnumActionResult.FAIL, heldStack);
 	}
 	
-	private final void throwVessel(World worldIn, EntityPlayer playerIn, ItemStack heldStack) {
+	private final void throwVessel(@Nonnull World worldIn, @Nonnull EntityPlayer playerIn, @Nonnull ItemStack heldStack) {
 		if (!playerIn.capabilities.isCreativeMode) {
 			heldStack.shrink(1);
 		}

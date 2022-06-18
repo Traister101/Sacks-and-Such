@@ -18,13 +18,13 @@ public class ConditionalFactory implements IConditionFactory {
 
 		switch (type) {
 		case "thatch_sack":
-			return () -> THATCHSACK.isEnabled;
+			return () -> THATCH_SACK.isEnabled;
 		case "leather_sack":
-			return () -> LEATHERSACK.isEnabled;
+			return () -> LEATHER_SACK.isEnabled;
 		case "burlap_sack":
-			return () -> BURLAPSACK.isEnabled;
+			return () -> BURLAP_SACK.isEnabled;
 		case "miner_sack":
-			return () -> MINERSACK.isEnabled;
+			return () -> MINER_SACK.isEnabled;
 		case "tiny_vessel":
 			return () -> EXPLOSIVE_VESSEL.isEnabled && EXPLOSIVE_VESSEL.smallEnabled;
 		case "sticky_vessel":

@@ -36,7 +36,7 @@ public class SackHandler extends AbstractHandler {
 		
 		if (!ConfigSNS.GLOBAL.allAllowOre)
 		if (type == SackType.MINER) {
-			if (!ConfigSNS.MINERSACK.allowNonOre) {
+			if (!ConfigSNS.MINER_SACK.allowNonOre) {
 				// If item is a TFC ore
 				if (!(item instanceof ItemOreTFC || item instanceof ItemSmallOre)) return false;
 			}

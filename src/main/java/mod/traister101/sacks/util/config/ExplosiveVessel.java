@@ -37,5 +37,5 @@ public final class ExplosiveVessel {
 	@RangeDouble(min = 0, max = 5)
 	@LangKey(LANG_KEY + ".small_power")
 	@Comment("The explosion power of the tiny vessel")
-	public double smallPower = 2;
+	public double smallPower = 2.5;
 }
