@@ -2,7 +2,11 @@ package mod.traister101.sacks.objects.container;
 
 import javax.annotation.Nonnull;
 
+import mod.traister101.sacks.objects.inventory.capability.AbstractHandler;
+import mod.traister101.sacks.objects.inventory.slot.SackSlot;
+import mod.traister101.sacks.objects.items.ItemSack;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
@@ -78,16 +82,7 @@ public abstract class AbstractContainer extends Container {
 		return flag;
 	}
 	
-	// Splits input stack, and returns a stack of the max size
-	private ItemStack splitStack(ItemStack stackIn, int maxStackSize) {
-		ItemStack returnStack;
-		returnStack = stackIn.copy();
-		returnStack.setCount(maxStackSize);
-		stackIn.shrink(maxStackSize);
-		return returnStack;
-	}
-	
-	// Private method to easily move a stack to a slot
+	//Private method to easily move a stack to a slot
 	private boolean moveStack(ItemStack stackIn, Slot slot) {
 		ItemStack itemstack = slot.getStack();
 		
@@ -126,31 +121,31 @@ public abstract class AbstractContainer extends Container {
 	@Nonnull
 	@Override
 	public final ItemStack slotClick(int slotID, int dragType, ClickType clickType, EntityPlayer player) {
-		// Not a slot, let vanilla handle it
+		//Not a slot, let vanilla handle it
 		if (slotID < 0) return super.slotClick(slotID, dragType, clickType, player);
-		// Prevent moving of the item stack that is currently open
+		//Prevent moving of the item stack that is currently open
 		if (slotID == itemIndex) return ItemStack.EMPTY;
-		// Vanilla slot
+		//Vanilla slot
 		if (slotID > slotAmount - 1) return super.slotClick(slotID, dragType, clickType, player);
- 		// Shift click, vanilla method works fine
+ 		//Shift click, vanilla method works fine
  		if (clickType == ClickType.QUICK_MOVE) return super.slotClick(slotID, dragType, clickType, player);
 		
 		Slot slot = getSlot(slotID);
 		ItemStack slotStack = slot.getStack();
-		// Slot is empty give to vanilla
+		//Slot is empty give to vanilla
 		if (slotStack.isEmpty()) return super.slotClick(slotID, dragType, clickType, player);
 		
 		if (clickType == ClickType.PICKUP) {
 			InventoryPlayer playerInventory = player.inventory;
 			
-			// Holding a item
+			//Holding a item
 			if (!playerInventory.getItemStack().isEmpty()) {
-				// Stack is full
+				//Stack is full
 				if (slotStack.getCount() >= slot.getSlotStackLimit()) return slotStack;
-				// Stacks are the same
+				//Stacks are the same
 				if (ItemStack.areItemsEqual(slotStack, playerInventory.getItemStack())) return addToStack(slotStack, playerInventory, dragType, slotStackCap);
 			}
-			// Stack size is within the normal bounds. Example: cobble = 64 or less
+			//Stack size is within the normal bounds. Example: cobble = 64 or less
 			if (slotStack.getCount() <= slotStack.getMaxStackSize()) return super.slotClick(slotID, dragType, clickType, player);
 			
 			return takeFromStack(slotStack, playerInventory, dragType);
@@ -199,7 +194,7 @@ public abstract class AbstractContainer extends Container {
 	@Nonnull
 	private ItemStack addToStack(@Nonnull ItemStack slotStack, @Nonnull InventoryPlayer playerInventory, int dragType, int stackCap) {
 		if (!slotStack.isStackable()) return slotStack;
-		// Slot stack less or equal to slot cap
+		//Slot stack less or equal to slot cap
 		if (slotStack.getCount() <= stackCap) {
 			if (dragType == 0) {
 				slotStack.setCount(slotStack.getCount() + playerInventory.getItemStack().getCount());

@@ -49,8 +49,8 @@ public abstract class AbstractHandler extends ItemStackHandler implements ICapab
 		return slotStackLimit;
 	}
 	
-	@Override
 	@Nonnull
+	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		
 		if (amount == 0) return ItemStack.EMPTY;

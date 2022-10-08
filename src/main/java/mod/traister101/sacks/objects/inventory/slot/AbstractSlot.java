@@ -24,7 +24,7 @@ public abstract class AbstractSlot extends SlotItemHandler {
 	
 	@Override
 	public int getItemStackLimit(ItemStack stack) {
-		return handler.getSlotLimit(slotNumber);
+		return handler.getStackLimit(slotNumber, stack);
 	}
 	
 	@Override
@@ -48,14 +48,14 @@ public abstract class AbstractSlot extends SlotItemHandler {
 		return handler.isItemValid(slotNumber, stack);
 	}
 	
-	@Override
 	@Nonnull
+	@Override
 	public ItemStack getStack() {
 		return handler.getStackInSlot(slotNumber);
 	}
 	
-	@Override
 	@Nonnull
+	@Override
 	public ItemStack decrStackSize(int amount) {
 		return handler.extractItem(slotNumber, amount, false);
 	}

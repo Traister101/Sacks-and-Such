@@ -32,7 +32,7 @@ public class ContainerSack extends AbstractContainerRenameable {
 			case THATCH:
 			case LEATHER:
 			case BURLAP:
-				// 4 slot container 
+				//4 slot container 
 				addSlotToContainer(new SackSlot(inventory, 0, 71, 23));
 				addSlotToContainer(new SackSlot(inventory, 1, 89, 23));
 				addSlotToContainer(new SackSlot(inventory, 2, 71, 41));
@@ -40,15 +40,22 @@ public class ContainerSack extends AbstractContainerRenameable {
 				break;
 				
 			case MINER:
-				// 1 slot container (
+				//1 slot container
 				addSlotToContainer(new SackSlot(inventory, 0, 80, 32));
 				break;
 			case FARMER:
-//				addSlotToContainer(new SackSlot(inventory, 0, 8, 20));
-		        // Add Player Inventory Slots
+		        //27 slot container (like a chest)
 		        for (int i = 0; i < 3; i++) {
 		            for (int j = 0; j < 9; j++) {
-		                addSlotToContainer(new SackSlot(inventory, j + i * 18 + 9, 8 + j * 18, 18 + i * 18));
+		                addSlotToContainer(new SackSlot(inventory, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
+		            }
+		        }
+				break;
+			case KNAPSACK:
+		        //18 slot container (two rows)
+		        for (int i = 0; i < 2; i++) {
+		            for (int j = 0; j < 9; j++) {
+		                addSlotToContainer(new SackSlot(inventory, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
 		            }
 		        }
 				break;

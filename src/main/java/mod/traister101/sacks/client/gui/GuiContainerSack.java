@@ -23,7 +23,7 @@ public class GuiContainerSack extends GuiRenameable {
 	@Override
 	public void initGui() {
 		super.initGui();
-		addButton(new GuiButtonSack(1, guiLeft + 155, guiTop + 22, 16, 16, SNSUtils.isAutoVoid(heldStack) ? "un-void" : "void", background));
+		addButton(new GuiButtonSack(1, guiLeft + 130, guiTop + 6, 16, 16, SNSUtils.isAutoVoid(heldStack) ? "un-void" : "void", background));
 	}
 	
 	@Override

@@ -12,7 +12,8 @@ public enum SackType {
 	LEATHER(4),
 	BURLAP(4),
 	MINER(1), 
-	FARMER(27);
+	FARMER(27),
+	KNAPSACK(18);
 	
 	private int slots;
 	
@@ -32,6 +33,8 @@ public enum SackType {
 			return MINER.slots;
 		case FARMER:
 			return FARMER.slots;
+		case KNAPSACK:
+			return KNAPSACK.slots;
 		default:
 			return 0;
 		}
@@ -49,6 +52,8 @@ public enum SackType {
 			return MINER_SACK.slotCap;
 		case FARMER:
 			return FARMER_SACK.slotCap;
+		case KNAPSACK:
+			return KNAP_SACK.slotCap;
 		default:
 			return 0;
 		}
@@ -72,6 +77,9 @@ public enum SackType {
 		case FARMER:
 			bool = FARMER_SACK.doPickup;
 			break;
+		case KNAPSACK:
+			bool = KNAP_SACK.doPickup;
+			break;
 		default:
 			bool = false;
 		}
@@ -90,6 +98,8 @@ public enum SackType {
 			return GuiType.SACK_MINER;
 		case FARMER:
 			return GuiType.SACK_FARMER;
+		case KNAPSACK:
+			return GuiType.SACK_KNAP;
 		default:
 			return GuiType.NULL;
 		}
@@ -105,6 +115,8 @@ public enum SackType {
 			return LEATHER_SACK.allowedSize;
 		case MINER:
 			return MINER_SACK.allowedSize;
+		case KNAPSACK:
+			return KNAP_SACK.allowedSize;
 		default:
 			return Size.NORMAL;
 		}

@@ -9,6 +9,8 @@ import com.google.common.collect.ImmutableList.Builder;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.util.SackType;
 import mod.traister101.sacks.util.VesselType;
+import net.dries007.tfc.api.capability.size.Size;
+import net.dries007.tfc.api.capability.size.Weight;
 import net.dries007.tfc.objects.CreativeTabsTFC;
 import net.dries007.tfc.objects.items.ceramics.ItemPottery;
 import net.minecraft.creativetab.CreativeTabs;
@@ -80,6 +82,10 @@ public final class ItemsSNS {
 		
 		if (ConfigSNS.FARMER_SACK.isEnabled) {
 			sacks.add(registerSack(registry, "farmer", SackType.FARMER));
+		}
+		
+		if (ConfigSNS.KNAP_SACK.isEnabled) {
+			sacks.add(registerSack(registry, "knap", SackType.KNAPSACK)/*.setSize(Size.LARGE).setWeight(Weight.VERY_HEAVY)*/);
 		}
 		
 		if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {

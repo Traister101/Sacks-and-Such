@@ -14,6 +14,7 @@ import net.dries007.tfc.objects.items.metal.ItemSmallOre;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class SackHandler extends AbstractHandler {
 	
@@ -25,6 +26,7 @@ public class SackHandler extends AbstractHandler {
 	}
 	
 	// TODO More sacks (like the food sack) will need to be handled
+	@Override
 	public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
 		if (stack.isEmpty()) return false;
 		if (!stack.isStackable()) return false;
@@ -32,8 +34,6 @@ public class SackHandler extends AbstractHandler {
 		if (stack.getItem() instanceof ItemSack) return false;
 		
 		Item item = stack.getItem();
-		boolean isInvalid;
-		
 		
 		if (type == SackType.FARMER) {
 			//Not a seed

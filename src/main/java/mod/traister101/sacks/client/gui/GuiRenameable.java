@@ -37,7 +37,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
 		super.initGui();
         Keyboard.enableRepeatEvents(true);
 		addButton(new GuiButtonSack(0, guiLeft + 155, guiTop + 6, 16, 16, "rename", background));
-		nameField = new GuiTextField(0, fontRenderer, guiLeft + 8, guiTop + 6, 140, 15);
+		nameField = new GuiTextField(0, fontRenderer, guiLeft + 8, guiTop + 6, 120, 15);
 		nameField.setTextColor(-1);
 		nameField.setDisabledTextColour(-1);
 		nameField.setMaxStringLength(22);

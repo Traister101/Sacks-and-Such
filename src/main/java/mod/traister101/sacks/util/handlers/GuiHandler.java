@@ -24,6 +24,7 @@ public final class GuiHandler implements IGuiHandler {
 
 	public static final ResourceLocation SACK_SLOTS_1 = new ResourceLocation(MODID, "textures/gui/sack_1.png");
 	public static final ResourceLocation SACK_SLOTS_4 = new ResourceLocation(MODID, "textures/gui/sack_4.png");
+	private static final ResourceLocation SACK_SLOTS_18 = new ResourceLocation(MODID, "textures/gui/sack_18.png");
 	public static final ResourceLocation SACK_SLOTS_27 = new ResourceLocation(MODID, "textures/gui/sack_27.png");
 	public static final ResourceLocation VESSEL_SLOTS_1 = new ResourceLocation(MODID, "textures/gui/vessel_1.png");
 
@@ -43,6 +44,7 @@ public final class GuiHandler implements IGuiHandler {
 		case SACK_BURLAP:
 		case SACK_MINER:
 		case SACK_FARMER:
+		case SACK_KNAP:
 			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case VESSEL_EXPLOSIVE:
 			return new ContainerThrowableVessel(player.inventory, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
@@ -66,6 +68,8 @@ public final class GuiHandler implements IGuiHandler {
 			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case SACK_MINER:
 			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_1, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+		case SACK_KNAP:
+			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_18, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case SACK_FARMER:
 			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_27, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case VESSEL_EXPLOSIVE:
@@ -82,6 +86,7 @@ public final class GuiHandler implements IGuiHandler {
 		SACK_MINER,
 		SACK_FARMER,
 		VESSEL_EXPLOSIVE,
+		SACK_KNAP,
 		NULL;
 		
 		private static final GuiType[] values = values();

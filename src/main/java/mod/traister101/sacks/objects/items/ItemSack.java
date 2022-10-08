@@ -90,12 +90,14 @@ public class ItemSack extends Item implements IItemSize {
 		return type;
 	}
 	
-	public void setSize(@Nonnull Size size) {
+	public ItemSack setSize(@Nonnull Size size) {
 		this.size = size;
+		return this;
 	}
 	
-	public void setWeight(@Nonnull Weight weight) {
+	public ItemSack setWeight(@Nonnull Weight weight) {
 		this.weight = weight;
+		return this;
 	}
 	
 	@Nonnull
