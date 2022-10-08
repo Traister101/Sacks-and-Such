@@ -1,10 +1,12 @@
 package mod.traister101.sacks.objects.container;
 
+import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.inventory.slot.SackSlot;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SackType;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -40,6 +42,18 @@ public class ContainerSack extends AbstractContainerRenameable {
 			case MINER:
 				// 1 slot container (
 				addSlotToContainer(new SackSlot(inventory, 0, 80, 32));
+				break;
+			case FARMER:
+//				addSlotToContainer(new SackSlot(inventory, 0, 8, 20));
+		        // Add Player Inventory Slots
+		        for (int i = 0; i < 3; i++) {
+		            for (int j = 0; j < 9; j++) {
+		                addSlotToContainer(new SackSlot(inventory, j + i * 18 + 9, 8 + j * 18, 18 + i * 18));
+		            }
+		        }
+				break;
+			default:
+				break;
 			}
 		}
 	}

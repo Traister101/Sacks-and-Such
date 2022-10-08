@@ -78,7 +78,9 @@ public final class ItemsSNS {
 			sacks.add(registerSack(registry, "miners", SackType.MINER));
 		}
 		
-//		registerSack(registry, sacks, "food", SackType.FOOD);
+		if (ConfigSNS.FARMER_SACK.isEnabled) {
+			sacks.add(registerSack(registry, "farmer", SackType.FARMER));
+		}
 		
 		if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
 			throwableVessels.add(registerVessel(registry, "explosive", VesselType.EXPLOSIVE));

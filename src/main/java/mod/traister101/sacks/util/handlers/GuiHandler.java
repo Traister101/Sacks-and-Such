@@ -20,10 +20,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-public class GuiHandler implements IGuiHandler {
+public final class GuiHandler implements IGuiHandler {
 
-	public static final ResourceLocation SLOTS_1 = new ResourceLocation(MODID, "textures/gui/sack_1.png");
-	public static final ResourceLocation SLOTS_4 = new ResourceLocation(MODID, "textures/gui/sack_4.png");
+	public static final ResourceLocation SACK_SLOTS_1 = new ResourceLocation(MODID, "textures/gui/sack_1.png");
+	public static final ResourceLocation SACK_SLOTS_4 = new ResourceLocation(MODID, "textures/gui/sack_4.png");
+	public static final ResourceLocation SACK_SLOTS_27 = new ResourceLocation(MODID, "textures/gui/sack_27.png");
+	public static final ResourceLocation VESSEL_SLOTS_1 = new ResourceLocation(MODID, "textures/gui/vessel_1.png");
 
 	public static void openGui(World world, EntityPlayer player, GuiType guiType) {
 		player.openGui(SacksNSuch.getInstance(), guiType.ordinal(), world, 0, 0, 0);
@@ -40,6 +42,7 @@ public class GuiHandler implements IGuiHandler {
 		case SACK_LEATHER:
 		case SACK_BURLAP:
 		case SACK_MINER:
+		case SACK_FARMER:
 			return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case VESSEL_EXPLOSIVE:
 			return new ContainerThrowableVessel(player.inventory, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
@@ -60,11 +63,13 @@ public class GuiHandler implements IGuiHandler {
 		case SACK_THATCH:
 		case SACK_LEATHER:
 		case SACK_BURLAP:
-			return new GuiContainerSack(container, player.inventory, SLOTS_4, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case SACK_MINER:
-			return new GuiContainerSack(container, player.inventory, SLOTS_1, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_1, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+		case SACK_FARMER:
+			return new GuiContainerSack(container, player.inventory, SACK_SLOTS_27, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
 		case VESSEL_EXPLOSIVE:
-			return new GuiContainerThrowableVessel(container, player.inventory, SLOTS_1, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
+			return new GuiContainerThrowableVessel(container, player.inventory, VESSEL_SLOTS_1, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
 		default:
 			return null;
 		}
@@ -75,6 +80,7 @@ public class GuiHandler implements IGuiHandler {
 		SACK_LEATHER,
 		SACK_BURLAP,
 		SACK_MINER,
+		SACK_FARMER,
 		VESSEL_EXPLOSIVE,
 		NULL;
 		

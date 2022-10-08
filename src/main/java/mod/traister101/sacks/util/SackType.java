@@ -1,18 +1,18 @@
 package mod.traister101.sacks.util;
 
-import static mod.traister101.sacks.ConfigSNS.BURLAP_SACK;
-import static mod.traister101.sacks.ConfigSNS.LEATHER_SACK;
-import static mod.traister101.sacks.ConfigSNS.MINER_SACK;
-import static mod.traister101.sacks.ConfigSNS.THATCH_SACK;
+import static mod.traister101.sacks.ConfigSNS.*;
 
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 import net.dries007.tfc.api.capability.size.Size;
+import scala.annotation.bridge;
+import scala.reflect.internal.Trees.This;
 
 public enum SackType {
 	THATCH(4),
 	LEATHER(4),
 	BURLAP(4),
-	MINER(1);
+	MINER(1), 
+	FARMER(27);
 	
 	private int slots;
 	
@@ -30,6 +30,8 @@ public enum SackType {
 			return BURLAP.slots;
 		case MINER:
 			return MINER.slots;
+		case FARMER:
+			return FARMER.slots;
 		default:
 			return 0;
 		}
@@ -45,6 +47,8 @@ public enum SackType {
 			return BURLAP_SACK.slotCap;
 		case MINER:
 			return MINER_SACK.slotCap;
+		case FARMER:
+			return FARMER_SACK.slotCap;
 		default:
 			return 0;
 		}
@@ -65,6 +69,9 @@ public enum SackType {
 		case MINER:
 			bool = MINER_SACK.doPickup;
 			break;
+		case FARMER:
+			bool = FARMER_SACK.doPickup;
+			break;
 		default:
 			bool = false;
 		}
@@ -81,6 +88,8 @@ public enum SackType {
 			return GuiType.SACK_LEATHER;
 		case MINER:
 			return GuiType.SACK_MINER;
+		case FARMER:
+			return GuiType.SACK_FARMER;
 		default:
 			return GuiType.NULL;
 		}
