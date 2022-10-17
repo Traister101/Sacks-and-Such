@@ -1,12 +1,10 @@
 package mod.traister101.sacks.objects.container;
 
-import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.inventory.slot.SackSlot;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SackType;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -17,9 +15,9 @@ public class ContainerSack extends AbstractContainerRenameable {
     
     public ContainerSack(InventoryPlayer playerInv, ItemStack heldStack) {
     	// This super constructor call is gross, especially this V because type can't assigned until after the constructor
-    	super(playerInv, heldStack, SackType.getSlotCount(((ItemSack) heldStack.getItem()).getType()));
+    	super(playerInv, heldStack, ((ItemSack) heldStack.getItem()).getType().slots);
         this.type = ((ItemSack) heldStack.getItem()).getType();
-        this.slotStackCap = SackType.getStackCap(type);
+        this.slotStackCap = type.stackCap;
         addContainerSlots();
         addPlayerInventorySlots(playerInv);
     }

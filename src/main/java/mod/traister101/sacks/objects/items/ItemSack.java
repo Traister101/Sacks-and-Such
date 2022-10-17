@@ -29,8 +29,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class ItemSack extends Item implements IItemSize {
-	
-	private SackHandler handler;
+
 	private final SackType type;
 	private Weight weight;
 	private Size size;
@@ -53,7 +52,7 @@ public class ItemSack extends Item implements IItemSize {
 				} else {
 					SNSUtils.sendPacketAndStatus(SNSUtils.isAutoPickup(heldStack), ToggleType.PICKUP);
 				}
-			} else GuiHandler.openGui(worldIn, playerIn, SackType.getGui(type));
+			} else GuiHandler.openGui(worldIn, playerIn, type.gui);
 		}
 		return new ActionResult<>(EnumActionResult.FAIL, heldStack);
 	}

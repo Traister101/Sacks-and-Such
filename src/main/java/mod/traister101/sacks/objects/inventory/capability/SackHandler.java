@@ -1,8 +1,5 @@
 package mod.traister101.sacks.objects.inventory.capability;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SackType;
@@ -14,14 +11,16 @@ import net.dries007.tfc.objects.items.metal.ItemSmallOre;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.items.ItemHandlerHelper;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SackHandler extends AbstractHandler {
 	
 	private final SackType type;
 	
 	public SackHandler(@Nullable NBTTagCompound nbt, @Nonnull SackType type) {
-		super(nbt, SackType.getSlotCount(type), SackType.getStackCap(type));
+		super(nbt, type.slots, type.stackCap);
 		this.type = type; 
 	}
 	
@@ -52,12 +51,12 @@ public class SackHandler extends AbstractHandler {
 		}
 		
 		if (!ConfigSNS.GLOBAL.allAllowOre)
-		if (type != SackType.MINER)
-		if (item instanceof ItemOreTFC || item instanceof ItemSmallOre) return false;
+			if (type != SackType.MINER)
+				if (item instanceof ItemOreTFC || item instanceof ItemSmallOre) return false;
 		
 		if (item instanceof IItemSize) {
 			//Larger than the sacks slot size
-			if (!((IItemSize) item).getSize(stack).isSmallerThan(SackType.getSlotSize(type))) return false;
+			if (!((IItemSize) item).getSize(stack).isSmallerThan(type.allowedSize)) return false;
 		}
 		
 		ItemStack currentStack = getStackInSlot(slot);

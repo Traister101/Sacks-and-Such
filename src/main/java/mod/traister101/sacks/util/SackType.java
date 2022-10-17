@@ -1,124 +1,29 @@
 package mod.traister101.sacks.util;
 
-import static mod.traister101.sacks.ConfigSNS.*;
-
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 import net.dries007.tfc.api.capability.size.Size;
-import scala.annotation.bridge;
-import scala.reflect.internal.Trees.This;
+
+import static mod.traister101.sacks.ConfigSNS.*;
 
 public enum SackType {
-	THATCH(4),
-	LEATHER(4),
-	BURLAP(4),
-	MINER(1), 
-	FARMER(27),
-	KNAPSACK(18);
-	
-	private int slots;
-	
-	SackType(int slots) {
+	THATCH(4, THATCH_SACK.slotCap, THATCH_SACK.doPickup, GuiType.SACK_THATCH, THATCH_SACK.allowedSize),
+	LEATHER(4, LEATHER_SACK.slotCap, LEATHER_SACK.doPickup, GuiType.SACK_LEATHER, LEATHER_SACK.allowedSize),
+	BURLAP(4, BURLAP_SACK.slotCap, BURLAP_SACK.doPickup, GuiType.SACK_BURLAP, BURLAP_SACK.allowedSize),
+	MINER(1, MINER_SACK.slotCap, MINER_SACK.doPickup, GuiType.SACK_MINER, MINER_SACK.allowedSize),
+	FARMER(27, FARMER_SACK.slotCap, FARMER_SACK.doPickup, GuiType.SACK_FARMER, Size.NORMAL),
+	KNAPSACK(18, KNAP_SACK.slotCap, KNAP_SACK.doPickup, GuiType.SACK_KNAP, KNAP_SACK.allowedSize);
+
+	public final int slots;
+	public final int stackCap;
+	public final boolean doesAutoPickup;
+	public final GuiType gui;
+	public final Size allowedSize;
+
+	SackType(int slots, int stackCap, boolean doAutoPickup, GuiType gui, Size allowedSize) {
 		this.slots = slots;
-	}
-	
-	public static int getSlotCount(SackType type) {
-		switch (type) {
-		case THATCH:
-			return THATCH.slots;
-		case LEATHER:
-			return LEATHER.slots;
-		case BURLAP:
-			return BURLAP.slots;
-		case MINER:
-			return MINER.slots;
-		case FARMER:
-			return FARMER.slots;
-		case KNAPSACK:
-			return KNAPSACK.slots;
-		default:
-			return 0;
-		}
-	}
-	
-	public static int getStackCap(SackType type) {
-		switch (type) {
-		case THATCH:
-			return THATCH_SACK.slotCap;
-		case LEATHER:
-			return LEATHER_SACK.slotCap;
-		case BURLAP:
-			return BURLAP_SACK.slotCap;
-		case MINER:
-			return MINER_SACK.slotCap;
-		case FARMER:
-			return FARMER_SACK.slotCap;
-		case KNAPSACK:
-			return KNAP_SACK.slotCap;
-		default:
-			return 0;
-		}
-	}
-	
-	public static boolean canTypeDoAutoPickup(SackType type) {
-		boolean bool;
-		switch (type) {
-		case THATCH:
-			bool = THATCH_SACK.doPickup;
-			break;
-		case BURLAP:
-			bool = BURLAP_SACK.doPickup;
-			break;
-		case LEATHER:
-			bool = LEATHER_SACK.doPickup;
-			break;
-		case MINER:
-			bool = MINER_SACK.doPickup;
-			break;
-		case FARMER:
-			bool = FARMER_SACK.doPickup;
-			break;
-		case KNAPSACK:
-			bool = KNAP_SACK.doPickup;
-			break;
-		default:
-			bool = false;
-		}
-		return !bool;
-	}
-	
-	public static GuiType getGui(SackType type) {
-		switch (type) {
-		case THATCH:
-			return GuiType.SACK_THATCH;
-		case BURLAP:
-			return GuiType.SACK_BURLAP;
-		case LEATHER:
-			return GuiType.SACK_LEATHER;
-		case MINER:
-			return GuiType.SACK_MINER;
-		case FARMER:
-			return GuiType.SACK_FARMER;
-		case KNAPSACK:
-			return GuiType.SACK_KNAP;
-		default:
-			return GuiType.NULL;
-		}
-	}
-	
-	public static Size getSlotSize(SackType type) {
-		switch (type) {
-		case THATCH:
-			return THATCH_SACK.allowedSize;
-		case BURLAP:
-			return BURLAP_SACK.allowedSize;
-		case LEATHER:
-			return LEATHER_SACK.allowedSize;
-		case MINER:
-			return MINER_SACK.allowedSize;
-		case KNAPSACK:
-			return KNAP_SACK.allowedSize;
-		default:
-			return Size.NORMAL;
-		}
+		this.stackCap = stackCap;
+		this.doesAutoPickup = doAutoPickup;
+		this.gui = gui;
+		this.allowedSize = allowedSize;
 	}
 }
