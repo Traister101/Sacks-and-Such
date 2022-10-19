@@ -8,19 +8,19 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class ContainerThrowableVessel extends AbstractContainer {
-	
-	public ContainerThrowableVessel(InventoryPlayer playerInv, ItemStack heldStack) {
-		super(playerInv, heldStack, 1);
-		this.slotStackCap = 256;
+
+    public ContainerThrowableVessel(InventoryPlayer playerInv, ItemStack heldStack) {
+        super(playerInv, heldStack, 1);
+        this.slotStackCap = 256;
         addContainerSlots();
         addPlayerInventorySlots(playerInv);
-	}
-	
-	@Override
-	protected void addContainerSlots() {
-		IItemHandler inventory = heldStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		if (inventory instanceof VesselHandler) {
-			addSlotToContainer(new VesselSlot(inventory, 0, 80, 32));
-		}
-	}
+    }
+
+    @Override
+    protected void addContainerSlots() {
+        IItemHandler inventory = heldStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        if (inventory instanceof VesselHandler) {
+            addSlotToContainer(new VesselSlot(inventory, 0, 80, 32));
+        }
+    }
 }

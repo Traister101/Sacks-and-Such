@@ -1,7 +1,5 @@
 package mod.traister101.sacks.client.gui;
 
-import java.io.IOException;
-
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonVessel;
 import mod.traister101.sacks.network.TogglePacket;
@@ -13,29 +11,31 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.IOException;
+
 public class GuiContainerThrowableVessel extends AbstractGuiContainer {
-	
-	public GuiContainerThrowableVessel(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack heldStack) {
-		super(container, background, heldStack);
-	}
-	
-	@Override
-	public void initGui() {
-		super.initGui();
-		addButton(new GuiButtonVessel(0, guiLeft + 155, guiTop + 6, 15, 15, "seal", background));
-	}
-	
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-		fontRenderer.drawString(heldStack.getDisplayName(), guiLeft + 6, guiTop + 4, 0xFFFFFF);
-	}
-	
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
-			SacksNSuch.getNetwork().sendToServer(new TogglePacket(!SNSUtils.isSealed(heldStack), ToggleType.SEAL));
-			mc.player.closeScreen();
-		}
-	}
+
+    public GuiContainerThrowableVessel(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack heldStack) {
+        super(container, background, heldStack);
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        addButton(new GuiButtonVessel(0, guiLeft + 155, guiTop + 6, 15, 15, "seal", background));
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+        fontRenderer.drawString(heldStack.getDisplayName(), guiLeft + 6, guiTop + 4, 0xFFFFFF);
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        if (button.id == 0) {
+            SacksNSuch.getNetwork().sendToServer(new TogglePacket(!SNSUtils.isSealed(heldStack), ToggleType.SEAL));
+            mc.player.closeScreen();
+        }
+    }
 }
