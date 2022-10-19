@@ -24,6 +24,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBloc
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
@@ -46,14 +47,14 @@ public final class PickupHandler {
         IBlockState blockState = world.getBlockState(blockPos);
         if (blockState.getBlock() instanceof BlockPlacedItemFlat) {
             final TEPlacedItemFlat te = Helpers.getTE(world, blockPos, TEPlacedItemFlat.class);
-            final ItemStack itemStack = te.getStack();
+            final ItemStack stack = te.getStack();
             te.setStack(ItemStack.EMPTY);
             world.setBlockToAir(blockPos);
             final EntityPlayer player = event.getEntityPlayer();
             if (event.getSide() == Side.SERVER) {
-                final EntityItem itemEntity = new EntityItem(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack);
+                final EntityItem itemEntity = new EntityItem(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), stack);
                 if (!doPickupHanlding(player, itemEntity)) {
-                    world.spawnEntity(itemEntity);
+                    ItemHandlerHelper.giveItemToPlayer(player, stack);
                 }
             }
             player.swingArm(EnumHand.MAIN_HAND);
@@ -101,6 +102,7 @@ public final class PickupHandler {
                 }
             }
 
+            // TODO oops this empties any picked up stacks that could be valid not just the ones which match the current items
             // If this sack has voiding enabled empty the picked up stack and finish.
             // This means the first valid sack that has voiding enabled will void the pickup stack
             // Item voiding enabled
