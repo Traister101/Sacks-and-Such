@@ -4,6 +4,7 @@ import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.objects.items.ItemThrowableVessel;
+import net.dries007.tfc.api.capability.size.Size;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,6 +44,9 @@ public final class SNSUtils {
         return stack.getTagCompound() == null ? new NBTTagCompound() : stack.getTagCompound();
     }
 
+    public static boolean isSmallerOrEqualTo(@Nonnull Size size1, @Nonnull Size size2) {
+        return size1.ordinal() <= size2.ordinal();
+    }
 
     @Nonnull
     @SuppressWarnings("ConstantConditions")
