@@ -17,16 +17,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = SacksNSuch.MODID, name = SacksNSuch.NAME, version = SacksNSuch.VERSION, acceptedMinecraftVersions = SacksNSuch.MCVERSION, dependencies = "required-after:tfc@1.7.18.176")
+@SuppressWarnings("FieldMayBeFinal")
+@Mod(modid = SacksNSuch.MODID, name = SacksNSuch.NAME, dependencies = "required-after:tfc@1.7.18.176", useMetadata = true)
 public final class SacksNSuch {
 
     public static final String MODID = "sns";
     public static final String NAME = "Sacks N Such";
-    public static final String VERSION = "${version}";
-    public static final String MCVERSION = "${mcversion}";
 
     @Instance
-    private static SacksNSuch INSTANCE;
+    private static SacksNSuch INSTANCE = null;
 
     private final Logger log = LogManager.getLogger(MODID);
     private SimpleNetworkWrapper network;
