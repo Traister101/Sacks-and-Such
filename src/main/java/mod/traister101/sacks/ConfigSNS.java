@@ -47,7 +47,7 @@ public final class ConfigSNS {
     public static final FarmerSack FARMER_SACK = new FarmerSack();
 
     @Comment("Config for farmers sack")
-    @LangKey(LANG_KEY + ".farmer_sack")
+    @LangKey(LANG_KEY + ".knap_sack")
     public static final KnapSack KNAP_SACK = new KnapSack();
 
     @Comment("Explosive vessel config")

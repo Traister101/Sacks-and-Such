@@ -16,7 +16,7 @@ public final class Global {
 
     @RequiresMcRestart
     @LangKey(LANG_KEY + ".pickup")
-    @Comment("A global toggle for auto pickup. This will not force enable for every type")
+    @Comment("Global control for automatic pickup, this will not force enable for every type")
     public boolean doPickup = true;
 
     @LangKey(LANG_KEY + ".void")
@@ -24,14 +24,14 @@ public final class Global {
     public boolean doVoiding = true;
 
     @LangKey(LANG_KEY + ".glint_toggle")
-    @Comment("This swaps the enchant glint from showing when a sack is voiding to when it's on autopickup")
+    @Comment("This swaps the enchant glint from showing when a sack is voiding to when it's on auto-pickup")
     public boolean voidGlint = true;
 
-    @LangKey(LANG_KEY + ".all_pickup_ore")
+    @LangKey(LANG_KEY + ".all_allow_ore")
     @Comment("This makes all sack types capable of holding ore")
     public boolean allAllowOre = false;
 
-    @LangKey(LANG_KEY + "shift_toggles_void")
+    @LangKey(LANG_KEY + ".shift_toggles_void")
     @Comment("This determines whether shift right click toggles item voiding or item pickup for sacks")
     public boolean shiftClickTogglesVoid = false;
 }
