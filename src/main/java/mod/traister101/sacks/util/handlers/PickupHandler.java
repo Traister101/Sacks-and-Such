@@ -1,5 +1,6 @@
 package mod.traister101.sacks.util.handlers;
 
+import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SNSUtils;
 import mod.traister101.sacks.util.SackType;
@@ -30,26 +31,30 @@ import java.util.Random;
 public final class PickupHandler {
 
 	@SubscribeEvent
-	public void onPickupItem(EntityItemPickupEvent event) {
-		EntityPlayer player = event.getEntityPlayer();
+	public void onPickupItem(@Nonnull final EntityItemPickupEvent event) {
+		final EntityPlayer player = event.getEntityPlayer();
 
-		doPickupHanlding(player, event.getItem());
-		event.setCanceled(true);
+		if (doPickupHanlding(player, event.getItem()))  {
+			event.setCanceled(true);
+		}
 	}
 
 	@SubscribeEvent
-	public void onBlockActivated(RightClickBlock event) {
-		BlockPos blockPos = event.getPos();
-		World world = event.getWorld();
+	public void onBlockActivated(@Nonnull final RightClickBlock event) {
+		final BlockPos blockPos = event.getPos();
+		final World world = event.getWorld();
 		IBlockState blockState = world.getBlockState(blockPos);
 		if (blockState.getBlock() instanceof BlockPlacedItemFlat) {
-			TEPlacedItemFlat te = Helpers.getTE(world, blockPos, TEPlacedItemFlat.class);
-			ItemStack itemStack = te.getStack();
+			final TEPlacedItemFlat te = Helpers.getTE(world, blockPos, TEPlacedItemFlat.class);
+			final ItemStack itemStack = te.getStack();
 			te.setStack(ItemStack.EMPTY);
 			world.setBlockToAir(blockPos);
-			EntityPlayer player = event.getEntityPlayer();
+			final EntityPlayer player = event.getEntityPlayer();
 			if (event.getSide() == Side.SERVER) {
-				doPickupHanlding(player, new EntityItem(world, player.posX, player.posY, player.posZ, itemStack));
+				final EntityItem itemEntity = new EntityItem(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack);
+				if (!doPickupHanlding(player, itemEntity)) {
+					world.spawnEntity(itemEntity);
+				}
 			}
 			player.swingArm(EnumHand.MAIN_HAND);
 			event.setCancellationResult(EnumActionResult.SUCCESS);
@@ -57,10 +62,10 @@ public final class PickupHandler {
 		}
 	}
 
-	private static void doPickupHanlding(EntityPlayer player, EntityItem itemEntity) {
+	private static boolean doPickupHanlding(final EntityPlayer player, final EntityItem itemEntity) {
 		final ItemStack itemPickup = itemEntity.getItem();
 
-		if (topsOffPlayerInventory(player, itemPickup)) return;
+		if (topsOffPlayerInventory(player, itemPickup)) return true;
 
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack sackStack = player.inventory.getStackInSlot(i);
@@ -79,6 +84,7 @@ public final class PickupHandler {
 			// Can't place in sack for any number of reasons
 			if (!canPlaceInSack(type, sackInv, itemPickup)) continue;
 
+			// Goes through the sack slots to see if the picked up item can be added
 			for (int j = 0; j < sackInv.getSlots(); j++) {
 				if (sackInv.getStackInSlot(j).getCount() < sackInv.getSlotLimit(j)) {
 					ItemStack pickupResult = sackInv.insertItem(j, itemPickup, false);
@@ -90,18 +96,26 @@ public final class PickupHandler {
 						SPacketCollectItem packet = new SPacketCollectItem(itemEntity.getEntityId(), player.getEntityId(), numPickedUp);
 						((EntityPlayerMP) player).connection.sendPacket(packet);
 						player.openContainer.detectAndSendChanges();
-						return;
+						return true;
 					}
 				}
 			}
+
 			// If this sack has voiding enabled empty the picked up stack and finish.
 			// This means the first valid sack that has voiding enabled will void the pickup stack
-			if (SNSUtils.isAutoVoid(sackStack)) {
-				itemPickup.setCount(0);
-				playPickupSound(player);
-				return;
-			}
+			// Item voiding enabled
+			if (ConfigSNS.GLOBAL.doVoiding)
+				// Type can void items
+				if (type.doesVoiding)
+					// This particular Sack has voiding enabled
+					if (SNSUtils.isAutoVoid(sackStack)) {
+						itemPickup.setCount(0);
+						playPickupSound(player);
+						return true;
+					}
 		}
+		// If we get here we don't handle the item
+		return false;
 	}
 
 	private static boolean canPlaceInSack(@Nonnull SackType type, @Nonnull IItemHandler sackInv, @Nonnull ItemStack itemPickup) {
@@ -112,7 +126,7 @@ public final class PickupHandler {
 	}
 
 	// Tops off stuff in player inventory
-	private static boolean topsOffPlayerInventory(EntityPlayer player, @Nonnull ItemStack stack) {
+	private static boolean topsOffPlayerInventory(@Nonnull final EntityPlayer player, @Nonnull final ItemStack stack) {
 		// Add to player inventory first, if there is an incomplete stack in there.
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack inventoryStack = player.inventory.getStackInSlot(i);

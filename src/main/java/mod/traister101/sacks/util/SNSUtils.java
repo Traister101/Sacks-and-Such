@@ -26,13 +26,10 @@ public final class SNSUtils {
 	public static boolean isAutoPickup(@Nonnull ItemStack stack) {
 		if (!(stack.getItem() instanceof ItemSack)) return false;
 		
-		if (stack.hasTagCompound()) {
-			return getTagSafely(stack).getBoolean(ToggleType.PICKUP.toString());
-		} else {
+		if (!stack.hasTagCompound()) {
 			toggle(stack, ToggleType.PICKUP, true);
-			return getTagSafely(stack).getBoolean(ToggleType.PICKUP.toString());
 		}
-		
+		return getTagSafely(stack).getBoolean(ToggleType.PICKUP.toString());
 	}
 	
 	public static void toggle(@Nonnull ItemStack stack, @Nonnull ToggleType type, boolean toggle) {
@@ -40,21 +37,23 @@ public final class SNSUtils {
 		tag.setBoolean(type.toString(), toggle);
 		stack.setTagCompound(tag);
 	}
-	
+
 	@Nonnull
 	public static NBTTagCompound getTagSafely(@Nonnull ItemStack stack) {
 		return stack.getTagCompound() == null ? new NBTTagCompound() : stack.getTagCompound();
 	}
-	
-    @Nonnull
+
+
+	@Nonnull
+	@SuppressWarnings("ConstantConditions")
 	public static <T> T getNull() {
 		return null;
 	}
-    
+
     public static IItemHandler getHandler(@Nonnull ItemStack stack) {
 		return stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 	}
-    
+
     public static void sendPacketAndStatus(boolean bool, @Nonnull ToggleType type) {
     	SacksNSuch.getNetwork().sendToServer(new TogglePacket(!bool, type));
 		TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".sack." + type.getLang() + "." + (bool ? "disabled" : "enabled"));
