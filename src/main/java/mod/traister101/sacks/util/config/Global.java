@@ -10,10 +10,6 @@ public final class Global {
 
     private static final String LANG_KEY = "config." + MODID + ".global";
 
-    @LangKey(LANG_KEY + ".all_pickup")
-    @Comment("Enable auto pickup for other sack like items such as the TFC vessel. This may not always work as expected enable at your own discretion")
-    public boolean allPickup = false;
-
     @RequiresMcRestart
     @LangKey(LANG_KEY + ".pickup")
     @Comment("Global control for automatic pickup, this will not force enable for every type")
@@ -26,6 +22,10 @@ public final class Global {
     @LangKey(LANG_KEY + ".glint_toggle")
     @Comment("This swaps the enchant glint from showing when a sack is voiding to when it's on auto-pickup")
     public boolean voidGlint = true;
+
+    @LangKey(LANG_KEY + ".all_pickup")
+    @Comment("Enable auto pickup for other sack like items such as the TFC vessel. This may not always work as expected enable at your own discretion")
+    public boolean allPickup = false;
 
     @LangKey(LANG_KEY + ".all_allow_ore")
     @Comment("This makes all sack types capable of holding ore")

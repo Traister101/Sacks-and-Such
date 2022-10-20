@@ -97,11 +97,12 @@ config.sns.explosive_vessel.sticky=Enable sticky explosive vessels
 config.sns.global=Global
 config.sns.global.tooltip=Global config, config which takes effect globally
 
-config.sns.global.all_pickup=Force auto pickup
 config.sns.global.pickup=Enable item pickup
 config.sns.global.void=Enable item voiding
 config.sns.global.glint_toggle=Glint when void
-config.sns.global.all_allow_ore=All allow ore
+config.sns.global.all_pickup=Pickup for other mods
+config.sns.global.all_allow_ore=Allow ore in all sacks
+config.sns.global.all_allow_food=Allow food in sacks
 config.sns.global.shift_toggles_void=Swap right click toggle
 
 

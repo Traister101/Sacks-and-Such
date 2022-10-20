@@ -24,7 +24,7 @@ public final class BurlapSack {
     @Comment("Determines if this sack can void items")
     public boolean doVoiding = true;
 
-    @RequiresWorldRestart
+    @RequiresMcRestart
     @RangeInt(min = 1, max = 512)
     @LangKey(LANG_KEY + ".slot_cap")
     @Comment("Item stack max for the type of sack")
