@@ -31,6 +31,10 @@ public final class Global {
     @Comment("This makes all sack types capable of holding ore")
     public boolean allAllowOre = false;
 
+    @LangKey(LANG_KEY + ".all_allow_food")
+    @Comment("This makes all sacks capable of holding food although they won't preserve it!")
+    public boolean allAllowFood = false;
+
     @LangKey(LANG_KEY + ".shift_toggles_void")
     @Comment("This determines whether shift right click toggles item voiding or item pickup for sacks")
     public boolean shiftClickTogglesVoid = false;

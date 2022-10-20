@@ -38,12 +38,14 @@ public class SackHandler extends AbstractHandler {
         Item item = stack.getItem();
 
         if (type == SackType.FARMER) {
-            //Not a seed
-            if (!(item instanceof ItemSeedsTFC)) return false;
-        } else {
-            //Is a seed
-            if (item instanceof ItemFoodTFC) return false;
+            // Allow other than seeds
+            if (!ConfigSNS.FARMER_SACK.allowNonSeed) {
+                if (!(item instanceof ItemSeedsTFC)) return false;
+            }
         }
+
+        if (!ConfigSNS.GLOBAL.allAllowFood)
+            if (item instanceof ItemFoodTFC) return false;
 
         if (type == SackType.MINER) {
             //Allow other than ore

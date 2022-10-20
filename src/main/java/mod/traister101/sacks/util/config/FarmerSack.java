@@ -24,7 +24,6 @@ public final class FarmerSack {
     @Comment("Determines if this sack can void items")
     public boolean doVoiding = true;
 
-    @RequiresMcRestart
     @LangKey(LANG_KEY + ".allow_non_seed")
     @Comment("Allow non-seed items inside the farmer sack. ITEM SIZE IS STILL A CONSTRAINT")
     public boolean allowNonSeed = false;
