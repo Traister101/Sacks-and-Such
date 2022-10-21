@@ -1,16 +1,22 @@
 package mod.traister101.sacks.objects.container;
 
+import mcp.MethodsReturnNonnullByDefault;
+import mod.traister101.sacks.util.SNSUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public abstract class AbstractContainer extends Container {
 
+    private final IItemHandler handler;
     protected final ItemStack heldStack;
     protected final EntityPlayer player;
     protected final int slotAmount;
@@ -30,6 +36,7 @@ public abstract class AbstractContainer extends Container {
             this.isOffhand = true;
         }
         this.itemIndex += slotAmount;
+        this.handler = SNSUtils.getHandler(heldStack);
     }
 
     @Override
@@ -44,15 +51,33 @@ public abstract class AbstractContainer extends Container {
                 if (i < startIndex) break;
             } else if (i >= endIndex) break;
 
-            Slot slot = inventorySlots.get(i);
-            ItemStack itemStack = slot.getStack();
+            final Slot slot = getSlot(i);
+            ItemStack slotStack = slot.getStack();
 
-            if (!itemStack.isEmpty() && itemStack.getItem() == stackIn.getItem() && (stackIn.getMetadata() == itemStack.getMetadata()) && ItemStack.areItemStackTagsEqual(stackIn, itemStack)) {
+            if (!slotStack.isEmpty() && slotStack.getItem() == stackIn.getItem() && (stackIn.getMetadata() == slotStack.getMetadata()) && ItemStack.areItemStackTagsEqual(stackIn, slotStack)) {
 
-                if (fillStack(stackIn, slot)) {
+                if (i < slotAmount) {
+                    final ItemStack remainer = handler.insertItem(i, stackIn, false);
+                    stackIn.setCount(remainer.getCount());
+                    slot.onSlotChanged();
                     flag = true;
                     break;
+                } else {
+                    final int total = slotStack.getCount() + stackIn.getCount();
+
+                    if (total <= slot.getSlotStackLimit()) {
+                        stackIn.setCount(0);
+                        slotStack.setCount(total);
+                        slot.onSlotChanged();
+                        flag = true;
+                    } else if (slotStack.getCount() < slotStack.getMaxStackSize()) {
+                        stackIn.shrink(slotStackCap - slotStack.getCount());
+                        slotStack.setCount(slotStack.getMaxStackSize());
+                        slot.onSlotChanged();
+                        flag = true;
+                    }
                 }
+
             }
             i += (reverseDirection) ? -1 : 1;
         }
@@ -67,10 +92,18 @@ public abstract class AbstractContainer extends Container {
                     if (i < startIndex) break;
                 } else if (i >= endIndex) break;
 
-                Slot slot = getSlot(i);
-                if (moveStack(stackIn, slot)) {
+                final Slot slot = getSlot(i);
+                final ItemStack slotStack = slot.getStack();
+
+                if (slotStack.isEmpty() && slot.isItemValid(stackIn)) {
+
+                    if (stackIn.getCount() > slot.getSlotStackLimit()) {
+                        slot.putStack(stackIn.splitStack(slot.getSlotStackLimit()));
+                    } else {
+                        slot.putStack(stackIn.splitStack(stackIn.getCount()));
+                    }
+                    slot.onSlotChanged();
                     flag = true;
-                    break;
                 }
                 i += (reverseDirection) ? -1 : 1;
             }
@@ -78,45 +111,8 @@ public abstract class AbstractContainer extends Container {
         return flag;
     }
 
-    //Private method to easily move a stack to a slot
-    private boolean moveStack(ItemStack stackIn, Slot slot) {
-        ItemStack itemstack = slot.getStack();
-
-        boolean bool = false;
-        if (itemstack.isEmpty() && slot.isItemValid(stackIn)) {
-            if (stackIn.getCount() > slot.getItemStackLimit(stackIn)) {
-                slot.putStack(stackIn.splitStack(slot.getItemStackLimit(stackIn)));
-            } else slot.putStack(stackIn.splitStack(stackIn.getCount()));
-            slot.onSlotChanged();
-            bool = true;
-        }
-        return bool;
-    }
-
-    // Private method to easily fill a container item stack
-    private boolean fillStack(ItemStack stackIn, Slot slot) {
-        ItemStack itemStack = slot.getStack();
-        int totalSize = itemStack.getCount() + stackIn.getCount();
-        int maxSize = slot.getItemStackLimit(itemStack);
-
-        boolean bool = false;
-        if (totalSize <= maxSize) {
-            stackIn.setCount(0);
-            itemStack.setCount(totalSize);
-            slot.onSlotChanged();
-            bool = true;
-        } else if (itemStack.getCount() < maxSize) {
-            stackIn.shrink(maxSize - itemStack.getCount());
-            itemStack.setCount(maxSize);
-            slot.onSlotChanged();
-            bool = true;
-        }
-        return bool;
-    }
-
-    @Nonnull
     @Override
-    public final ItemStack slotClick(int slotID, int dragType, ClickType clickType, EntityPlayer player) {
+    public final ItemStack slotClick(final int slotID, final int dragType, final ClickType clickType, final EntityPlayer player) {
         //Not a slot, let vanilla handle it
         if (slotID < 0) return super.slotClick(slotID, dragType, clickType, player);
         //Prevent moving of the item stack that is currently open
@@ -126,49 +122,82 @@ public abstract class AbstractContainer extends Container {
         //Shift click, vanilla method works fine
         if (clickType == ClickType.QUICK_MOVE) return super.slotClick(slotID, dragType, clickType, player);
 
-        Slot slot = getSlot(slotID);
-        ItemStack slotStack = slot.getStack();
+        final Slot slot = getSlot(slotID);
+        final ItemStack slotStack = slot.getStack();
         //Slot is empty give to vanilla
         if (slotStack.isEmpty()) return super.slotClick(slotID, dragType, clickType, player);
 
         if (clickType == ClickType.PICKUP) {
-            InventoryPlayer playerInventory = player.inventory;
+            final InventoryPlayer playerInventory = player.inventory;
+            final ItemStack mouseStack = playerInventory.getItemStack();
 
-            //Holding a item
-            if (!playerInventory.getItemStack().isEmpty()) {
+            //Holding an item
+            if (!mouseStack.isEmpty()) {
+                // If we should try to swap the stacks
+                if (!ItemStack.areItemsEqual(slotStack, mouseStack)) {
+                    if (isStacksSwappable(slotStack, mouseStack, slotID)) {
+                        slot.putStack(mouseStack);
+                        playerInventory.setItemStack(slotStack);
+                        return mouseStack;
+                    } else {
+                        return slotStack;
+                    }
+                }
+
                 //Stack is full
                 if (slotStack.getCount() >= slot.getSlotStackLimit()) return slotStack;
-                //Stacks are the same
-                if (ItemStack.areItemsEqual(slotStack, playerInventory.getItemStack()))
-                    return addToStack(slotStack, playerInventory, dragType, slotStackCap);
+
+                // If we should try to merge the stacks
+                if (ItemStack.areItemsEqual(slotStack, mouseStack)) {
+                    if (slotStack.isStackable() && slotStack.getCount() <= slotStackCap) {
+                        if (dragType == 0) {
+                            // This is a left click
+                            final ItemStack remainer = handler.insertItem(slotID, mouseStack, false);
+                            playerInventory.setItemStack(remainer);
+                        } else {
+                            // This is a rightclick
+                            slotStack.setCount(slotStack.getCount() + 1);
+                            mouseStack.setCount(mouseStack.getCount() - 1);
+                            playerInventory.setItemStack(mouseStack);
+                        }
+                        return slotStack;
+                    }
+                }
             }
             //Stack size is within the normal bounds. Example: cobble = 64 or less
             if (slotStack.getCount() <= slotStack.getMaxStackSize())
                 return super.slotClick(slotID, dragType, clickType, player);
 
-            return takeFromStack(slotStack, playerInventory, dragType);
+            // Grabbing items from sack
+            if (mouseStack.isEmpty()) {
+                int amount = slotStack.getMaxStackSize();
+                if (dragType == 1) amount = amount / 2;
+                final ItemStack extractedItem = handler.extractItem(slotID, amount, false);
+                playerInventory.setItemStack(extractedItem);
+                return ItemStack.EMPTY;
+            }
         }
         return super.slotClick(slotID, dragType, clickType, player);
     }
 
+    // This is very much needed don't believe the fact it seems to be unused
     @Override
     public final ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = inventorySlots.get(index);
+        final Slot slot = inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
+            final ItemStack slotStack = slot.getStack();
 
             if (index < slotAmount) {
-                if (!mergeItemStack(itemstack1, slotAmount, inventorySlots.size(), true)) {
+                if (!mergeItemStack(slotStack, slotAmount, inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(itemstack1, 0, slotAmount, false)) {
+            } else if (!mergeItemStack(slotStack, 0, slotAmount, false)) {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack1.isEmpty()) {
+            if (slotStack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
@@ -177,36 +206,20 @@ public abstract class AbstractContainer extends Container {
         return itemstack;
     }
 
-    @Nonnull
-    private ItemStack takeFromStack(@Nonnull ItemStack slotStack, @Nonnull InventoryPlayer playerInventory, int dragType) {
-        int amount = slotStack.getMaxStackSize();
-        if (dragType == 1) amount = amount / 2;
+    private boolean isStacksSwappable(final ItemStack stackA, final ItemStack stackB, final int slotID) {
+        final int countA = stackA.getCount();
+        final int countB = stackB.getCount();
 
-        ItemStack mouseStack = slotStack.copy();
-        slotStack.setCount(slotStack.getCount() - amount);
-        mouseStack.setCount(amount);
-        playerInventory.setItemStack(mouseStack);
-        return slotStack;
-    }
+        boolean swappableA = false;
+        boolean swappableB = false;
 
-    @Nonnull
-    private ItemStack addToStack(@Nonnull ItemStack slotStack, @Nonnull InventoryPlayer playerInventory, int dragType, int stackCap) {
-        if (!slotStack.isStackable()) return slotStack;
-        //Slot stack less or equal to slot cap
-        if (slotStack.getCount() <= stackCap) {
-            if (dragType == 0) {
-                slotStack.setCount(slotStack.getCount() + playerInventory.getItemStack().getCount());
-                playerInventory.setItemStack(ItemStack.EMPTY);
-                return slotStack;
-            } else {
-                ItemStack mouseStack = playerInventory.getItemStack();
-                slotStack.setCount(slotStack.getCount() + 1);
-                mouseStack.setCount(mouseStack.getCount() - 1);
-                playerInventory.setItemStack(mouseStack);
-                return slotStack;
-            }
-        }
-        return slotStack;
+        if (countA <= slotStackCap && countA <= stackA.getMaxStackSize())
+            swappableA = true;
+
+        if (countB <= slotStackCap && countB <= stackB.getMaxStackSize() && handler.isItemValid(slotID, stackB))
+            swappableB = true;
+
+        return swappableA && swappableB;
     }
 
     protected abstract void addContainerSlots();
@@ -218,7 +231,7 @@ public abstract class AbstractContainer extends Container {
                 addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
-
+        // Add player hotbar slots
         for (int k = 0; k < 9; k++) {
             addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 142));
         }
