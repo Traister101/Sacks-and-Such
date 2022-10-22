@@ -5,7 +5,10 @@ import com.google.common.collect.ImmutableList.Builder;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.util.SackType;
 import mod.traister101.sacks.util.VesselType;
+import net.dries007.tfc.api.capability.size.Size;
+import net.dries007.tfc.api.capability.size.Weight;
 import net.dries007.tfc.objects.CreativeTabsTFC;
+import net.dries007.tfc.objects.items.ItemMisc;
 import net.dries007.tfc.objects.items.ceramics.ItemPottery;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -66,7 +69,7 @@ public final class ItemsSNS {
 
         if (ConfigSNS.LEATHER_SACK.isEnabled) {
             sacks.add(registerSack(registry, "leather", SackType.LEATHER));
-            simpleItems.add(register(registry, "unfinished_leather_sack"));
+            simpleItems.add(register(registry, "unfinished_leather_sack", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
         }
 
         if (ConfigSNS.BURLAP_SACK.isEnabled) {
@@ -114,10 +117,6 @@ public final class ItemsSNS {
 
     private static ItemPottery registerPottery(IForgeRegistry<Item> registry, String string) {
         return register(registry, string, new ItemPottery(), CreativeTabsTFC.CT_POTTERY);
-    }
-
-    private static ItemSNS register(IForgeRegistry<Item> registry, String name) {
-        return register(registry, name, new ItemSNS(), CreativeTabsTFC.CT_MISC);
     }
 
     private static <T extends Item> T register(IForgeRegistry<Item> registry, String name, T item) {
