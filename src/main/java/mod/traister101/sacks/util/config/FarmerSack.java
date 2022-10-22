@@ -21,7 +21,7 @@ public final class FarmerSack {
 
     @RequiresMcRestart
     @LangKey(LANG_KEY + "void")
-    @Comment("Determines if this sack can void items")
+    @Comment("Determines if this sack can void items on pickup")
     public boolean doVoiding = true;
 
     @LangKey(LANG_KEY + "allow_non_seed")
