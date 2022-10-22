@@ -1,5 +1,6 @@
 package mod.traister101.sacks.objects.items;
 
+import mcp.MethodsReturnNonnullByDefault;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.network.TogglePacket;
@@ -21,18 +22,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ItemThrowableVessel extends Item implements IItemSize {
 
     private final VesselType type;
@@ -66,7 +67,9 @@ public class ItemThrowableVessel extends Item implements IItemSize {
         if (!worldIn.isRemote) {
             if (playerIn.isSneaking()) {
                 SacksNSuch.getNetwork().sendToServer(new TogglePacket(!SNSUtils.isSealed(heldStack), ToggleType.SEAL));
-                TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".explosive_vessel.seal." + (SNSUtils.isSealed(heldStack) ? "disabled" : "enabled"));
+                final String flag = SNSUtils.isSealed(heldStack) ? "disabled" : "enabled";
+                final String translationKey = SacksNSuch.MODID + ".explosive_vessel.seal." + flag;
+                TextComponentTranslation statusMessage = new TextComponentTranslation(translationKey);
                 Minecraft.getMinecraft().player.sendStatusMessage(statusMessage, true);
                 return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
             }
@@ -78,12 +81,12 @@ public class ItemThrowableVessel extends Item implements IItemSize {
         return new ActionResult<>(EnumActionResult.FAIL, heldStack);
     }
 
-    private final void throwVessel(@Nonnull World worldIn, @Nonnull EntityPlayer playerIn, @Nonnull ItemStack heldStack) {
+    private void throwVessel(@Nonnull World worldIn, @Nonnull EntityPlayer playerIn, @Nonnull ItemStack heldStack) {
         if (!playerIn.capabilities.isCreativeMode) {
             heldStack.shrink(1);
         }
 
-        worldIn.playSound((EntityPlayer) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW,
+        worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW,
                 SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
         if (!worldIn.isRemote) {
@@ -94,16 +97,15 @@ public class ItemThrowableVessel extends Item implements IItemSize {
     }
 
     private void openContainer(World worldIn, EntityPlayer playerIn) {
-        GuiHandler.openGui(worldIn, playerIn, VesselType.getGui(type));
+        GuiHandler.openGui(worldIn, playerIn, type.gui);
     }
 
-    private final float calculateStrength() {
+    private float calculateStrength() {
         if (type == VesselType.TINY) return (float) ConfigSNS.EXPLOSIVE_VESSEL.smallPower;
 
         final int count = handler.getStackInSlot(0).getCount();
         final double multiplier = ConfigSNS.EXPLOSIVE_VESSEL.explosionMultiplier;
-        final float strength = (float) ((count / 14) * multiplier);
-        return strength;
+        return (float) ((count / 14) * multiplier);
     }
 
     @Override
@@ -148,6 +150,6 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 
     @Override
     public boolean canStack(@Nonnull ItemStack stack) {
-        return type == VesselType.TINY ? true : false;
+        return type == VesselType.TINY;
     }
 }

@@ -1,28 +1,22 @@
 package mod.traister101.sacks.util;
 
-import mod.traister101.sacks.util.handlers.GuiHandler;
 import mod.traister101.sacks.util.handlers.GuiHandler.GuiType;
 
 import javax.annotation.Nonnull;
 
 public enum VesselType {
-    EXPLOSIVE,
-    STICKY,
-    TINY,
-    NULL;
+    EXPLOSIVE(GuiType.VESSEL_EXPLOSIVE),
+    STICKY(GuiType.VESSEL_EXPLOSIVE),
+    TINY(GuiType.NULL),
+    NULL(GuiType.NULL);
+
+    public final GuiType gui;
+
+    VesselType(GuiType gui) {
+        this.gui = gui;
+    }
 
     private static final VesselType[] values = values();
-
-    public static GuiType getGui(VesselType type) {
-        switch (type) {
-            case EXPLOSIVE:
-            case STICKY:
-                return GuiHandler.GuiType.VESSEL_EXPLOSIVE;
-            case TINY:
-            default:
-                return GuiHandler.GuiType.NULL;
-        }
-    }
 
     @Nonnull
     public static VesselType valueOf(int id) {

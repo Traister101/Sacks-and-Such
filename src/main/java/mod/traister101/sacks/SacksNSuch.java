@@ -52,7 +52,7 @@ public final class SacksNSuch {
         // Only register pickup handler if auto pickup is enabled
         if (ConfigSNS.GLOBAL.doPickup) {
             MinecraftForge.EVENT_BUS.register(new PickupHandler());
-        } else log.info("Sacks of all types won't have autopickup");
+        } else log.info("Sacks of all types won't do autopickup!");
 
         EntitiesSNS.preInit();
 

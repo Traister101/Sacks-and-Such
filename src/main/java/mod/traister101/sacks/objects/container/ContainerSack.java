@@ -14,7 +14,7 @@ public class ContainerSack extends AbstractContainerRenameable {
     private final SackType type;
 
     public ContainerSack(InventoryPlayer playerInv, ItemStack heldStack) {
-        // This super constructor call is gross, especially this V because type can't assigned until after the constructor
+        // This super constructor call is gross, especially this V because type can't be assigned until after the constructor
         super(playerInv, heldStack, ((ItemSack) heldStack.getItem()).getType().slots);
         this.type = ((ItemSack) heldStack.getItem()).getType();
         this.slotStackCap = type.stackCap;
