@@ -1,5 +1,6 @@
 package mod.traister101.sacks.objects.items;
 
+import mcp.MethodsReturnNonnullByDefault;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
@@ -25,26 +26,24 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class ItemSack extends Item implements IItemSize {
 
     private final SackType type;
-    private Weight weight;
-    private Size size;
 
-    public ItemSack(@Nonnull SackType type) {
-        setWeight(Weight.MEDIUM);
-        setSize(Size.NORMAL);
+    public ItemSack(SackType type) {
         setMaxStackSize(1);
         this.type = type;
     }
 
     @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        ItemStack heldStack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> onItemRightClick(final World worldIn, final EntityPlayer playerIn, final EnumHand handIn) {
+        final ItemStack heldStack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
-
             if (playerIn.isSneaking()) {
                 if (ConfigSNS.GLOBAL.shiftClickTogglesVoid) {
                     SNSUtils.sendPacketAndStatus(SNSUtils.isAutoVoid(heldStack), ToggleType.VOID);
@@ -57,7 +56,7 @@ public class ItemSack extends Item implements IItemSize {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(final ItemStack stack, @Nullable final World worldIn, final List<String> tooltip, ITooltipFlag flagIn) {
         String text = SacksNSuch.MODID + ".sack.tooltip";
         if (GuiScreen.isShiftKeyDown()) {
             if (SNSUtils.isAutoVoid(stack)) {
@@ -72,14 +71,14 @@ public class ItemSack extends Item implements IItemSize {
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean hasEffect(final ItemStack stack) {
         if (ConfigSNS.GLOBAL.voidGlint) return SNSUtils.isAutoVoid(stack);
         return SNSUtils.isAutoPickup(stack);
     }
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+    public ICapabilityProvider initCapabilities(final ItemStack stack, @Nullable NBTTagCompound nbt) {
         return new SackHandler(nbt, type);
     }
 
@@ -88,30 +87,26 @@ public class ItemSack extends Item implements IItemSize {
         return type;
     }
 
-    public ItemSack setSize(@Nonnull Size size) {
-        this.size = size;
-        return this;
-    }
-
-    public ItemSack setWeight(@Nonnull Weight weight) {
-        this.weight = weight;
-        return this;
+    @Nonnull
+    @Override
+    public Size getSize(ItemStack stack) {
+        if (stack.getItem() instanceof ItemSack) {
+            if (SNSUtils.doesSackHaveItems(stack)) {
+                if (type == SackType.KNAPSACK) return Size.VERY_LARGE;
+                return Size.LARGE;
+            }
+        }
+        return Size.NORMAL;
     }
 
     @Nonnull
     @Override
-    public Size getSize(@Nonnull ItemStack stack) {
-        return size;
-    }
-
-    @Nonnull
-    @Override
-    public Weight getWeight(@Nonnull ItemStack stack) {
-        return weight;
+    public Weight getWeight(ItemStack stack) {
+        return Weight.VERY_HEAVY;
     }
 
     @Override
-    public boolean canStack(@Nonnull ItemStack stack) {
+    public boolean canStack(ItemStack stack) {
         return false;
     }
 }

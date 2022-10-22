@@ -142,5 +142,18 @@ public abstract class AbstractHandler extends ItemStackHandler implements ICapab
 
     @Override
     public void onContentsChanged(int slot) {
+
+    }
+
+    public boolean hasItems() {
+        boolean hasItems = false;
+        deserializeNBT(serializeNBT());
+        for (int i = 0; i < getSlots(); i++) {
+            if (!getStackInSlot(i).isEmpty()) {
+                hasItems = true;
+                break;
+            }
+        }
+        return hasItems;
     }
 }

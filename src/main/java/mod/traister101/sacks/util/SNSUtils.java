@@ -30,7 +30,12 @@ public final class SNSUtils {
         if (!stack.hasTagCompound()) {
             toggle(stack, ToggleType.PICKUP, true);
         }
+
         return getTagSafely(stack).getBoolean(ToggleType.PICKUP.toString());
+    }
+
+    public static boolean doesSackHaveItems(ItemStack stack) {
+        return getTagSafely(stack).getBoolean("has items");
     }
 
     public static void toggle(@Nonnull ItemStack stack, @Nonnull ToggleType type, boolean toggle) {
