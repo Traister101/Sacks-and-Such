@@ -13,6 +13,6 @@ public class SackSlot extends AbstractSlot {
 
     @Override
     public boolean isSameInventory(Slot other) {
-        return other instanceof SackSlot && ((SackSlot) other).getItemHandler() == handler;
+        return other instanceof SackSlot && ((SackSlot) other).getItemHandler() == getItemHandler();
     }
 }

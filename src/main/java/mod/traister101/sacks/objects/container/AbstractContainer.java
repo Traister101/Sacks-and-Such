@@ -59,23 +59,18 @@ public abstract class AbstractContainer extends Container {
                 if (i < slotAmount) {
                     final ItemStack remainer = handler.insertItem(i, stackIn, false);
                     stackIn.setCount(remainer.getCount());
-                    slot.onSlotChanged();
-                    flag = true;
-                    break;
                 } else {
                     final int total = slotStack.getCount() + stackIn.getCount();
-
-                    if (total <= slot.getSlotStackLimit()) {
+                    final int maxSize = Math.min(slot.getSlotStackLimit(), stackIn.getMaxStackSize());
+                    if (total <= maxSize) {
                         stackIn.setCount(0);
                         slotStack.setCount(total);
-                        slot.onSlotChanged();
-                        flag = true;
-                    } else if (slotStack.getCount() < slotStack.getMaxStackSize()) {
-                        stackIn.shrink(slotStackCap - slotStack.getCount());
+                    } else if (slotStack.getCount() < maxSize) {
+                        stackIn.shrink(maxSize - slotStack.getCount());
                         slotStack.setCount(slotStack.getMaxStackSize());
-                        slot.onSlotChanged();
-                        flag = true;
                     }
+                    slot.onSlotChanged();
+                    flag = true;
                 }
 
             }
@@ -96,9 +91,10 @@ public abstract class AbstractContainer extends Container {
                 final ItemStack slotStack = slot.getStack();
 
                 if (slotStack.isEmpty() && slot.isItemValid(stackIn)) {
-
-                    if (stackIn.getCount() > slot.getSlotStackLimit()) {
-                        slot.putStack(stackIn.splitStack(slot.getSlotStackLimit()));
+                    if (i < slotAmount) {
+                        slot.putStack(stackIn.splitStack(slotStackCap));
+                    } else if (stackIn.getCount() > stackIn.getMaxStackSize()) {
+                        slot.putStack(stackIn.splitStack(stackIn.getMaxStackSize()));
                     } else {
                         slot.putStack(stackIn.splitStack(stackIn.getCount()));
                     }

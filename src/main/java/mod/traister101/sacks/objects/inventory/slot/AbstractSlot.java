@@ -7,61 +7,60 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public abstract class AbstractSlot extends SlotItemHandler {
 
-    protected final AbstractHandler handler;
-
-    public AbstractSlot(@Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+    public AbstractSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
-        this.handler = (AbstractHandler) itemHandler;
     }
 
     @Override
     public int getSlotStackLimit() {
-        return handler.getSlotLimit(slotNumber);
+        return getItemHandler().getSlotLimit(slotNumber);
     }
 
     @Override
     public int getItemStackLimit(ItemStack stack) {
-        return handler.getStackLimit(slotNumber, stack);
+        return getItemHandler().getStackLimit(slotNumber, stack);
     }
 
     @Override
-    public void putStack(@Nonnull ItemStack stack) {
-        handler.setStackInSlot(slotNumber, stack);
+    public void putStack(ItemStack stack) {
+        getItemHandler().setStackInSlot(slotNumber, stack);
         onSlotChanged();
     }
 
     @Override
-    public void onSlotChange(ItemStack p_75220_1_, ItemStack p_75220_2_) {
-        handler.onContentsChanged(slotNumber);
+    public void onSlotChange(ItemStack stackA, ItemStack stackB) {
+        getItemHandler().onContentsChanged(slotNumber);
     }
 
     @Override
     public boolean canTakeStack(EntityPlayer playerIn) {
-        return !handler.extractItem(slotNumber, 1, true).isEmpty();
+        return !getItemHandler().extractItem(slotNumber, 1, true).isEmpty();
     }
 
     @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
-        return handler.isItemValid(slotNumber, stack);
+    public boolean isItemValid(ItemStack stack) {
+        return getItemHandler().isItemValid(slotNumber, stack);
     }
 
     @Nonnull
     @Override
     public ItemStack getStack() {
-        return handler.getStackInSlot(slotNumber);
+        return getItemHandler().getStackInSlot(slotNumber);
     }
 
     @Nonnull
     @Override
     public ItemStack decrStackSize(int amount) {
-        return handler.extractItem(slotNumber, amount, false);
+        return getItemHandler().extractItem(slotNumber, amount, false);
     }
 
     @Override
     public AbstractHandler getItemHandler() {
-        return handler;
+        return (AbstractHandler) super.getItemHandler();
     }
 }

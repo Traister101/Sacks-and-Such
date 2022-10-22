@@ -16,13 +16,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class SackHandler extends AbstractHandler {
 
     private final SackType type;
 
-    public SackHandler(@Nullable NBTTagCompound nbt, @Nonnull SackType type) {
+    public SackHandler(NBTTagCompound nbt, SackType type) {
         super(nbt, type.slots, type.stackCap);
         this.type = type;
     }
@@ -35,7 +34,7 @@ public class SackHandler extends AbstractHandler {
         // Stack is a sack, no sack-ception
         if (stack.getItem() instanceof ItemSack) return false;
 
-        Item item = stack.getItem();
+        final Item item = stack.getItem();
 
         if (type == SackType.FARMER) {
             // Allow other than seeds
@@ -66,11 +65,17 @@ public class SackHandler extends AbstractHandler {
             if (!SNSUtils.isSmallerOrEqualTo(size, type.allowedSize)) return false;
         }
 
-        ItemStack currentStack = getStackInSlot(slot);
+        final ItemStack currentStack = getStackInSlot(slot);
         setStackInSlot(slot, ItemStack.EMPTY);
-        ItemStack remainder = insertItem(slot, stack, true);
+        final ItemStack remainder = insertItem(slot, stack, true);
         setStackInSlot(slot, currentStack);
 
         return remainder.isEmpty() || remainder.getCount() < stack.getCount();
+    }
+
+    @Override
+    public int getStackLimit(int slot, @Nonnull ItemStack stack) {
+        if (type == SackType.KNAPSACK) return stack.getMaxStackSize();
+        return super.getStackLimit(slot, stack);
     }
 }
