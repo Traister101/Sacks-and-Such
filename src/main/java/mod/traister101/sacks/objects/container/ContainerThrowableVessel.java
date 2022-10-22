@@ -1,5 +1,6 @@
 package mod.traister101.sacks.objects.container;
 
+import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.inventory.capability.VesselHandler;
 import mod.traister101.sacks.objects.inventory.slot.VesselSlot;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -11,7 +12,7 @@ public class ContainerThrowableVessel extends AbstractContainer {
 
     public ContainerThrowableVessel(InventoryPlayer playerInv, ItemStack heldStack) {
         super(playerInv, heldStack, 1);
-        this.slotStackCap = 256;
+        this.slotStackCap = ConfigSNS.EXPLOSIVE_VESSEL.slotCap;
         addContainerSlots();
         addPlayerInventorySlots(playerInv);
     }

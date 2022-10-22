@@ -17,12 +17,12 @@ public final class KnapSack {
     @RequiresMcRestart
     @LangKey(LANG_KEY + ".pickup")
     @Comment("Determines if this sack will automatically pickup items")
-    public boolean doPickup = true;
+    public boolean doPickup = false;
 
     @RequiresMcRestart
     @LangKey(LANG_KEY + ".void")
-    @Comment("Determines if this sack can void items")
-    public boolean doVoiding = true;
+    @Comment("Determines if this sack can void items on autopickup")
+    public boolean doVoiding = false;
 
     @RequiresMcRestart
     @RangeInt(min = 1, max = 64)
@@ -33,5 +33,5 @@ public final class KnapSack {
     @RequiresMcRestart
     @LangKey(LANG_KEY + ".size")
     @Comment("The maximum item size allowed in the sack")
-    public Size allowedSize = Size.NORMAL;
+    public Size allowedSize = Size.LARGE;
 }
