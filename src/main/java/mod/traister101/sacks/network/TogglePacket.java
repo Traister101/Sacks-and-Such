@@ -43,14 +43,14 @@ public class TogglePacket implements IMessage {
 
         @Override
         public IMessage onMessage(TogglePacket message, MessageContext ctx) {
-            EntityPlayer player = ctx.getServerHandler().player;
+            final EntityPlayer player = ctx.getServerHandler().player;
             if (player == null) return null;
             FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
             return null;
         }
 
         private void handle(TogglePacket message, MessageContext ctx) {
-            EntityPlayer player = ctx.getServerHandler().player;
+            final EntityPlayer player = ctx.getServerHandler().player;
             ItemStack stack = player.getHeldItemMainhand();
             // Only throwable vessels can be sealed
             if (message.type == ToggleType.SEAL) {

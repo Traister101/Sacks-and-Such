@@ -17,30 +17,29 @@ import javax.annotation.Nonnull;
 public final class SNSUtils {
 
     public static boolean isSealed(@Nonnull ItemStack stack) {
-        return stack.getItem() instanceof ItemThrowableVessel && getTagSafely(stack).getBoolean(ToggleType.SEAL.toString());
+        return stack.getItem() instanceof ItemThrowableVessel && getTagSafely(stack).getBoolean(ToggleType.SEAL.key);
     }
 
     public static boolean isAutoVoid(@Nonnull ItemStack stack) {
-        return stack.getItem() instanceof ItemSack && getTagSafely(stack).getBoolean(ToggleType.VOID.toString());
+        return stack.getItem() instanceof ItemSack && getTagSafely(stack).getBoolean(ToggleType.VOID.key);
     }
 
     public static boolean isAutoPickup(@Nonnull ItemStack stack) {
-        if (!(stack.getItem() instanceof ItemSack)) return false;
-
-        if (!stack.hasTagCompound()) {
-            toggle(stack, ToggleType.PICKUP, true);
-        }
-
-        return getTagSafely(stack).getBoolean(ToggleType.PICKUP.toString());
+        if (stack.getItem() instanceof ItemSack)
+            if (!getTagSafely(stack).hasKey(ToggleType.PICKUP.key)) {
+                SacksNSuch.getNetwork().sendToServer(new TogglePacket(true, ToggleType.PICKUP));
+                return true;
+            }
+        return getTagSafely(stack).getBoolean(ToggleType.PICKUP.key);
     }
 
-    public static boolean doesSackHaveItems(ItemStack stack) {
-        return getTagSafely(stack).getBoolean("has items");
+    public static boolean doesSackHaveItems(@Nonnull ItemStack stack) {
+        return stack.getItem() instanceof ItemSack && getTagSafely(stack).getBoolean(ToggleType.ITEMS.key);
     }
 
     public static void toggle(@Nonnull ItemStack stack, @Nonnull ToggleType type, boolean toggle) {
-        NBTTagCompound tag = getTagSafely(stack);
-        tag.setBoolean(type.toString(), toggle);
+        final NBTTagCompound tag = getTagSafely(stack);
+        tag.setBoolean(type.key, toggle);
         stack.setTagCompound(tag);
     }
 
@@ -63,36 +62,32 @@ public final class SNSUtils {
         return stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
     }
 
-    public static void sendPacketAndStatus(boolean bool, @Nonnull ToggleType type) {
-        SacksNSuch.getNetwork().sendToServer(new TogglePacket(!bool, type));
-        TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".sack." + type.getLang() + "." + (bool ? "disabled" : "enabled"));
+    public static void sendPacketAndStatus(boolean flag, @Nonnull ToggleType type) {
+        SacksNSuch.getNetwork().sendToServer(new TogglePacket(!flag, type));
+        TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".sack." + type.lang + "." + (flag ? "disabled" : "enabled"));
         Minecraft.getMinecraft().player.sendStatusMessage(statusMessage, true);
     }
 
     public enum ToggleType {
-        SEAL,
-        VOID,
-        PICKUP,
-        NULL;
+        SEAL("seal", "seal"),
+        VOID("auto_void", "void"),
+        PICKUP("auto_pickup", "pickup"),
+        ITEMS("", "items"),
+        NULL("", "");
+
+        public final String lang;
+        public final String key;
+
+        ToggleType(String lang, String key) {
+            this.lang = lang;
+            this.key = key;
+        }
 
         private static final ToggleType[] values = values();
 
         @Override
         public String toString() {
             return name().toLowerCase();
-        }
-
-        public String getLang() {
-            switch (this) {
-                case PICKUP:
-                    return "auto_pickup";
-                case SEAL:
-                    return "seal";
-                case VOID:
-                    return "auto_void";
-                default:
-                    return "";
-            }
         }
 
         @Nonnull

@@ -50,7 +50,10 @@ public class ItemSack extends Item implements IItemSize {
                 } else {
                     SNSUtils.sendPacketAndStatus(SNSUtils.isAutoPickup(heldStack), ToggleType.PICKUP);
                 }
-            } else GuiHandler.openGui(worldIn, playerIn, type.gui);
+            } else {
+                GuiHandler.openGui(worldIn, playerIn, type.gui);
+            }
+            return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
         }
         return new ActionResult<>(EnumActionResult.FAIL, heldStack);
     }

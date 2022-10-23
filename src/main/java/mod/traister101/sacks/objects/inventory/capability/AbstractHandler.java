@@ -147,7 +147,6 @@ public abstract class AbstractHandler extends ItemStackHandler implements ICapab
 
     public boolean hasItems() {
         boolean hasItems = false;
-        deserializeNBT(serializeNBT());
         for (int i = 0; i < getSlots(); i++) {
             if (!getStackInSlot(i).isEmpty()) {
                 hasItems = true;

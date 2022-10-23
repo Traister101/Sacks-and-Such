@@ -2,6 +2,9 @@ package mod.traister101.sacks.util.handlers;
 
 import mcp.MethodsReturnNonnullByDefault;
 import mod.traister101.sacks.ConfigSNS;
+import mod.traister101.sacks.SacksNSuch;
+import mod.traister101.sacks.network.TogglePacket;
+import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SNSUtils;
 import mod.traister101.sacks.util.SackType;
@@ -104,6 +107,10 @@ public final class PickupHandler {
                         SPacketCollectItem packet = new SPacketCollectItem(itemEntity.getEntityId(), player.getEntityId(), numPickedUp);
                         ((EntityPlayerMP) player).connection.sendPacket(packet);
                         player.openContainer.detectAndSendChanges();
+                        if (containerInv instanceof SackHandler) {
+                            final boolean toggleFlag = ((SackHandler) containerInv).hasItems();
+                            SacksNSuch.getNetwork().sendToServer(new TogglePacket(toggleFlag, SNSUtils.ToggleType.ITEMS));
+                        }
                         return true;
                     }
                 }
