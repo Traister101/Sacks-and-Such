@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
@@ -24,7 +23,7 @@ public final class GuiHandler implements IGuiHandler {
 
     public static final ResourceLocation SACK_SLOTS_1 = new ResourceLocation(MODID, "textures/gui/sack_1.png");
     public static final ResourceLocation SACK_SLOTS_4 = new ResourceLocation(MODID, "textures/gui/sack_4.png");
-    private static final ResourceLocation SACK_SLOTS_18 = new ResourceLocation(MODID, "textures/gui/sack_18.png");
+    public static final ResourceLocation SACK_SLOTS_18 = new ResourceLocation(MODID, "textures/gui/sack_18.png");
     public static final ResourceLocation SACK_SLOTS_27 = new ResourceLocation(MODID, "textures/gui/sack_27.png");
     public static final ResourceLocation VESSEL_SLOTS_1 = new ResourceLocation(MODID, "textures/gui/vessel_1.png");
 
@@ -35,7 +34,6 @@ public final class GuiHandler implements IGuiHandler {
     @Override
     @Nullable
     public Container getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        BlockPos pos = new BlockPos(x, y, z);
         ItemStack stack = player.getHeldItemMainhand();
         GuiType guiType = GuiType.valueOf(ID);
         switch (guiType) {
@@ -59,7 +57,6 @@ public final class GuiHandler implements IGuiHandler {
         Container container = getServerGuiElement(ID, player, world, x, y, z);
         ItemStack stack = player.getHeldItemMainhand();
         GuiType guiType = GuiType.valueOf(ID);
-        BlockPos pos = new BlockPos(x, y, z);
 
         switch (guiType) {
             case SACK_THATCH:

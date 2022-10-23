@@ -22,7 +22,7 @@ public final class MinerSack {
     @RequiresMcRestart
     @LangKey(LANG_KEY + "void")
     @Comment("Determines if this sack can void items on pickup")
-    public boolean doVoiding = true;
+    public boolean doVoiding = false;
 
     @RequiresMcRestart
     @LangKey(LANG_KEY + "allow_non_ore")
@@ -38,5 +38,5 @@ public final class MinerSack {
     @RequiresMcRestart
     @LangKey(LANG_KEY + "size")
     @Comment("The maximum item size allowed in the sack")
-    public Size allowedSize = Size.NORMAL;
+    public Size allowedSize = Size.SMALL;
 }

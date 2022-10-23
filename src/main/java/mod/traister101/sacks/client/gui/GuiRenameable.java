@@ -19,7 +19,6 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
 
     protected final AbstractContainerRenameable container;
     protected final InventoryPlayer playerInv;
-
     private GuiTextField nameField;
     private boolean renaming;
     private String name;
@@ -35,11 +34,11 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
     public void initGui() {
         super.initGui();
         Keyboard.enableRepeatEvents(true);
-        addButton(new GuiButtonSack(0, guiLeft + 155, guiTop + 6, 16, 16, "rename", background));
+        addButton(new GuiButtonSack(0, guiLeft + 152, guiTop + 6, 16, 16, "rename"));
         nameField = new GuiTextField(0, fontRenderer, guiLeft + 8, guiTop + 6, 120, 15);
         nameField.setTextColor(-1);
         nameField.setDisabledTextColour(-1);
-        nameField.setMaxStringLength(22);
+        nameField.setMaxStringLength(20);
         nameField.setEnableBackgroundDrawing(false);
         nameField.setText(name);
         nameField.setEnabled(false);
@@ -63,9 +62,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
         // Rename button
         if (button.id == 0) {
             // Toggle text box
-            if (renaming) {
-                setRenaming(false);
-            } else setRenaming(true);
+            setRenaming(!renaming);
         }
     }
 
@@ -109,7 +106,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
     }
 
     // Toggles renaming and the text field
-    private final void setRenaming(boolean rename) {
+    private void setRenaming(boolean rename) {
         if (rename) {
             renaming = true;
             nameField.setFocused(true);
@@ -123,7 +120,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
         }
     }
 
-    private final void renameItem() {
+    private void renameItem() {
         String name = nameField.getText();
 
         if (StringUtils.equals(name, this.name)) return;
