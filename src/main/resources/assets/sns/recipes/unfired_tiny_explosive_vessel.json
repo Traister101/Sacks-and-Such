@@ -1,25 +1,25 @@
 {
-	"conditions": [
-		{
-			"type": "sns:config",
-			"config": "tiny_explosive_vessel"
-		}
-	],
-	"type": "damage_item_shaped",
-	"pattern": [
-		"VK"
-	],
-	"key":{
-		"K": {
-			"type": "forge:ore_dict",
-			"ore": "knife"
-		},
-		"V": {
-			"item": "sns:unfired_explosive_vessel"
-		}
-	},
-	"result": {
-		"item": "sns:unfired_tiny_explosive_vessel",
-		"count": 4
-	}
+  "conditions": [
+    {
+      "type": "sns:config",
+      "config": "tiny_explosive_vessel"
+    }
+  ],
+  "type": "damage_item_shaped",
+  "pattern": [
+    "VK"
+  ],
+  "key": {
+    "K": {
+      "type": "forge:ore_dict",
+      "ore": "knife"
+    },
+    "V": {
+      "item": "sns:unfired_explosive_vessel"
+    }
+  },
+  "result": {
+    "item": "sns:unfired_tiny_explosive_vessel",
+    "count": 4
+  }
 }

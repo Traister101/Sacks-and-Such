@@ -9,6 +9,7 @@ import java.util.function.BooleanSupplier;
 
 import static mod.traister101.sacks.ConfigSNS.*;
 
+@SuppressWarnings("unused")
 public class ConditionalFactory implements IConditionFactory {
 
     @Override
@@ -24,6 +25,14 @@ public class ConditionalFactory implements IConditionFactory {
                 return () -> BURLAP_SACK.isEnabled;
             case "miner_sack":
                 return () -> MINER_SACK.isEnabled;
+            case "farmer_sack":
+                return () -> FARMER_SACK.isEnabled;
+            case "knap_sack":
+                return () -> KNAP_SACK.isEnabled;
+            case "reinforced_fiber":
+                return () -> FARMER_SACK.isEnabled || MINER_SACK.isEnabled;
+            case "steel_reinforced_fiber":
+                return () -> (FARMER_SACK.isEnabled || MINER_SACK.isEnabled) && KNAP_SACK.isEnabled;
             case "tiny_vessel":
                 return () -> EXPLOSIVE_VESSEL.isEnabled && EXPLOSIVE_VESSEL.smallEnabled;
             case "sticky_vessel":

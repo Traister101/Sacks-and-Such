@@ -2,32 +2,28 @@
   "conditions": [
     {
       "type": "sns:config",
-      "config": "leather_sack"
+      "config": "burlap_sack"
     }
   ],
   "type": "damage_item_shaped",
   "pattern": [
     "JJJ",
-    "LUL",
-    " LK"
+    "B B",
+    " BK"
   ],
   "key": {
     "K": {
       "type": "forge:ore_dict",
       "ore": "knife"
     },
-    "U": {
-      "item": "sns:unfinished_leather_sack"
-    },
-    "L": {
-      "type": "forge:ore_dict",
-      "ore": "leather"
+    "B": {
+      "item": "tfc:crop/product/burlap_cloth"
     },
     "J": {
       "item": "tfc:crop/product/jute_fiber"
     }
   },
   "result": {
-    "item": "sns:leather_sack"
+    "item": "sns:burlap_sack"
   }
 }

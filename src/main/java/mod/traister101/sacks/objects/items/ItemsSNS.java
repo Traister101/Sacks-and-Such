@@ -85,12 +85,14 @@ public final class ItemsSNS {
 
         if (ConfigSNS.FARMER_SACK.isEnabled) {
             sacks.add(registerSack(registry, "farmer", SackType.FARMER));
-            simpleItems.add(register(registry, "reinforced_fiber", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
-            simpleItems.add(register(registry, "reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
         }
 
-        if (ConfigSNS.KNAP_SACK.isEnabled || ConfigSNS.MINER_SACK.isEnabled && ConfigSNS.FARMER_SACK.isEnabled) {
-            simpleItems.add(register(registry, "steel_reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
+        if (ConfigSNS.FARMER_SACK.isEnabled || ConfigSNS.MINER_SACK.isEnabled) {
+            simpleItems.add(register(registry, "reinforced_fiber", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
+            simpleItems.add(register(registry, "reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
+            if (ConfigSNS.KNAP_SACK.isEnabled) {
+                simpleItems.add(register(registry, "steel_reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
+            }
         }
 
         if (ConfigSNS.KNAP_SACK.isEnabled) {

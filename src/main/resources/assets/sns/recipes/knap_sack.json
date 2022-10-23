@@ -1,0 +1,33 @@
+{
+  "conditions": [
+    {
+      "type": "sns:config",
+      "config": "knap_sack"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RFR",
+    "FCF",
+    "RFS"
+  ],
+  "key": {
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "chestWood"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    },
+    "R": {
+      "item": "sns:reinforced_fiber"
+    },
+    "F": {
+      "item": "sns:steel_reinforced_fabric"
+    }
+  },
+  "result": {
+    "item": "sns:knap_sack"
+  }
+}

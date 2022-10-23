@@ -4,6 +4,9 @@ item.sns.unfinished_leather_sack.name=Unfinished Leather Sack
 item.sns.unfired_tiny_vessel.name=Unfired Tiny Vessel
 item.sns.fired_tiny_vessel.name=Fired Tiny Vessel
 item.sns.unfired_explosive_vessel.name=Unfired Explosive Vessel
+item.sns.reinforced_fabric.name=Reinforced Fabric
+item.sns.reinforced_fiber.name=Reinforced Fiber
+item.sns.steel_reinforced_fabric.name=Steel Reinforced Fabric
 
 #Sacks
 item.sns.thatch_sack.name=Thatch Sack

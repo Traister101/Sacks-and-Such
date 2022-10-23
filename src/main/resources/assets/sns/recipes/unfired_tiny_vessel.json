@@ -2,28 +2,24 @@
   "conditions": [
     {
       "type": "sns:config",
-      "config": "thatch_sack"
+      "config": "tiny_vessel"
     }
   ],
   "type": "damage_item_shaped",
   "pattern": [
-    "JJJ",
-    "T T",
-    " TK"
+    "VK"
   ],
   "key": {
     "K": {
       "type": "forge:ore_dict",
       "ore": "knife"
     },
-    "T": {
-      "item": "tfc:thatch"
-    },
-    "J": {
-      "item": "tfc:crop/product/jute_fiber"
+    "V": {
+      "item": "sns:unfired_explosive_vessel"
     }
   },
   "result": {
-    "item": "sns:thatch_sack"
+    "item": "sns:unfired_tiny_vessel",
+    "count": 4
   }
 }

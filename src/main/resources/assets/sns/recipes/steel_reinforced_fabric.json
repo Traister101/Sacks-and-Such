@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "sns:config",
+      "config": "steel_reinforced_fiber"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FFF",
+    "FSF",
+    "FFF"
+  ],
+  "key": {
+    "S": {
+      "item": "tfc:metal/sheet/steel"
+    },
+    "F": {
+      "item": "sns:reinforced_fabric"
+    }
+  },
+  "result": {
+    "item": "sns:steel_reinforced_fabric"
+  }
+}

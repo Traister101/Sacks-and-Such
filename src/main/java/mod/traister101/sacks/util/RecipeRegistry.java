@@ -2,6 +2,7 @@ package mod.traister101.sacks.util;
 
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.items.ItemsSNS;
+import net.dries007.tfc.api.recipes.LoomRecipe;
 import net.dries007.tfc.api.recipes.heat.HeatRecipe;
 import net.dries007.tfc.api.recipes.heat.HeatRecipeSimple;
 import net.dries007.tfc.api.recipes.knapping.KnappingRecipe;
@@ -11,6 +12,7 @@ import net.dries007.tfc.api.types.Metal;
 import net.dries007.tfc.objects.inventory.ingredient.IIngredient;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -25,7 +27,7 @@ public final class RecipeRegistry {
 
     @SubscribeEvent
     public static void onRegisterKnappingRecipeEvent(Register<KnappingRecipe> event) {
-        IForgeRegistry<KnappingRecipe> recipeRegistry = event.getRegistry();
+        final IForgeRegistry<KnappingRecipe> recipeRegistry = event.getRegistry();
 
         if (ConfigSNS.LEATHER_SACK.isEnabled)
             leatherKnappingRecipe(recipeRegistry, ItemsSNS.UNFINISHED_LEATHER_SACK, 1,
@@ -53,10 +55,18 @@ public final class RecipeRegistry {
 
     @SubscribeEvent
     public static void onRegisterHeatRecipeEvent(Register<HeatRecipe> event) {
-        IForgeRegistry<HeatRecipe> recipeRegistry = event.getRegistry();
+        final IForgeRegistry<HeatRecipe> recipeRegistry = event.getRegistry();
 
         heatRecipe(recipeRegistry, ItemsSNS.UNFIRED_TINY_VESSEL, ItemsSNS.FIRED_TINY_VESSEL);
         heatRecipe(recipeRegistry, ItemsSNS.UNFIRED_EXPLOSIVE_VESSEL, ItemsSNS.EXPLOSIVE_VESSEL);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterLoomRecipeEvent(Register<LoomRecipe> event) {
+        final IForgeRegistry<LoomRecipe> recipeRegistry = event.getRegistry();
+        final ResourceLocation texture = new ResourceLocation(MODID,"textures/loom/reinforced_fabric.png");
+        final ResourceLocation name = new ResourceLocation(MODID, "reinforced_fiber");
+        recipeRegistry.register(new LoomRecipe(name, IIngredient.of(ItemsSNS.REINFORCED_FIBER, 16), new ItemStack(ItemsSNS.REINFORCED_FABRIC), 16, texture));
     }
 
     private static void heatRecipe(IForgeRegistry<HeatRecipe> recipeRegistry, @Nonnull Item itemInput, @Nonnull Item itemOutput) {

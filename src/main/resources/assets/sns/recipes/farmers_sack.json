@@ -2,12 +2,12 @@
   "conditions": [
     {
       "type": "sns:config",
-      "config": "leather_sack"
+      "config": "farmer_sack"
     }
   ],
   "type": "damage_item_shaped",
   "pattern": [
-    "JJJ",
+    "RRR",
     "LUL",
     " LK"
   ],
@@ -23,11 +23,11 @@
       "type": "forge:ore_dict",
       "ore": "leather"
     },
-    "J": {
-      "item": "tfc:crop/product/jute_fiber"
+    "R": {
+      "item": "sns:reinforced_fiber"
     }
   },
   "result": {
-    "item": "sns:leather_sack"
+    "item": "sns:farmer_sack"
   }
 }

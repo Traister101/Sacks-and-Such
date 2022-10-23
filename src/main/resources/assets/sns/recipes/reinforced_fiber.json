@@ -2,28 +2,25 @@
   "conditions": [
     {
       "type": "sns:config",
-      "config": "thatch_sack"
+      "config": "reinforced_fiber"
     }
   ],
-  "type": "damage_item_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "JJJ",
-    "T T",
-    " TK"
+    "SSS",
+    "JJJ"
   ],
   "key": {
-    "K": {
+    "S": {
       "type": "forge:ore_dict",
-      "ore": "knife"
-    },
-    "T": {
-      "item": "tfc:thatch"
+      "ore": "string"
     },
     "J": {
       "item": "tfc:crop/product/jute_fiber"
     }
   },
   "result": {
-    "item": "sns:thatch_sack"
+    "item": "sns:reinforced_fiber"
   }
 }

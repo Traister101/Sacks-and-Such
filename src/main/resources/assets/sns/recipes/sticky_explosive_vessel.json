@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "sns:config",
+      "config": "sticky_vessel"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "sns:explosive_vessel"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "slimeball"
+    }
+  ],
+  "result": {
+    "item": "sns:sticky_explosive_vessel"
+  }
+}
