@@ -1,5 +1,6 @@
 package mod.traister101.sacks.util.handlers;
 
+import mcp.MethodsReturnNonnullByDefault;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SNSUtils;
@@ -26,13 +27,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public final class PickupHandler {
 
     @SubscribeEvent
-    public void onPickupItem(@Nonnull final EntityItemPickupEvent event) {
+    public void onPickupItem(final EntityItemPickupEvent event) {
         final EntityPlayer player = event.getEntityPlayer();
 
         if (doPickupHanlding(player, event.getItem())) {
@@ -41,7 +44,7 @@ public final class PickupHandler {
     }
 
     @SubscribeEvent
-    public void onBlockActivated(@Nonnull final RightClickBlock event) {
+    public void onBlockActivated(final RightClickBlock event) {
         final BlockPos blockPos = event.getPos();
         final World world = event.getWorld();
         IBlockState blockState = world.getBlockState(blockPos);
@@ -69,14 +72,14 @@ public final class PickupHandler {
         if (topsOffPlayerInventory(player, itemPickup)) return true;
 
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-            ItemStack itemContainer = player.inventory.getStackInSlot(i);
+            final ItemStack itemContainer = player.inventory.getStackInSlot(i);
 
             // Handle item pickups for all items with containers
             if (!ConfigSNS.GLOBAL.allPickup)
                 // Not a sack
                 if (!(itemContainer.getItem() instanceof ItemSack)) continue;
 
-            // Make sure the item is a Sack, so we don't crash when other items can pickup too
+            // Make sure the item is a Sack, so we don't crash when other items can pick up too
             if (itemContainer.getItem() instanceof ItemSack) {
                 SackType type = ((ItemSack) itemContainer.getItem()).getType();
                 // Config pickup disabled for sack type
@@ -85,14 +88,14 @@ public final class PickupHandler {
                 if (!SNSUtils.isAutoPickup(itemContainer)) continue;
             }
 
-            IItemHandler containerInv = SNSUtils.getHandler(itemContainer);
+            final IItemHandler containerInv = SNSUtils.getHandler(itemContainer);
             // Can't place in sack for any number of reasons
             if (!canPlaceInSack(containerInv, itemPickup)) continue;
 
             // Goes through the sack slots to see if the picked up item can be added
             for (int j = 0; j < containerInv.getSlots(); j++) {
                 if (containerInv.getStackInSlot(j).getCount() < containerInv.getSlotLimit(j)) {
-                    ItemStack pickupResult = containerInv.insertItem(j, itemPickup, false);
+                    final ItemStack pickupResult = containerInv.insertItem(j, itemPickup, false);
                     final int numPickedUp = itemPickup.getCount() - pickupResult.getCount();
                     itemEntity.setItem(pickupResult);
 
@@ -105,35 +108,36 @@ public final class PickupHandler {
                     }
                 }
             }
-
-            // This defaults to false, sack config takes priority
-            final boolean doVoiding = itemContainer.getItem() instanceof ItemSack && ((ItemSack) itemContainer.getItem()).getType().doesVoiding;
-            if (tryItemVoid(doVoiding, itemPickup, itemContainer, player)) {
-                return true;
+            // No slots were valid for incerting
+            if (!canPlaceInSack(containerInv, itemPickup)) return false;
+            // Can't void
+            if (!canItemVoid(itemContainer)) return false;
+            // Make sure there's a slot with the same type of item before voiding the pickup
+            for (int j = 0; j < containerInv.getSlots(); j++) {
+                final ItemStack slotStack = containerInv.getStackInSlot(j);
+                if (ItemStack.areItemsEqual(slotStack, itemPickup)) {
+                    itemPickup.setCount(0);
+                    playPickupSound(player);
+                    return true;
+                }
             }
         }
         // If we get here we don't handle the item
         return false;
     }
 
-    // TODO oops this empties any picked up stacks that could be valid not just the ones which match the current items
-    // If this sack has voiding enabled empty the picked up stack and finish.
-    // This means the first valid sack that has voiding enabled will void the pickup stack
-    private static boolean tryItemVoid(boolean doVoiding, ItemStack itemPickup, ItemStack itemContainer, EntityPlayer player) {
-        // Item voiding enabled
-        if (ConfigSNS.GLOBAL.doVoiding)
-            // Type can void items
-            if (doVoiding)
-                // This particular Sack has voiding enabled
-                if (SNSUtils.isAutoVoid(itemContainer)) {
-                    itemPickup.setCount(0);
-                    playPickupSound(player);
-                    return true;
-                }
-        return false;
+    private static boolean canItemVoid(final ItemStack itemContainer) {
+        // Item voiding disabled
+        if (!ConfigSNS.GLOBAL.doVoiding) return false;
+        // Not a sack
+        if (!(itemContainer.getItem() instanceof ItemSack)) return false;
+        // Type can't void items
+        if (!((ItemSack) itemContainer.getItem()).getType().doesVoiding) return false;
+        // Returns if this particular sack item has voiding enabled
+        return SNSUtils.isAutoVoid(itemContainer);
     }
 
-    private static boolean canPlaceInSack(@Nonnull IItemHandler containerInv, @Nonnull ItemStack itemPickup) {
+    private static boolean canPlaceInSack(final IItemHandler containerInv, final ItemStack itemPickup) {
         for (int j = 0; j < containerInv.getSlots(); j++) {
             if (containerInv.isItemValid(j, itemPickup)) return true;
         }
@@ -141,7 +145,7 @@ public final class PickupHandler {
     }
 
     // Tops off stuff in player inventory
-    private static boolean topsOffPlayerInventory(@Nonnull final EntityPlayer player, @Nonnull final ItemStack stack) {
+    private static boolean topsOffPlayerInventory(final EntityPlayer player, final ItemStack stack) {
         // Add to player inventory first, if there is an incomplete stack in there.
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack inventoryStack = player.inventory.getStackInSlot(i);
