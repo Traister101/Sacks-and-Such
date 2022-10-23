@@ -61,6 +61,7 @@ public class RenderThrownVessel extends Render<EntityExplosiveVessel> {
     }
 
     @Override
+    @Nonnull
     protected ResourceLocation getEntityTexture(@Nonnull EntityExplosiveVessel entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }

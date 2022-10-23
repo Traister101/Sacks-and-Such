@@ -44,6 +44,9 @@ public final class ItemsSNS {
     // Sack items
     public static final Item UNFINISHED_LEATHER_SACK = getNull();
 
+    public static final Item REINFORCED_FIBER = getNull();
+    public static final Item REINFORCED_FABRIC = getNull();
+
     // Unfired explosive vessels
     public static final Item UNFIRED_TINY_VESSEL = getNull();
     public static final Item UNFIRED_EXPLOSIVE_VESSEL = getNull();
@@ -82,10 +85,16 @@ public final class ItemsSNS {
 
         if (ConfigSNS.FARMER_SACK.isEnabled) {
             sacks.add(registerSack(registry, "farmer", SackType.FARMER));
+            simpleItems.add(register(registry, "reinforced_fiber", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
+            simpleItems.add(register(registry, "reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
+        }
+
+        if (ConfigSNS.KNAP_SACK.isEnabled || ConfigSNS.MINER_SACK.isEnabled && ConfigSNS.FARMER_SACK.isEnabled) {
+            simpleItems.add(register(registry, "steel_reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
         }
 
         if (ConfigSNS.KNAP_SACK.isEnabled) {
-            sacks.add(registerSack(registry, "knap", SackType.KNAPSACK)/*.setSize(Size.LARGE).setWeight(Weight.VERY_HEAVY)*/);
+            sacks.add(registerSack(registry, "knap", SackType.KNAPSACK));
         }
 
         if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
