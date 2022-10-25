@@ -36,6 +36,12 @@ public final class MinerSack {
     public int slotCap = 512;
 
     @RequiresMcRestart
+    @RangeInt(min = 1)
+    @LangKey(LANG_KEY + "slot_count")
+    @Comment("Honestly I recomend you not touch this it's meant for modpack devs who wanna get freaky with stuff")
+    public int slotCount = 1;
+
+    @RequiresMcRestart
     @LangKey(LANG_KEY + "size")
     @Comment("The maximum item size allowed in the sack")
     public Size allowedSize = Size.SMALL;

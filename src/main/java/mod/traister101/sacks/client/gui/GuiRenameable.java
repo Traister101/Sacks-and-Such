@@ -17,7 +17,6 @@ import java.io.IOException;
 
 public abstract class GuiRenameable extends AbstractGuiContainer {
 
-    protected final AbstractContainerRenameable container;
     protected final InventoryPlayer playerInv;
     private GuiTextField nameField;
     private boolean renaming;
@@ -25,7 +24,6 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
 
     protected GuiRenameable(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack heldStack) {
         super(container, background, heldStack);
-        this.container = (AbstractContainerRenameable) inventorySlots;
         this.name = heldStack.getDisplayName();
         this.playerInv = playerInv;
     }
@@ -127,7 +125,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
         SacksNSuch.getNetwork().sendToServer(new RenamePacket(name));
         if (StringUtils.isBlank(name)) {
             // Best way I've figured out to set the text box to the default stack name
-            ItemStack heldStack = container.getSlot(container.getItemIndex()).getStack();
+            ItemStack heldStack = inventorySlots.getSlot(((AbstractContainerRenameable) inventorySlots).getItemIndex()).getStack();
             ItemStack itemStack = heldStack.copy();
             itemStack.clearCustomName();
             this.name = itemStack.getDisplayName();

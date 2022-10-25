@@ -21,11 +21,8 @@ import static mod.traister101.sacks.SacksNSuch.MODID;
 
 public final class GuiHandler implements IGuiHandler {
 
-    public static final ResourceLocation SACK_SLOTS_1 = new ResourceLocation(MODID, "textures/gui/sack_1.png");
-    public static final ResourceLocation SACK_SLOTS_4 = new ResourceLocation(MODID, "textures/gui/sack_4.png");
-    public static final ResourceLocation SACK_SLOTS_18 = new ResourceLocation(MODID, "textures/gui/sack_18.png");
-    public static final ResourceLocation SACK_SLOTS_27 = new ResourceLocation(MODID, "textures/gui/sack_27.png");
-    public static final ResourceLocation VESSEL_SLOTS_1 = new ResourceLocation(MODID, "textures/gui/vessel_1.png");
+    public static final ResourceLocation SACK = new ResourceLocation(MODID, "textures/gui/sack_1.png");
+    public static final ResourceLocation VESSEL = new ResourceLocation(MODID, "textures/gui/vessel_1.png");
 
     public static void openGui(World world, EntityPlayer player, GuiType guiType) {
         player.openGui(SacksNSuch.getInstance(), guiType.ordinal(), world, 0, 0, 0);
@@ -34,8 +31,8 @@ public final class GuiHandler implements IGuiHandler {
     @Override
     @Nullable
     public Container getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        final GuiType guiType = GuiType.valueOf(ID);
         ItemStack stack = player.getHeldItemMainhand();
-        GuiType guiType = GuiType.valueOf(ID);
         switch (guiType) {
             case SACK_THATCH:
             case SACK_LEATHER:
@@ -54,23 +51,20 @@ public final class GuiHandler implements IGuiHandler {
     @Override
     @Nullable
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        Container container = getServerGuiElement(ID, player, world, x, y, z);
+        final Container container = getServerGuiElement(ID, player, world, x, y, z);
+        final GuiType guiType = GuiType.valueOf(ID);
         ItemStack stack = player.getHeldItemMainhand();
-        GuiType guiType = GuiType.valueOf(ID);
-
         switch (guiType) {
             case SACK_THATCH:
             case SACK_LEATHER:
             case SACK_BURLAP:
-                return new GuiContainerSack(container, player.inventory, SACK_SLOTS_4, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
             case SACK_MINER:
-                return new GuiContainerSack(container, player.inventory, SACK_SLOTS_1, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
             case SACK_KNAP:
-                return new GuiContainerSack(container, player.inventory, SACK_SLOTS_18, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
             case SACK_FARMER:
-                return new GuiContainerSack(container, player.inventory, SACK_SLOTS_27, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
+                 // Yeah this seems like it'd cause issues with the variable slots but we render those rather than doing them ahead of time in the texture
+                return new GuiContainerSack(container, player.inventory, SACK, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
             case VESSEL_EXPLOSIVE:
-                return new GuiContainerThrowableVessel(container, player.inventory, VESSEL_SLOTS_1, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
+                return new GuiContainerThrowableVessel(container, player.inventory, VESSEL, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
             default:
                 return null;
         }

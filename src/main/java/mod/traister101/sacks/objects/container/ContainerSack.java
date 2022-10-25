@@ -41,39 +41,46 @@ public class ContainerSack extends AbstractContainerRenameable {
     @Override
     protected void addContainerSlots() {
         if (handler instanceof SackHandler) {
-            switch (type) {
-                case THATCH:
-                case LEATHER:
-                case BURLAP:
-                    //4 slot container
-                    addSlotToContainer(new SackSlot(handler, 0, 71, 23));
-                    addSlotToContainer(new SackSlot(handler, 1, 89, 23));
-                    addSlotToContainer(new SackSlot(handler, 2, 71, 41));
-                    addSlotToContainer(new SackSlot(handler, 3, 89, 41));
+            switch (type.slots) {
+                case 1:
+                    // 1 slot container
+                    addSackSlots(1, 1, 80, 32);
                     break;
-
-                case MINER:
-                    //1 slot container
-                    addSlotToContainer(new SackSlot(handler, 0, 80, 32));
+                case 4:
+                    // 4 slot container
+                    addSackSlots(2, 2, 71, 23);
                     break;
-                case FARMER:
-                    //27 slot container (like a chest)
-                    for (int i = 0; i < 3; i++) {
-                        for (int j = 0; j < 9; j++) {
-                            addSlotToContainer(new SackSlot(handler, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
-                        }
-                    }
-                    break;
-                case KNAPSACK:
-                    //18 slot container (two rows)
-                    for (int i = 0; i < 2; i++) {
-                        for (int j = 0; j < 9; j++) {
-                            addSlotToContainer(new SackSlot(handler, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
-                        }
-                    }
+                case 8:
+                    // 8 slot container
+                    addSackSlots(2, 4, 53, 23);
                     break;
                 default:
-                    break;
+                    final int rows = (int) Math.ceil((double) type.slots / 9);
+                    final int columns = type.slots / rows;
+                    addSackSlots(rows, columns);
+            }
+        }
+    }
+
+    private void addSackSlots(final int rows, final int columns, final int startX, final int startY) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                addSlotToContainer(new SackSlot(handler, j + i * 18 + 9, startX + j * 18, startY + i * 18));
+            }
+        }
+    }
+
+
+    private void addSackSlots(final int rows, final int columns) {
+        for (int i = 0; i < rows; i++) {
+            if (i == rows - 1) {
+                for (int j = 0; j < columns - 1; j++) {
+                    addSlotToContainer(new SackSlot(handler, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
+                }
+            } else {
+                for (int j = 0; j < 9; j++) {
+                    addSlotToContainer(new SackSlot(handler, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
+                }
             }
         }
     }

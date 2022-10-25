@@ -31,6 +31,12 @@ public final class KnapSack {
     public int slotCap = 64;
 
     @RequiresMcRestart
+    @RangeInt(min = 1)
+    @LangKey(LANG_KEY + "slot_count")
+    @Comment("Honestly I recomend you not touch this it's meant for modpack devs who wanna get freaky with stuff")
+    public int slotCount = 18;
+
+    @RequiresMcRestart
     @LangKey(LANG_KEY + ".size")
     @Comment("The maximum item size allowed in the sack")
     public Size allowedSize = Size.LARGE;
