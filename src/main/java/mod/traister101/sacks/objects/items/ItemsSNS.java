@@ -66,36 +66,36 @@ public final class ItemsSNS {
         Builder<Item> simpleItems = ImmutableList.builder();
         Builder<ItemThrowableVessel> throwableVessels = ImmutableList.builder();
 
-        if (ConfigSNS.THATCH_SACK.isEnabled) {
+        if (ConfigSNS.THATCH_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "thatch", SackType.THATCH));
         }
 
-        if (ConfigSNS.LEATHER_SACK.isEnabled) {
+        if (ConfigSNS.LEATHER_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "leather", SackType.LEATHER));
             simpleItems.add(register(registry, "unfinished_leather_sack", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
         }
 
-        if (ConfigSNS.BURLAP_SACK.isEnabled) {
+        if (ConfigSNS.BURLAP_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "burlap", SackType.BURLAP));
         }
 
-        if (ConfigSNS.MINER_SACK.isEnabled) {
+        if (ConfigSNS.MINER_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "miners", SackType.MINER));
         }
 
-        if (ConfigSNS.FARMER_SACK.isEnabled) {
+        if (ConfigSNS.FARMER_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "farmer", SackType.FARMER));
         }
 
-        if (ConfigSNS.FARMER_SACK.isEnabled || ConfigSNS.MINER_SACK.isEnabled) {
+        if (ConfigSNS.FARMER_SACK.DANGEROUS.isEnabled || ConfigSNS.MINER_SACK.DANGEROUS.isEnabled) {
             simpleItems.add(register(registry, "reinforced_fiber", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
             simpleItems.add(register(registry, "reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
-            if (ConfigSNS.KNAP_SACK.isEnabled) {
+            if (ConfigSNS.KNAP_SACK.DANGEROUS.isEnabled) {
                 simpleItems.add(register(registry, "steel_reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
             }
         }
 
-        if (ConfigSNS.KNAP_SACK.isEnabled) {
+        if (ConfigSNS.KNAP_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "knap", SackType.KNAPSACK));
         }
 

@@ -18,21 +18,21 @@ public class ConditionalFactory implements IConditionFactory {
 
         switch (type) {
             case "thatch_sack":
-                return () -> THATCH_SACK.isEnabled;
+                return () -> THATCH_SACK.DANGEROUS.isEnabled;
             case "leather_sack":
-                return () -> LEATHER_SACK.isEnabled;
+                return () -> LEATHER_SACK.DANGEROUS.isEnabled;
             case "burlap_sack":
-                return () -> BURLAP_SACK.isEnabled;
+                return () -> BURLAP_SACK.DANGEROUS.isEnabled;
             case "miner_sack":
-                return () -> MINER_SACK.isEnabled;
+                return () -> MINER_SACK.DANGEROUS.isEnabled;
             case "farmer_sack":
-                return () -> FARMER_SACK.isEnabled;
+                return () -> FARMER_SACK.DANGEROUS.isEnabled;
             case "knap_sack":
-                return () -> KNAP_SACK.isEnabled;
+                return () -> KNAP_SACK.DANGEROUS.isEnabled;
             case "reinforced_fiber":
-                return () -> FARMER_SACK.isEnabled || MINER_SACK.isEnabled;
+                return () -> FARMER_SACK.DANGEROUS.isEnabled || MINER_SACK.DANGEROUS.isEnabled;
             case "steel_reinforced_fiber":
-                return () -> (FARMER_SACK.isEnabled || MINER_SACK.isEnabled) && KNAP_SACK.isEnabled;
+                return () -> (FARMER_SACK.DANGEROUS.isEnabled || MINER_SACK.DANGEROUS.isEnabled) && KNAP_SACK.DANGEROUS.isEnabled;
             case "tiny_vessel":
                 return () -> EXPLOSIVE_VESSEL.isEnabled && EXPLOSIVE_VESSEL.smallEnabled;
             case "sticky_vessel":

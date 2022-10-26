@@ -16,7 +16,7 @@ public final class Global {
     public boolean doPickup = true;
 
     @LangKey(LANG_KEY + ".void")
-    @Comment("A global toggle for item voiding. This will not force enable for every type")
+    @Comment("A global toggle for item voiding, this will not force enable for every type")
     public boolean doVoiding = true;
 
     @LangKey(LANG_KEY + ".glint_toggle")
@@ -24,7 +24,8 @@ public final class Global {
     public boolean voidGlint = true;
 
     @LangKey(LANG_KEY + ".all_pickup")
-    @Comment("Enable auto pickup for other sack like items such as the TFC vessel. This may not always work as expected enable at your own discretion")
+    @Comment("Enable auto pickup for other sack like items such as the TFC vessel." +
+            "This may not always work as expected enable at your own discretion")
     public boolean allPickup = false;
 
     @LangKey(LANG_KEY + ".all_allow_ore")

@@ -26,6 +26,7 @@ public class SackHandler extends AbstractHandler {
         this.type = type;
     }
 
+    // TODO more ore config
     // TODO More sacks (like the food sack) will need to be handled
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
@@ -43,6 +44,7 @@ public class SackHandler extends AbstractHandler {
             }
         }
 
+        // Food in every sack
         if (!ConfigSNS.GLOBAL.allAllowFood)
             if (item instanceof ItemFoodTFC) return false;
 
@@ -54,6 +56,7 @@ public class SackHandler extends AbstractHandler {
             }
         }
 
+        // Ore for all sacks
         if (!ConfigSNS.GLOBAL.allAllowOre)
             if (type != SackType.MINER)
                 if (item instanceof ItemOreTFC || item instanceof ItemSmallOre) return false;

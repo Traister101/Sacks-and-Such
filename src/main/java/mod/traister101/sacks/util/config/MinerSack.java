@@ -9,10 +9,9 @@ public final class MinerSack {
 
     private static final String LANG_KEY = "config." + MODID + ".miner_sack.";
 
-    @RequiresMcRestart
-    @LangKey(LANG_KEY + "enabled")
-    @Comment("Enable or disable this sack type")
-    public boolean isEnabled = true;
+    @LangKey(LANG_KEY + "dangerous")
+    @Comment("These configs are aimed at modpack Devs. Server client mismach will cause issues!")
+    public final Dangerous DANGEROUS = new Dangerous();
 
     @RequiresMcRestart
     @LangKey(LANG_KEY + "pickup")
@@ -36,13 +35,23 @@ public final class MinerSack {
     public int slotCap = 512;
 
     @RequiresMcRestart
-    @RangeInt(min = 1)
-    @LangKey(LANG_KEY + "slot_count")
-    @Comment("Honestly I recomend you not touch this it's meant for modpack devs who wanna get freaky with stuff")
-    public int slotCount = 1;
-
-    @RequiresMcRestart
     @LangKey(LANG_KEY + "size")
     @Comment("The maximum item size allowed in the sack")
     public Size allowedSize = Size.SMALL;
+
+    public static class Dangerous {
+
+        private static final String LANG_KEY = MinerSack.LANG_KEY + "dangerous.";
+
+        @RequiresMcRestart
+        @RangeInt(min = 1)
+        @LangKey(LANG_KEY + "slot_count")
+        @Comment("This config has a relistic cap of 27 as any higher the slots are added on top of the player slots")
+        public int slotCount = 1;
+
+        @RequiresMcRestart
+        @LangKey(LANG_KEY + "enabled")
+        @Comment("Enable or disable this sack type")
+        public boolean isEnabled = true;
+    }
 }

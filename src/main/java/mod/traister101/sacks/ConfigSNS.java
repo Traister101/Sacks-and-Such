@@ -26,6 +26,14 @@ public final class ConfigSNS {
         }
     }
 
+    @Comment("Global config")
+    @LangKey(LANG_KEY + ".global")
+    public static final Global GLOBAL = new Global();
+
+    @Comment("Explosive vessel config")
+    @LangKey(LANG_KEY + ".explosive_vessel")
+    public static final ExplosiveVessel EXPLOSIVE_VESSEL = new ExplosiveVessel();
+
     @Comment("Config for thatch sack")
     @LangKey(LANG_KEY + ".thatch_sack")
     public static final ThatchSack THATCH_SACK = new ThatchSack();
@@ -49,12 +57,4 @@ public final class ConfigSNS {
     @Comment("Config for farmers sack")
     @LangKey(LANG_KEY + ".knap_sack")
     public static final KnapSack KNAP_SACK = new KnapSack();
-
-    @Comment("Explosive vessel config")
-    @LangKey(LANG_KEY + ".explosive_vessel")
-    public static final ExplosiveVessel EXPLOSIVE_VESSEL = new ExplosiveVessel();
-
-    @Comment("Global config")
-    @LangKey(LANG_KEY + ".global")
-    public static final Global GLOBAL = new Global();
 }

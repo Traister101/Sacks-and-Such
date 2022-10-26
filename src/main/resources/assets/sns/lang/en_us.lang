@@ -26,65 +26,77 @@ item.sns.sticky_explosive_vessel.name=Sticky Explosive Vessel
 
 #Thatch
 config.sns.thatch_sack=Thatch sack
+config.sns.thatch_sack.dangerous=Dangerous
 config.sns.thatch_sack.tooltip=Config for thatch sacks
 
-config.sns.thatch_sack.enabled=Enabled
 config.sns.thatch_sack.pickup=Do pickup
 config.sns.thatch_sack.void=Do voiding
 config.sns.thatch_sack.slot_cap=Slot cap
 config.sns.thatch_sack.size=Size limit
+config.sns.thatch_sack.dangerous.enabled=Enabled
+config.sns.thatch_sack.dangerous.slot_count=Slot count
 
 #Leather
 config.sns.leather_sack=Leather sack
+config.sns.leather_sack.dangerous=Dangerous
 config.sns.leather_sack.tooltip=Config for leather sacks
 
-config.sns.leather_sack.enabled=Enabled
 config.sns.leather_sack.pickup=Do pickup
 config.sns.leather_sack.void=Do voiding
 config.sns.leather_sack.slot_cap=Slot cap
 config.sns.leather_sack.size=Size limit
+config.sns.leather_sack.dangerous.enabled=Enabled
+config.sns.leather_sack.dangerous.slot_count=Slot count
 
 #Burlap
 config.sns.burlap_sack=Burlap sack
+config.sns.burlap_sack.dangerous=Dangerous
 config.sns.burlap_sack.tooltip=Config for burlap sacks
 
-config.sns.burlap_sack.enabled=Enabled
 config.sns.burlap_sack.pickup=Do pickup
 config.sns.burlap_sack.void=Do voiding
 config.sns.burlap_sack.slot_cap=Slot cap
 config.sns.burlap_sack.size=Size limit
+config.sns.burlap_sack.dangerous.enabled=Enabled
+config.sns.burlap_sack.dangerous.slot_count=Slot count
 
 #Miner
 config.sns.miner_sack=Miners sack
+config.sns.miner_sack.dangerous=Dangerous
 config.sns.miner_sack.tooltip=Config for miners sack
 
-config.sns.miner_sack.enabled=Enabled
 config.sns.miner_sack.pickup=Do pickup
 config.sns.miner_sack.void=Do voiding
 config.sns.miner_sack.slot_cap=Slot cap
 config.sns.miner_sack.size=Size limit
 config.sns.miner_sack.allow_non_ore=Pickup non-ore
+config.sns.miner_sack.dangerous.enabled=Enabled
+config.sns.miner_sack.dangerous.slot_count=Slot count
 
 #Farmer
 config.sns.farmer_sack=Farmers sack
+config.sns.farmer_sack.dangerous=Dangerous
 config.sns.farmer_sack.tooltip=Config for farmers sack
 
-config.sns.farmer_sack.enabled=Enabled
 config.sns.farmer_sack.pickup=Do pickup
 config.sns.farmer_sack.void=Do voiding
 config.sns.farmer_sack.slot_cap=Slot cap
 config.sns.farmer_sack.size=Size limit
 config.sns.farmer_sack.allow_non_seed=Pickup non-seed
+config.sns.farmer_sack.dangerous.enabled=Enabled
+config.sns.farmer_sack.dangerous.slot_count=Slot count
 
 #Knap sack
 config.sns.knap_sack=Knapsack
+config.sns.knap_sack.dangerous=Dangerous
 config.sns.knap_sack.tooltip=Config for knapsack
 
-config.sns.knap_sack.enabled=Enabled
 config.sns.knap_sack.pickup=Do pickup
 config.sns.knap_sack.void=Do voiding
 config.sns.knap_sack.slot_cap=Slot cap
 config.sns.knap_sack.size=Size limit
+config.sns.knap_sack.dangerous.enabled=Enabled
+config.sns.knap_sack.dangerous.slot_count=Slot count
 
 #Explosive vessel
 config.sns.explosive_vessel=Explosive vessel
