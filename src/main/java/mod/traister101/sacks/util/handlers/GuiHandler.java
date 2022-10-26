@@ -21,8 +21,8 @@ import static mod.traister101.sacks.SacksNSuch.MODID;
 
 public final class GuiHandler implements IGuiHandler {
 
-    public static final ResourceLocation SACK = new ResourceLocation(MODID, "textures/gui/sack_1.png");
-    public static final ResourceLocation VESSEL = new ResourceLocation(MODID, "textures/gui/vessel_1.png");
+    public static final ResourceLocation SACK = new ResourceLocation(MODID, "textures/gui/sack.png");
+    public static final ResourceLocation VESSEL = new ResourceLocation(MODID, "textures/gui/vessel.png");
 
     public static void openGui(World world, EntityPlayer player, GuiType guiType) {
         player.openGui(SacksNSuch.getInstance(), guiType.ordinal(), world, 0, 0, 0);
@@ -61,10 +61,10 @@ public final class GuiHandler implements IGuiHandler {
             case SACK_MINER:
             case SACK_KNAP:
             case SACK_FARMER:
-                 // Yeah this seems like it'd cause issues with the variable slots but we render those rather than doing them ahead of time in the texture
+                 // Yeah this seems like it'd cause issues with the variable slots but we render those dynamiclly rather than doing them ahead of time in the texture
                 return new GuiContainerSack(container, player.inventory, SACK, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
             case VESSEL_EXPLOSIVE:
-                return new GuiContainerThrowableVessel(container, player.inventory, VESSEL, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
+                return new GuiContainerThrowableVessel(container, VESSEL, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
             default:
                 return null;
         }
