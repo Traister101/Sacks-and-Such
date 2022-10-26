@@ -54,6 +54,9 @@ public class ContainerSack extends AbstractContainerRenameable {
                     // 8 slot container
                     addSackSlots(2, 4, 53, 23);
                     break;
+                case 18:
+                    addSackSlots(2, 9, 8, 34);
+                    break;
                 default:
                     final int rows = (int) Math.ceil((double) type.slots / 9);
                     final int columns = type.slots / rows;
@@ -74,7 +77,7 @@ public class ContainerSack extends AbstractContainerRenameable {
     private void addSackSlots(final int rows, final int columns) {
         for (int i = 0; i < rows; i++) {
             if (i == rows - 1) {
-                for (int j = 0; j < columns - 1; j++) {
+                for (int j = 0; j < columns; j++) {
                     addSlotToContainer(new SackSlot(handler, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
                 }
             } else {
