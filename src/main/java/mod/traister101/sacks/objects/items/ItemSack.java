@@ -11,6 +11,7 @@ import mod.traister101.sacks.util.handlers.GuiHandler;
 import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
 import net.dries007.tfc.api.capability.size.Weight;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -21,6 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
@@ -46,9 +48,19 @@ public class ItemSack extends Item implements IItemSize {
         if (!worldIn.isRemote) {
             if (playerIn.isSneaking()) {
                 if (ConfigSNS.GLOBAL.shiftClickTogglesVoid) {
-                    SNSUtils.sendPacketAndStatus(SNSUtils.isAutoVoid(heldStack), ToggleType.VOID);
+                    if (type.doesVoiding) {
+                        SNSUtils.sendPacketAndStatus(SNSUtils.isAutoVoid(heldStack), ToggleType.VOID);
+                    } else {
+                        final TextComponentTranslation status = new TextComponentTranslation(SacksNSuch.MODID + ".sack.no_void");
+                        Minecraft.getMinecraft().player.sendStatusMessage(status, true);
+                    }
                 } else {
-                    SNSUtils.sendPacketAndStatus(SNSUtils.isAutoPickup(heldStack), ToggleType.PICKUP);
+                    if (type.doesAutoPickup) {
+                        SNSUtils.sendPacketAndStatus(SNSUtils.isAutoPickup(heldStack), ToggleType.PICKUP);
+                    } else {
+                        final TextComponentTranslation status = new TextComponentTranslation(SacksNSuch.MODID + ".sack.no_pickup");
+                        Minecraft.getMinecraft().player.sendStatusMessage(status, true);
+                    }
                 }
             } else {
                 GuiHandler.openGui(worldIn, playerIn, type.gui);
@@ -62,10 +74,10 @@ public class ItemSack extends Item implements IItemSize {
     public void addInformation(final ItemStack stack, @Nullable final World worldIn, final List<String> tooltip, ITooltipFlag flagIn) {
         String text = SacksNSuch.MODID + ".sack.tooltip";
         if (GuiScreen.isShiftKeyDown()) {
-            if (SNSUtils.isAutoVoid(stack)) {
+            if (SNSUtils.isAutoVoid(stack) && type.doesVoiding) {
                 text += ".void";
             }
-            if (SNSUtils.isAutoPickup(stack)) {
+            if (SNSUtils.isAutoPickup(stack) && type.doesAutoPickup) {
                 text += ".pickup";
             }
             text += ".shift";

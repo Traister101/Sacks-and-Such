@@ -15,6 +15,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 
+
 public abstract class GuiRenameable extends AbstractGuiContainer {
 
     protected final InventoryPlayer playerInv;

@@ -146,6 +146,10 @@ sns.explosive_vessel.tooltip.sealed=Will go §cKaboom
 ##Status message
 sns.sack.auto_pickup.enabled=Auto pickup §aEnabled
 sns.sack.auto_pickup.disabled=Auto pickup §cDisabled
+sns.sack.auto_void.enabled=Voiding §aEnabled
+sns.sack.auto_void.disabled=Voiding §cDisabled
+sns.sack.no_void=Voiding is §cDisabled§r in the config for this type
+sns.sack.no_pickup=Auto pickup is §cDisabled§r in the config for this type
 
 sns.explosive_vessel.seal.enabled=§aSealed
 sns.explosive_vessel.seal.disabled=§cUn-Sealed

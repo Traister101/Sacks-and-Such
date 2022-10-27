@@ -18,11 +18,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("FieldMayBeFinal")
-@Mod(modid = SacksNSuch.MODID, name = SacksNSuch.NAME, dependencies = "required-after:tfc@1.7.18.176", useMetadata = true)
+@Mod(modid = SacksNSuch.MODID, name = SacksNSuch.NAME, version = SacksNSuch.VERSION, dependencies = "required-after:tfc@1.7.18.176", useMetadata = true)
 public final class SacksNSuch {
 
     public static final String MODID = "sns";
-    public static final String NAME = "Sacks N Such";
+    public static final String NAME = "Sacks 'N Such";
+    public  static final String VERSION = "@VERSION@";
 
     @Instance
     private static SacksNSuch INSTANCE = null;
@@ -43,7 +44,7 @@ public final class SacksNSuch {
     }
 
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(final FMLPreInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
         int id = 0;
@@ -53,6 +54,9 @@ public final class SacksNSuch {
         if (ConfigSNS.GLOBAL.doPickup) {
             MinecraftForge.EVENT_BUS.register(new PickupHandler());
         } else log.info("Sacks of all types won't do autopickup!");
+
+        if (ConfigSNS.GLOBAL.allPickup) log.info("All item containers will try to be handled by the PickupHandler" +
+                "This COULD lead to crashes or jank use at your own discretion!");
 
         EntitiesSNS.preInit();
 
