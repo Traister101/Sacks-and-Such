@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        jcenter()
         maven {
             name = "forge"
             url = "https://maven.minecraftforge.net/"
@@ -26,14 +25,15 @@ repositories {
     }
 
     removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
+
     maven {
         url "https://maven.minecraftforge.net/"
     }
 }
 
-version = "0.1.0"
+version = "1.0"
 group = "mod.traister101.sns"
-archivesBaseName = "sns"
+archivesBaseName = "Sacks 'N Such"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -42,28 +42,31 @@ minecraft {
     version = "1.12.2-14.23.5.2838"
     runDir = "run"
     mappings = "stable_39"
+
+    replace("@VERSION@", project.version)
+    replaceIn("SacksNSuch.java")
 }
 
 dependencies {
     compile fileTree(include: ["*.jar"], dir: "libs")
 }
 
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property("version", project.version)
+    inputs.property("mcversion", project.minecraft.version)
+    inputs.property("modname", archivesBaseName)
 
-    // replace stuff in mcmod.info, nothing else
+    // replace stuff in mcmod.info and pack.mcmeta
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+        include("mcmod.info", "pack.mcmeta")
 
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        // replace version, mcversion and modname
+        expand("version": project.version, "mcversion": project.minecraft.version, "modname": archivesBaseName)
     }
 
-    // copy everything else, thats not the mcmod.info
+    // copy everything else
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude("mcmod.info", "pack.mcmeta")
     }
 }

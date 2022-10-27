@@ -1,15 +1,19 @@
 [
-{
-  "modid": "sns",
-  "name": "Sacks N Such",
-  "description": "A mod that adds some sacks intended for use with the mod TerraFirmaCraft",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "updateUrl": "",
-  "authorList": ["Traister101"],
-  "credits": "Joe mamma",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": ["tfc"]
-}
+  {
+    "modid": "sns",
+    "name": "${modname}",
+    "description": "A TFC addon which adds Sacks and Explosive vessels",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "updateUrl": "",
+    "authorList": [
+      "Traister101"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": [
+      "tfc"
+    ]
+  }
 ]
