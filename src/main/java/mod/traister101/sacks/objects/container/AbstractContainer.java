@@ -123,6 +123,14 @@ public abstract class AbstractContainer extends Container {
         //Slot is empty give to vanilla
         if (slotStack.isEmpty()) return super.slotClick(slotID, dragType, clickType, player);
 
+        if (clickType == ClickType.THROW && player.inventory.getItemStack().isEmpty()) {
+            if (dragType == 1) {
+                final ItemStack tossStack = handler.extractItem(slotID, slotStack.getMaxStackSize(), false);
+                player.dropItem(tossStack, false);
+                return slotStack;
+            } else return super.slotClick(slotID, dragType, clickType, player);
+        }
+
         if (clickType == ClickType.PICKUP) {
             final InventoryPlayer playerInventory = player.inventory;
             final ItemStack mouseStack = playerInventory.getItemStack();
