@@ -21,6 +21,10 @@ item.sns.explosive_vessel.name=Explosive Vessel
 item.sns.tiny_explosive_vessel.name=Tiny Explosive Vessel
 item.sns.sticky_explosive_vessel.name=Sticky Explosive Vessel
 
+##Keybinds
+sns.key.pickup=Toggle Sack Pickup
+sns.key.void=Toggle Sack Voiding
+
 
 ##Config
 

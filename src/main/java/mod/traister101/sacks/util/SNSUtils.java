@@ -63,8 +63,8 @@ public final class SNSUtils {
     }
 
     public static void sendPacketAndStatus(boolean flag, @Nonnull ToggleType type) {
-        SacksNSuch.getNetwork().sendToServer(new TogglePacket(!flag, type));
-        TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".sack." + type.lang + "." + (flag ? "disabled" : "enabled"));
+        SacksNSuch.getNetwork().sendToServer(new TogglePacket(flag, type));
+        TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".sack." + type.lang + "." + (flag ? "enabled" : "disabled"));
         Minecraft.getMinecraft().player.sendStatusMessage(statusMessage, true);
     }
 

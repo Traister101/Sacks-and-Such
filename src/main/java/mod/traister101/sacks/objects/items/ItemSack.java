@@ -49,14 +49,14 @@ public class ItemSack extends Item implements IItemSize {
             if (playerIn.isSneaking()) {
                 if (ConfigSNS.GLOBAL.shiftClickTogglesVoid) {
                     if (type.doesVoiding) {
-                        SNSUtils.sendPacketAndStatus(SNSUtils.isAutoVoid(heldStack), ToggleType.VOID);
+                        SNSUtils.sendPacketAndStatus(!SNSUtils.isAutoVoid(heldStack), ToggleType.VOID);
                     } else {
                         final TextComponentTranslation status = new TextComponentTranslation(SacksNSuch.MODID + ".sack.no_void");
                         Minecraft.getMinecraft().player.sendStatusMessage(status, true);
                     }
                 } else {
                     if (type.doesAutoPickup) {
-                        SNSUtils.sendPacketAndStatus(SNSUtils.isAutoPickup(heldStack), ToggleType.PICKUP);
+                        SNSUtils.sendPacketAndStatus(!SNSUtils.isAutoPickup(heldStack), ToggleType.PICKUP);
                     } else {
                         final TextComponentTranslation status = new TextComponentTranslation(SacksNSuch.MODID + ".sack.no_pickup");
                         Minecraft.getMinecraft().player.sendStatusMessage(status, true);
