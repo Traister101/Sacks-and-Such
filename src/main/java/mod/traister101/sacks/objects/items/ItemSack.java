@@ -107,7 +107,7 @@ public class ItemSack extends Item implements IItemSize {
     public Size getSize(ItemStack stack) {
         if (stack.getItem() instanceof ItemSack) {
             if (SNSUtils.doesSackHaveItems(stack)) {
-                if (type == SackType.KNAPSACK) return Size.VERY_LARGE;
+                if (type == SackType.KNAPSACK) return Size.HUGE;
                 return Size.LARGE;
             }
         }

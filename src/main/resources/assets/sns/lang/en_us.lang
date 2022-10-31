@@ -135,9 +135,9 @@ sns.gui_vessel.tooltip.seal=Seal
 #Sacks
 sns.sack.tooltip=§7[Shift]
 sns.sack.tooltip.shift=Automatic item pickup §cdisabled
-sns.sack.tooltip.void.shift=§c§lExcess items will be voided
+sns.sack.tooltip.void.shift=Item §c§lvoiding§r enabled
 sns.sack.tooltip.pickup.shift=Automatic item pickup §aenabled
-sns.sack.tooltip.void.pickup.shift=§c§lExcess picked up items will be voided
+sns.sack.tooltip.void.pickup.shift=Excess picked up items will be §c§lvoided
 
 #Vessels
 sns.explosive_vessel.tooltip=§aUn-sealed

@@ -5,9 +5,7 @@ import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.inventory.capability.AbstractHandler;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.inventory.slot.SackSlot;
-import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SNSUtils;
-import mod.traister101.sacks.util.SackType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,15 +16,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class ContainerSack extends AbstractContainerRenameable {
 
-    private final SackType type;
     private final IItemHandler handler;
 
     public ContainerSack(InventoryPlayer playerInv, ItemStack heldStack) {
-        // This super constructor call is gross, especially this V because type can't be assigned until after the constructor
-        super(playerInv, heldStack, ((ItemSack) heldStack.getItem()).getType().slots);
-        this.type = ((ItemSack) heldStack.getItem()).getType();
-        this.slotStackCap = type.stackCap;
+        super(playerInv, heldStack, SNSUtils.getHandler(heldStack).getSlots());
         this.handler = SNSUtils.getHandler(heldStack);
+        this.slotStackCap = handler.getSlotLimit(0);
         addContainerSlots();
         addPlayerInventorySlots(playerInv);
     }
@@ -41,7 +36,7 @@ public class ContainerSack extends AbstractContainerRenameable {
     @Override
     protected void addContainerSlots() {
         if (handler instanceof SackHandler) {
-            switch (type.slots) {
+            switch (handler.getSlots()) {
                 case 1:
                     // 1 slot container
                     addSackSlots(1, 1, 80, 32);
@@ -58,8 +53,8 @@ public class ContainerSack extends AbstractContainerRenameable {
                     addSackSlots(2, 9, 8, 34);
                     break;
                 default:
-                    final int rows = (int) Math.ceil((double) type.slots / 9);
-                    final int columns = type.slots / rows;
+                    final int rows = (int) Math.ceil((double) handler.getSlots() / 9);
+                    final int columns = handler.getSlots() / rows;
                     addSackSlots(rows, columns);
             }
         }

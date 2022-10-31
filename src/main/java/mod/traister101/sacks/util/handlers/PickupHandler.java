@@ -155,7 +155,7 @@ public final class PickupHandler {
     private static boolean topsOffPlayerInventory(final EntityPlayer player, final ItemStack stack) {
         // Add to player inventory first, if there is an incomplete stack in there.
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-            ItemStack inventoryStack = player.inventory.getStackInSlot(i);
+            final ItemStack inventoryStack = player.inventory.getStackInSlot(i);
             // We only add to existing stacks.
             if (inventoryStack.isEmpty()) continue;
             // Already full
