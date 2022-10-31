@@ -1,6 +1,8 @@
 package mod.traister101.sacks;
 
 import mod.traister101.sacks.client.ClientRegistery;
+import mod.traister101.sacks.client.SNSKeybinds;
+import mod.traister101.sacks.network.PickBlockPacket;
 import mod.traister101.sacks.network.RenamePacket;
 import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.entity.EntitiesSNS;
@@ -10,6 +12,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -50,6 +53,8 @@ public final class SacksNSuch {
         int id = 0;
         network.registerMessage(new RenamePacket.Handler(), RenamePacket.class, ++id, Side.SERVER);
         network.registerMessage(new TogglePacket.Handler(), TogglePacket.class, ++id, Side.SERVER);
+        network.registerMessage(new PickBlockPacket.Handler(), PickBlockPacket.class, ++id, Side.SERVER);
+
         // Only register pickup handler if auto pickup is enabled
         if (ConfigSNS.GLOBAL.doPickup) {
             MinecraftForge.EVENT_BUS.register(new PickupHandler());
@@ -63,5 +68,10 @@ public final class SacksNSuch {
         if (event.getSide().isClient()) {
             ClientRegistery.preInit();
         }
+    }
+
+    @EventHandler
+    public void init(final FMLInitializationEvent event) {
+        if (event.getSide().isClient()) SNSKeybinds.init();
     }
 }
