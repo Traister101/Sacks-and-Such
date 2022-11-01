@@ -10,9 +10,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public abstract class AbstractSlot extends SlotItemHandler {
+public class SlotSNS extends SlotItemHandler {
 
-    public AbstractSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+    public SlotSNS(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
     }
 

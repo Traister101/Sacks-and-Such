@@ -44,7 +44,7 @@ public final class RecipeRegistry {
 //				"XX XX",
 //				" XXX ");
 
-        if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled)
+        if (ConfigSNS.EXPLOSIVE_VESSEL.DANGEROUS.isEnabled)
             fireClayKnappingRecipe(recipeRegistry, ItemsSNS.UNFIRED_EXPLOSIVE_VESSEL, 1,
                     " XXX ",
                     "XXXXX",

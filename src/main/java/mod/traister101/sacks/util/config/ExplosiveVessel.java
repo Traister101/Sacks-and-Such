@@ -8,20 +8,9 @@ public final class ExplosiveVessel {
 
     private static final String LANG_KEY = "config." + MODID + ".explosive_vessel.";
 
-    @RequiresMcRestart
-    @LangKey(LANG_KEY + "enabled")
-    @Comment("Enable or disable the explosive vessel")
-    public boolean isEnabled = true;
-
-    @RequiresMcRestart
-    @LangKey(LANG_KEY + "sticky")
-    @Comment("Enable or disable sticky explosive vessel")
-    public boolean stickyEnabled = true;
-
-    @RequiresMcRestart
-    @LangKey(LANG_KEY + "small")
-    @Comment("Enable or disable the tiny explosive vessels")
-    public boolean smallEnabled = true;
+    @LangKey(LANG_KEY + "dangerous")
+    @Comment("These configs are aimed at modpack Devs. Server client mismach will cause issues!")
+    public final Dangerous DANGEROUS = new Dangerous();
 
     @RequiresMcRestart
     @RangeInt(min = 1, max = 512)
@@ -40,4 +29,35 @@ public final class ExplosiveVessel {
     @LangKey(LANG_KEY + "small_power")
     @Comment("The explosion power of the tiny vessel")
     public double smallPower = 2.5;
+
+    @RangeInt(min = 1)
+    @LangKey(LANG_KEY + "strength_item_cap")
+    @Comment("Cap for the amount of items used in the strength calculation, more than what is set are voided")
+    public int strengthItemCap = 256;
+
+    public static class Dangerous {
+
+        private static final String LANG_KEY = ExplosiveVessel.LANG_KEY + "dangerous.";
+
+        @RequiresMcRestart
+        @RangeInt(min = 1)
+        @LangKey(LANG_KEY + "slot_count")
+        @Comment("This config has a relistic cap of 27 as any higher the slots are added on top of the player slots")
+        public int slotCount = 1;
+
+        @RequiresMcRestart
+        @LangKey(LANG_KEY + "enabled")
+        @Comment("Enable or disable the explosive vessel")
+        public boolean isEnabled = true;
+
+        @RequiresMcRestart
+        @LangKey(LANG_KEY + "sticky_enabled")
+        @Comment("Enable or disable sticky explosive vessel")
+        public boolean stickyEnabled = true;
+
+        @RequiresMcRestart
+        @LangKey(LANG_KEY + "small_enabled")
+        @Comment("Enable or disable the tiny explosive vessels")
+        public boolean smallEnabled = true;
+    }
 }

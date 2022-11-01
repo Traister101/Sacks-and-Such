@@ -34,9 +34,9 @@ public class ConditionalFactory implements IConditionFactory {
             case "steel_reinforced_fiber":
                 return () -> (FARMER_SACK.DANGEROUS.isEnabled || MINER_SACK.DANGEROUS.isEnabled) && KNAP_SACK.DANGEROUS.isEnabled;
             case "tiny_vessel":
-                return () -> EXPLOSIVE_VESSEL.isEnabled && EXPLOSIVE_VESSEL.smallEnabled;
+                return () -> EXPLOSIVE_VESSEL.DANGEROUS.isEnabled && EXPLOSIVE_VESSEL.DANGEROUS.smallEnabled;
             case "sticky_vessel":
-                return () -> EXPLOSIVE_VESSEL.isEnabled && EXPLOSIVE_VESSEL.stickyEnabled;
+                return () -> EXPLOSIVE_VESSEL.DANGEROUS.isEnabled && EXPLOSIVE_VESSEL.DANGEROUS.stickyEnabled;
             // If a recipe uses the mod conditional but doesn't have a valid config key it won't work
             default:
                 return () -> false;

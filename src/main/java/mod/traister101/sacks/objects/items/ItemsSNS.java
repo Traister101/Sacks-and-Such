@@ -99,14 +99,14 @@ public final class ItemsSNS {
             sacks.add(registerSack(registry, "knap", SackType.KNAPSACK));
         }
 
-        if (ConfigSNS.EXPLOSIVE_VESSEL.isEnabled) {
+        if (ConfigSNS.EXPLOSIVE_VESSEL.DANGEROUS.isEnabled) {
             throwableVessels.add(registerVessel(registry, "explosive", VesselType.EXPLOSIVE));
             simpleItems.add(registerPottery(registry, "unfired_explosive_vessel"));
-            if (ConfigSNS.EXPLOSIVE_VESSEL.stickyEnabled)
+            if (ConfigSNS.EXPLOSIVE_VESSEL.DANGEROUS.stickyEnabled)
                 throwableVessels.add(registerVessel(registry, "sticky_explosive", VesselType.STICKY));
         }
 
-        if (ConfigSNS.EXPLOSIVE_VESSEL.smallEnabled) {
+        if (ConfigSNS.EXPLOSIVE_VESSEL.DANGEROUS.smallEnabled) {
             simpleItems.add(registerPottery(registry, "unfired_tiny_vessel"));
             simpleItems.add(registerPottery(registry, "fired_tiny_vessel"));
             throwableVessels.add(registerVessel(registry, "tiny_explosive", VesselType.TINY));

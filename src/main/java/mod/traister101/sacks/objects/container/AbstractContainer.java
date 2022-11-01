@@ -1,6 +1,8 @@
 package mod.traister101.sacks.objects.container;
 
 import mcp.MethodsReturnNonnullByDefault;
+import mod.traister101.sacks.objects.inventory.capability.AbstractHandler;
+import mod.traister101.sacks.objects.inventory.slot.SlotSNS;
 import mod.traister101.sacks.util.SNSUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -16,7 +18,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public abstract class AbstractContainer extends Container {
 
-    private final IItemHandler handler;
+    protected final IItemHandler handler;
     protected final ItemStack heldStack;
     protected final EntityPlayer player;
     protected final int slotAmount;
@@ -24,10 +26,12 @@ public abstract class AbstractContainer extends Container {
     protected int slotStackCap;
     protected int itemIndex;
 
-    protected AbstractContainer(InventoryPlayer playerInv, ItemStack heldStack, int slotAmount) {
+    protected AbstractContainer(InventoryPlayer playerInv, ItemStack heldStack) {
         this.player = playerInv.player;
         this.heldStack = heldStack;
-        this.slotAmount = slotAmount;
+        this.handler = SNSUtils.getHandler(heldStack);
+        this.slotAmount = handler.getSlots();
+        this.slotStackCap = handler.getSlotLimit(0);
         if (heldStack == player.getHeldItemMainhand()) {
             this.itemIndex = playerInv.currentItem + 27; // Mainhand opened inventory
             this.isOffhand = false;
@@ -36,7 +40,8 @@ public abstract class AbstractContainer extends Container {
             this.isOffhand = true;
         }
         this.itemIndex += slotAmount;
-        this.handler = SNSUtils.getHandler(heldStack);
+        addContainerSlots();
+        addPlayerInventorySlots(playerInv);
     }
 
     @Override
@@ -246,8 +251,53 @@ public abstract class AbstractContainer extends Container {
         return swappableA && swappableB;
     }
 
-    protected abstract void addContainerSlots();
+    protected void addContainerSlots() {
+        if (handler instanceof AbstractHandler) {
+            switch (handler.getSlots()) {
+                case 1:
+                    // 1 slot container
+                    addSlots(1, 1, 80, 32);
+                    break;
+                case 4:
+                    // 4 slot container
+                    addSlots(2, 2, 71, 23);
+                    break;
+                case 8:
+                    // 8 slot container
+                    addSlots(2, 4, 53, 23);
+                    break;
+                case 18:
+                    addSlots(2, 9, 8, 34);
+                    break;
+                default:
+                    final int rows = (int) Math.ceil((double) handler.getSlots() / 9);
+                    final int columns = handler.getSlots() / rows;
+                    addSlots(rows, columns);
+            }
+        }
+    }
 
+    private void addSlots(final int rows, final int columns, final int startX, final int startY) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                addSlotToContainer(new SlotSNS(handler, j + i * 18 + 9, startX + j * 18, startY + i * 18));
+            }
+        }
+    }
+
+    private void addSlots(final int rows, final int columns) {
+        for (int i = 0; i < rows; i++) {
+            if (i == rows - 1) {
+                for (int j = 0; j < columns; j++) {
+                    addSlotToContainer(new SlotSNS(handler, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
+                }
+            } else {
+                for (int j = 0; j < 9; j++) {
+                    addSlotToContainer(new SlotSNS(handler, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
+                }
+            }
+        }
+    }
     protected final void addPlayerInventorySlots(InventoryPlayer playerInv) {
         // Add Player Inventory Slots
         for (int i = 0; i < 3; i++) {
