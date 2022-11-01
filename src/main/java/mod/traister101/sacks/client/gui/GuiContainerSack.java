@@ -7,6 +7,7 @@ import mod.traister101.sacks.objects.inventory.slot.SackSlot;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SNSUtils.ToggleType;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -33,6 +34,7 @@ public class GuiContainerSack extends GuiRenameable {
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+        GlStateManager.color(1, 1, 1);
         drawSlots();
     }
 

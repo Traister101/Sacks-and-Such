@@ -15,7 +15,6 @@ import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 
-
 public abstract class GuiRenameable extends AbstractGuiContainer {
 
     protected final InventoryPlayer playerInv;
@@ -70,8 +69,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
 
         switch (keyCode) {
-            // Escape key
-            case 1:
+            case Keyboard.KEY_ESCAPE:
                 // Text box is enabled when escape is pressed
                 if (renaming) {
                     setRenaming(false);
@@ -80,7 +78,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
                 }
                 return;
             // Enter key
-            case 28:
+            case Keyboard.KEY_RETURN:
                 // Text box is enabled when enter is pressed
                 if (renaming) {
                     setRenaming(false);
@@ -117,6 +115,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
             nameField.setEnabled(false);
             nameField.setEnableBackgroundDrawing(false);
         }
+        nameField.setCursorPositionEnd();
     }
 
     private void renameItem() {
