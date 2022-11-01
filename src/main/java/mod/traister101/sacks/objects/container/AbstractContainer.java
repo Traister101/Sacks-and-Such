@@ -109,18 +109,29 @@ public abstract class AbstractContainer extends Container {
 
     @Override
     public final ItemStack slotClick(final int slotID, final int dragType, final ClickType clickType, final EntityPlayer player) {
-        //Not a slot, let vanilla handle it
+        // Not a slot, let vanilla handle it
         if (slotID < 0) return super.slotClick(slotID, dragType, clickType, player);
-        //Prevent moving of the item stack that is currently open
+        // Prevent moving of the item stack that is currently open
         if (slotID == itemIndex) return ItemStack.EMPTY;
-        //Vanilla slot
+        // Keybind swap
+        if (clickType == ClickType.SWAP && dragType >= 0 && dragType < 9) {
+            final Slot hoverSlot = inventorySlots.get(slotID);
+            final ItemStack hotbarStack = player.inventory.getStackInSlot(dragType);
+            final ItemStack heldStack = player.getHeldItemMainhand();
+            // Blocks the held stack from being moved
+            if (hoverSlot.getStack() == heldStack || heldStack == hotbarStack) return ItemStack.EMPTY;
+            // TODO swapped stacks need to respect stack size
+            // Vanilla will swap the entire stack allowing for above 64 stacks in player inventory
+            return super.slotClick(slotID, dragType, clickType, player);
+        }
+        // Vanilla slot
         if (slotID > slotAmount - 1) return super.slotClick(slotID, dragType, clickType, player);
-        //Shift click, vanilla method works fine
+        // Shift click, vanilla method works fine
         if (clickType == ClickType.QUICK_MOVE) return super.slotClick(slotID, dragType, clickType, player);
 
         final Slot slot = getSlot(slotID);
         final ItemStack slotStack = slot.getStack();
-        //Slot is empty give to vanilla
+        // Slot is empty give to vanilla
         if (slotStack.isEmpty()) return super.slotClick(slotID, dragType, clickType, player);
 
         if (clickType == ClickType.THROW && player.inventory.getItemStack().isEmpty()) {
@@ -135,7 +146,7 @@ public abstract class AbstractContainer extends Container {
             final InventoryPlayer playerInventory = player.inventory;
             final ItemStack mouseStack = playerInventory.getItemStack();
 
-            //Holding an item
+            // Holding an item
             if (!mouseStack.isEmpty()) {
                 // If we should try to swap the stacks
                 if (!ItemStack.areItemsEqual(slotStack, mouseStack)) {
@@ -148,7 +159,7 @@ public abstract class AbstractContainer extends Container {
                     }
                 }
 
-                //Stack is full
+                // Stack is full
                 if (slotStack.getCount() >= slot.getSlotStackLimit()) return slotStack;
 
                 // If we should try to merge the stacks
