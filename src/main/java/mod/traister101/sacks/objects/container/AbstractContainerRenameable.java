@@ -8,8 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public abstract class AbstractContainerRenameable extends AbstractContainer {
 
-    protected AbstractContainerRenameable(InventoryPlayer playerInv, ItemStack heldStack, int slotAmount) {
-        super(playerInv, heldStack, slotAmount);
+    protected AbstractContainerRenameable(InventoryPlayer playerInv, ItemStack heldStack) {
+        super(playerInv, heldStack);
     }
 
     public final void updateItemName(String newName) {
@@ -25,7 +25,7 @@ public abstract class AbstractContainerRenameable extends AbstractContainer {
         updateStack(itemStack);
     }
 
-    private final void updateStack(ItemStack itemStack) {
+    private void updateStack(ItemStack itemStack) {
         ItemStack stack = itemStack.copy();
 
         Slot slot = inventorySlots.get(itemIndex);
