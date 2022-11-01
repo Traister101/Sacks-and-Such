@@ -17,6 +17,8 @@ public class PickBlockHandler {
 
     public static void handlePickBlock(final EntityPlayer player) {
 
+        if (!ConfigSNS.doPickBlock) return;
+
         final Minecraft mc = Minecraft.getMinecraft();
         final World world = mc.world;
         final RayTraceResult target = mc.objectMouseOver;

@@ -1,4 +1,4 @@
-package mod.traister101.sacks.util.config;
+package mod.traister101.sacks.util.config.sack;
 
 import net.dries007.tfc.api.capability.size.Size;
 import net.minecraftforge.common.config.Config.*;

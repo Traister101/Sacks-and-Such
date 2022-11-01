@@ -29,7 +29,7 @@ public final class RecipeRegistry {
     public static void onRegisterKnappingRecipeEvent(Register<KnappingRecipe> event) {
         final IForgeRegistry<KnappingRecipe> recipeRegistry = event.getRegistry();
 
-        if (ConfigSNS.LEATHER_SACK.DANGEROUS.isEnabled)
+        if (ConfigSNS.SACK.LEATHER_SACK.DANGEROUS.isEnabled)
             leatherKnappingRecipe(recipeRegistry, ItemsSNS.UNFINISHED_LEATHER_SACK, 1,
                     " XXX ",
                     "XXXXX",

@@ -28,6 +28,9 @@ sns.key.void=Toggle Sack Voiding
 
 ##Config
 
+config.sns.sack_config=Sack Config
+config.sns.do_pick_block=Pick block from sacks
+
 #Thatch
 config.sns.thatch_sack=Thatch sack
 config.sns.thatch_sack.dangerous=Dangerous

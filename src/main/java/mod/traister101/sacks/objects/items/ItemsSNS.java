@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import static mod.traister101.sacks.ConfigSNS.SACK;
 import static mod.traister101.sacks.SacksNSuch.MODID;
 import static mod.traister101.sacks.util.SNSUtils.getNull;
 
@@ -66,36 +67,36 @@ public final class ItemsSNS {
         Builder<Item> simpleItems = ImmutableList.builder();
         Builder<ItemThrowableVessel> throwableVessels = ImmutableList.builder();
 
-        if (ConfigSNS.THATCH_SACK.DANGEROUS.isEnabled) {
+        if (SACK.THATCH_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "thatch", SackType.THATCH));
         }
 
-        if (ConfigSNS.LEATHER_SACK.DANGEROUS.isEnabled) {
+        if (SACK.LEATHER_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "leather", SackType.LEATHER));
             simpleItems.add(register(registry, "unfinished_leather_sack", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
         }
 
-        if (ConfigSNS.BURLAP_SACK.DANGEROUS.isEnabled) {
+        if (SACK.BURLAP_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "burlap", SackType.BURLAP));
         }
 
-        if (ConfigSNS.MINER_SACK.DANGEROUS.isEnabled) {
+        if (SACK.MINER_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "miners", SackType.MINER));
         }
 
-        if (ConfigSNS.FARMER_SACK.DANGEROUS.isEnabled) {
+        if (SACK.FARMER_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "farmer", SackType.FARMER));
         }
 
-        if (ConfigSNS.FARMER_SACK.DANGEROUS.isEnabled || ConfigSNS.MINER_SACK.DANGEROUS.isEnabled) {
+        if (SACK.FARMER_SACK.DANGEROUS.isEnabled || SACK.MINER_SACK.DANGEROUS.isEnabled) {
             simpleItems.add(register(registry, "reinforced_fiber", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
             simpleItems.add(register(registry, "reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
-            if (ConfigSNS.KNAP_SACK.DANGEROUS.isEnabled) {
+            if (SACK.KNAP_SACK.DANGEROUS.isEnabled) {
                 simpleItems.add(register(registry, "steel_reinforced_fabric", new ItemMisc(Size.NORMAL, Weight.LIGHT)));
             }
         }
 
-        if (ConfigSNS.KNAP_SACK.DANGEROUS.isEnabled) {
+        if (SACK.KNAP_SACK.DANGEROUS.isEnabled) {
             sacks.add(registerSack(registry, "knap", SackType.KNAPSACK));
         }
 

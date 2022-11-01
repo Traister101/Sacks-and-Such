@@ -1,6 +1,8 @@
 package mod.traister101.sacks;
 
-import mod.traister101.sacks.util.config.*;
+import mod.traister101.sacks.util.config.ExplosiveVessel;
+import mod.traister101.sacks.util.config.Global;
+import mod.traister101.sacks.util.config.SackConfig;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.LangKey;
@@ -30,31 +32,14 @@ public final class ConfigSNS {
     @LangKey(LANG_KEY + ".global")
     public static final Global GLOBAL = new Global();
 
+    @Comment("Sack config")
+    @LangKey(LANG_KEY + ".sack_config")
+    public static final SackConfig SACK = new SackConfig();
+
     @Comment("Explosive vessel config")
     @LangKey(LANG_KEY + ".explosive_vessel")
     public static final ExplosiveVessel EXPLOSIVE_VESSEL = new ExplosiveVessel();
 
-    @Comment("Config for thatch sack")
-    @LangKey(LANG_KEY + ".thatch_sack")
-    public static final ThatchSack THATCH_SACK = new ThatchSack();
-
-    @Comment("Config for burlap sack")
-    @LangKey(LANG_KEY + ".burlap_sack")
-    public static final BurlapSack BURLAP_SACK = new BurlapSack();
-
-    @Comment("Config for leather sack")
-    @LangKey(LANG_KEY + ".leather_sack")
-    public static final LeatherSack LEATHER_SACK = new LeatherSack();
-
-    @Comment("Config for miners sack")
-    @LangKey(LANG_KEY + ".miner_sack")
-    public static final MinerSack MINER_SACK = new MinerSack();
-
-    @Comment("Config for farmers sack")
-    @LangKey(LANG_KEY + ".farmer_sack")
-    public static final FarmerSack FARMER_SACK = new FarmerSack();
-
-    @Comment("Config for farmers sack")
-    @LangKey(LANG_KEY + ".knap_sack")
-    public static final KnapSack KNAP_SACK = new KnapSack();
+    @LangKey(LANG_KEY + ".do_pick_block")
+    public static boolean doPickBlock = true;
 }

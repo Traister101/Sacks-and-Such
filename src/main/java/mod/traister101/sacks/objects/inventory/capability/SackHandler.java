@@ -39,7 +39,7 @@ public class SackHandler extends AbstractHandler {
 
         if (type == SackType.FARMER) {
             // Allow other than seeds
-            if (!ConfigSNS.FARMER_SACK.allowNonSeed) {
+            if (!ConfigSNS.SACK.FARMER_SACK.allowNonSeed) {
                 if (!(item instanceof ItemSeedsTFC)) return false;
             }
         }
@@ -50,7 +50,7 @@ public class SackHandler extends AbstractHandler {
 
         if (type == SackType.MINER) {
             //Allow other than ore
-            if (!ConfigSNS.MINER_SACK.allowNonOre) {
+            if (!ConfigSNS.SACK.MINER_SACK.allowNonOre) {
                 //If item is a TFC ore
                 if (!(item instanceof ItemOreTFC || item instanceof ItemSmallOre)) return false;
             }
