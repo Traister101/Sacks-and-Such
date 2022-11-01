@@ -115,16 +115,23 @@ public abstract class AbstractContainer extends Container {
         if (slotID == itemIndex) return ItemStack.EMPTY;
         // Keybind swap
         if (clickType == ClickType.SWAP && dragType >= 0 && dragType < 9) {
-            final Slot hoverSlot = inventorySlots.get(slotID);
+            final ItemStack hoverStack = inventorySlots.get(slotID).getStack();
             final ItemStack hotbarStack = player.inventory.getStackInSlot(dragType);
-            final ItemStack heldStack = player.getHeldItemMainhand();
             // Blocks the held stack from being moved
-            if (hoverSlot.getStack() == heldStack || heldStack == hotbarStack) return ItemStack.EMPTY;
-            // TODO swapped stacks need to respect stack size
-            // Vanilla will swap the entire stack allowing for above 64 stacks in player inventory
-            return super.slotClick(slotID, dragType, clickType, player);
+            if (hoverStack == player.getHeldItemMainhand() || player.getHeldItemMainhand() == hotbarStack)
+                return ItemStack.EMPTY;
+
+            // If either stack is empty pass it to vanilla
+            if (hotbarStack.isEmpty() || hoverStack.isEmpty())
+                return super.slotClick(slotID, dragType, clickType, player);
+
+            // If neither stack is too large call vanilla
+            if (hotbarStack.getCount() <= hotbarStack.getMaxStackSize() && hoverStack.getCount() <= hoverStack.getMaxStackSize())
+                return super.slotClick(slotID, dragType, clickType, player);
+
+            return ItemStack.EMPTY;
         }
-        // Vanilla slot
+        // Vanilla slot, pass to vanilla
         if (slotID > slotAmount - 1) return super.slotClick(slotID, dragType, clickType, player);
         // Shift click, vanilla method works fine
         if (clickType == ClickType.QUICK_MOVE) return super.slotClick(slotID, dragType, clickType, player);
@@ -134,7 +141,9 @@ public abstract class AbstractContainer extends Container {
         // Slot is empty give to vanilla
         if (slotStack.isEmpty()) return super.slotClick(slotID, dragType, clickType, player);
 
+        // Pressing q
         if (clickType == ClickType.THROW && player.inventory.getItemStack().isEmpty()) {
+            // ctrl + q
             if (dragType == 1) {
                 final ItemStack tossStack = handler.extractItem(slotID, slotStack.getMaxStackSize(), false);
                 player.dropItem(tossStack, false);
