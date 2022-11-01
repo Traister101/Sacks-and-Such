@@ -298,6 +298,7 @@ public abstract class AbstractContainer extends Container {
             }
         }
     }
+
     protected final void addPlayerInventorySlots(InventoryPlayer playerInv) {
         // Add Player Inventory Slots
         for (int i = 0; i < 3; i++) {

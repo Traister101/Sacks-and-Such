@@ -41,7 +41,7 @@ public final class KnapSack {
         @RequiresMcRestart
         @RangeInt(min = 1)
         @LangKey(LANG_KEY + "slot_count")
-        @Comment("This config has a relistic cap of 27 as any higher the slots are added on top of the player slots")
+        @Comment("This config has a realistic cap of 27 as any higher the slots are added on top of the player slots")
         public int slotCount = 18;
 
         @RequiresMcRestart

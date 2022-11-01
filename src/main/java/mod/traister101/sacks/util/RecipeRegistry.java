@@ -64,7 +64,7 @@ public final class RecipeRegistry {
     @SubscribeEvent
     public static void onRegisterLoomRecipeEvent(Register<LoomRecipe> event) {
         final IForgeRegistry<LoomRecipe> recipeRegistry = event.getRegistry();
-        final ResourceLocation texture = new ResourceLocation(MODID,"textures/loom/reinforced_fabric.png");
+        final ResourceLocation texture = new ResourceLocation(MODID, "textures/loom/reinforced_fabric.png");
         final ResourceLocation name = new ResourceLocation(MODID, "reinforced_fiber");
         recipeRegistry.register(new LoomRecipe(name, IIngredient.of(ItemsSNS.REINFORCED_FIBER, 16), new ItemStack(ItemsSNS.REINFORCED_FABRIC), 16, texture));
     }

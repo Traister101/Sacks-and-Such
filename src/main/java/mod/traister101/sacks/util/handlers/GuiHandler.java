@@ -60,7 +60,7 @@ public final class GuiHandler implements IGuiHandler {
             case SACK_MINER:
             case SACK_KNAP:
             case SACK_FARMER:
-                 // Yeah this seems like it'd cause issues with the variable slots but we render those dynamiclly rather than doing them ahead of time in the texture
+                // Yeah this seems like it'd cause issues with the variable slots but we render those dynamiclly rather than doing them ahead of time in the texture
                 return new GuiContainerSack(container, player.inventory, BACKGROUND, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
             case VESSEL_EXPLOSIVE:
                 return new GuiContainerThrowableVessel(container, BACKGROUND, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());

@@ -26,7 +26,7 @@ public final class SacksNSuch {
 
     public static final String MODID = "sns";
     public static final String NAME = "Sacks 'N Such";
-    public  static final String VERSION = "@VERSION@";
+    public static final String VERSION = "@VERSION@";
 
     @Instance
     private static SacksNSuch INSTANCE = null;
