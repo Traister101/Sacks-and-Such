@@ -64,14 +64,14 @@ public final class SNSUtils {
 
     public static void sendPacketAndStatus(boolean flag, @Nonnull ToggleType type) {
         SacksNSuch.getNetwork().sendToServer(new TogglePacket(flag, type));
-        TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + ".sack." + type.lang + "." + (flag ? "enabled" : "disabled"));
+        TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + type.lang + "." + (flag ? "enabled" : "disabled"));
         Minecraft.getMinecraft().player.sendStatusMessage(statusMessage, true);
     }
 
     public enum ToggleType {
-        SEAL("seal", "seal"),
-        VOID("auto_void", "void"),
-        PICKUP("auto_pickup", "pickup"),
+        SEAL(".explosive_vessel.seal", "seal"),
+        VOID(".sack.auto_void", "void"),
+        PICKUP(".sack.auto_pickup", "pickup"),
         ITEMS("", "hasItems"),
         NULL("", "");
 

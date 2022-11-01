@@ -104,14 +104,16 @@ config.sns.knap_sack.dangerous.slot_count=Slot count
 
 #Explosive vessel
 config.sns.explosive_vessel=Explosive vessel
+config.sns.explosive_vessel.dangerous=Dangerous
 config.sns.explosive_vessel.tooltip=Config for explosive vessels
 
-config.sns.explosive_vessel.enabled=Enabled
-config.sns.explosive_vessel.small=Enable small vessels
+config.sns.explosive_vessel.dangerous.enabled=Enabled
 config.sns.explosive_vessel.small_power=Tiny vessel explosion power
 config.sns.explosive_vessel.slot_cap=Slot cap
 config.sns.explosive_vessel.multiplier=Explosion multiplier
-config.sns.explosive_vessel.sticky=Enable sticky explosive vessels
+config.sns.explosive_vessel.dangerous.slot_count=Slot count
+config.sns.explosive_vessel.dangerous.small_enabled=Enable small vessels
+config.sns.explosive_vessel.dangerous.sticky_enabled=Enable sticky explosive vessels
 
 #Global
 config.sns.global=Global
