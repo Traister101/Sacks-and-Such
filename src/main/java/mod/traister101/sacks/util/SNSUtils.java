@@ -72,7 +72,7 @@ public final class SNSUtils {
         SEAL("seal", "seal"),
         VOID("auto_void", "void"),
         PICKUP("auto_pickup", "pickup"),
-        ITEMS("", "items"),
+        ITEMS("", "hasItems"),
         NULL("", "");
 
         public final String lang;

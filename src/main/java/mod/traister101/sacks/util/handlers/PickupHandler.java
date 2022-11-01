@@ -115,10 +115,8 @@ public final class PickupHandler {
                     }
                 }
             }
-            // No slots were valid for incerting
-            if (!canPlaceInSack(containerInv, itemPickup)) return false;
             // Can't void
-            if (!canItemVoid(itemContainer)) return false;
+            if (!canItemVoid(itemContainer)) continue;
             // Make sure there's a slot with the same type of item before voiding the pickup
             for (int j = 0; j < containerInv.getSlots(); j++) {
                 final ItemStack slotStack = containerInv.getStackInSlot(j);
