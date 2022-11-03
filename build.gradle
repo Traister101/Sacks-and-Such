@@ -1,50 +1,35 @@
 buildscript {
     repositories {
-        maven {
-            name = "forge"
-            url = "https://maven.minecraftforge.net/"
-        }
-        maven {
-            name = "curseforge"
-            url "https://plugins.gradle.org/m2/"
-        }
+        maven { url = 'https://maven.minecraftforge.net/' }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath "com.wynprice.cursemaven:CurseMaven:2.1.0"
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'com.wynprice.cursemaven'
 
-repositories {
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
-
-    removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
-
-    maven {
-        url "https://maven.minecraftforge.net/"
-    }
+file "build.properties" withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
 }
 
-version = "1.0"
-group = "mod.traister101.sns"
-archivesBaseName = "Sacks 'N Such"
+version = "${config.mod.version}"
+group = "mod.traister101.${config.mod.id}"
+archivesBaseName = "${config.mod.name}"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = 1.8
 
 minecraft {
-    version = "1.12.2-14.23.5.2838"
+    version = "${config.minecraft.version}-${config.forge.version}"
     runDir = "run"
     mappings = "stable_39"
 
+    replace("@MODID@", config.mod.id)
+    replace("@MODNAME@", config.mod.name)
     replace("@VERSION@", project.version)
-    replaceIn("SacksNSuch.java")
+    replaceIn("${config.mod.class}.java")
 }
 
 dependencies {
@@ -53,20 +38,30 @@ dependencies {
 
 processResources {
     // this will ensure that this task is redone when the versions change.
+    inputs.property("moid", config.mod.id)
+    inputs.property("modname", config.mod.name)
     inputs.property("version", project.version)
     inputs.property("mcversion", project.minecraft.version)
-    inputs.property("modname", archivesBaseName)
 
     // replace stuff in mcmod.info and pack.mcmeta
     from(sourceSets.main.resources.srcDirs) {
         include("mcmod.info", "pack.mcmeta")
 
         // replace version, mcversion and modname
-        expand("version": project.version, "mcversion": project.minecraft.version, "modname": archivesBaseName)
+        expand("modid": config.mod.id, "version": project.version, "modname": config.mod.name, "mcversion": project.minecraft.version)
     }
 
     // copy everything else
     from(sourceSets.main.resources.srcDirs) {
         exclude("mcmod.info", "pack.mcmeta")
     }
+
+    // Copy lisence from project root
+    from('.') {
+        include "LICENSE"
+    }
+}
+
+project.tasks.withType(Jar) { jarTask ->
+    jarTask.appendix = project.minecraft.version
 }

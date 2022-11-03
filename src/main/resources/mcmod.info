@@ -1,6 +1,6 @@
 [
   {
-    "modid": "sns",
+    "modid": "${modid}",
     "name": "${modname}",
     "description": "A TFC addon which adds Sacks and Explosive vessels",
     "version": "${version}",
@@ -10,7 +10,7 @@
       "Traister101"
     ],
     "credits": "",
-    "logoFile": "",
+    "logoFile": "/assets/tfc/textures/gui/logo.png",
     "screenshots": [],
     "dependencies": [
       "tfc"
