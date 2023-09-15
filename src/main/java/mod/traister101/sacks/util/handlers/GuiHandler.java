@@ -79,11 +79,9 @@ public final class GuiHandler implements IGuiHandler {
         SACK_KNAP,
         NULL;
 
-        private static final GuiType[] values = values();
-
         @Nonnull
         public static GuiType valueOf(int id) {
-            return id < 0 || id >= values.length ? NULL : values[id];
+	        return id < 0 || id >= values().length ? NULL : values()[id];
         }
     }
 }

@@ -4,6 +4,7 @@ import mcp.MethodsReturnNonnullByDefault;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.entity.projectile.EntityExplosiveVessel;
 import mod.traister101.sacks.objects.inventory.capability.VesselHandler;
+import mod.traister101.sacks.util.NBTHelper;
 import mod.traister101.sacks.util.SNSUtils;
 import mod.traister101.sacks.util.SNSUtils.ToggleType;
 import mod.traister101.sacks.util.VesselType;
@@ -18,7 +19,10 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
@@ -54,7 +58,7 @@ public class ItemThrowableVessel extends Item implements IItemSize {
         }
 
         if (!playerIn.isSneaking()) {
-            if (SNSUtils.isSealed(heldStack)) {
+	        if (NBTHelper.isSealed(heldStack)) {
                 throwVessel(worldIn, playerIn, heldStack);
                 return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
             }
@@ -62,7 +66,7 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 
         if (!worldIn.isRemote) {
             if (playerIn.isSneaking()) {
-                SNSUtils.sendPacketAndStatus(!SNSUtils.isSealed(heldStack), ToggleType.SEAL);
+	            SNSUtils.sendPacketAndStatus(!NBTHelper.isSealed(heldStack), ToggleType.SEAL);
                 return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
             }
             if (!playerIn.isSneaking()) {
@@ -75,8 +79,10 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 
     private void throwVessel(final World worldIn, final EntityPlayer playerIn, final ItemStack heldStack) {
         final IItemHandler containerInv = SNSUtils.getHandler(heldStack);
-        if (!playerIn.capabilities.isCreativeMode)
+
+	    if (!playerIn.capabilities.isCreativeMode) {
             heldStack.shrink(1);
+	    }
 
         worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW,
                 SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
@@ -113,7 +119,7 @@ public class ItemThrowableVessel extends Item implements IItemSize {
         if (type == VesselType.TINY) return;
 
         String text = SacksNSuch.MODID + ".explosive_vessel.tooltip";
-        if (SNSUtils.isSealed(stack)) {
+	    if (NBTHelper.isSealed(stack)) {
             text += ".sealed";
         }
         tooltip.add(I18n.format(text));
@@ -127,7 +133,7 @@ public class ItemThrowableVessel extends Item implements IItemSize {
 
     @Override
     public boolean hasEffect(ItemStack stack) {
-        return SNSUtils.isSealed(stack);
+	    return NBTHelper.isSealed(stack);
     }
 
     @Nonnull

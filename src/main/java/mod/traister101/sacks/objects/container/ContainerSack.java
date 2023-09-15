@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ContainerSack extends AbstractContainerRenameable {
+public class ContainerSack extends ContainerRenameable {
 
     public ContainerSack(InventoryPlayer playerInv, ItemStack heldStack) {
         super(playerInv, heldStack);

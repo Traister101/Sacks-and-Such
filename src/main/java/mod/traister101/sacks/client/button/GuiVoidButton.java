@@ -1,6 +1,6 @@
 package mod.traister101.sacks.client.button;
 
-import mod.traister101.sacks.util.SNSUtils;
+import mod.traister101.sacks.util.NBTHelper;
 import net.dries007.tfc.client.button.IButtonTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -23,7 +23,7 @@ public class GuiVoidButton extends GuiButton implements IButtonTooltip {
 
     public GuiVoidButton(int buttonId, int x, int y, int widthIn, int heightIn, ItemStack stack) {
         super(buttonId, x, y, widthIn, heightIn, "");
-        this.isVoid = SNSUtils.isAutoVoid(stack);
+	    this.isVoid = NBTHelper.isAutoVoid(stack);
     }
 
     @Override

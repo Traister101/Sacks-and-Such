@@ -5,7 +5,6 @@ import mod.traister101.sacks.objects.inventory.slot.SlotSNS;
 import net.dries007.tfc.client.button.IButtonTooltip;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -17,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class AbstractGuiContainer extends GuiContainer {
 
+    private static final ResourceLocation slot = new ResourceLocation(SacksNSuch.MODID, "textures/gui/slot.png");
     protected final ResourceLocation background;
     protected final ItemStack heldStack;
 
@@ -35,14 +35,8 @@ public abstract class AbstractGuiContainer extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        drawSimpleBackground();
-    }
-
-    private void drawSimpleBackground() {
-        GlStateManager.color(1, 1, 1, 1);
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-        GlStateManager.color(1, 1, 1);
         drawSlots();
     }
 
@@ -64,8 +58,8 @@ public abstract class AbstractGuiContainer extends GuiContainer {
     }
 
     private void drawSlots() {
-        mc.getTextureManager().bindTexture(new ResourceLocation(SacksNSuch.MODID, "textures/gui/slot.png"));
-        final int size = 18;
+        mc.getTextureManager().bindTexture(slot);
+        final int size = 18; // Size of the texture which is a square
         // The largest container we ship only renders 27 slots. That commeneded out loop makes it render
         // 27,000 and only cuts the framerate in half I don't think performance is a valid concern
 //        for (int i = 0; i < 1000; i++)

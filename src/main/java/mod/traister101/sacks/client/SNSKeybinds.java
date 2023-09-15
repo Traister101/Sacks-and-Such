@@ -3,6 +3,7 @@ package mod.traister101.sacks.client;
 
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.network.PickBlockPacket;
+import mod.traister101.sacks.util.NBTHelper;
 import mod.traister101.sacks.util.SNSUtils;
 import mod.traister101.sacks.util.handlers.PickBlockHandler;
 import net.minecraft.client.Minecraft;
@@ -41,10 +42,10 @@ public final class SNSKeybinds {
         final SimpleNetworkWrapper network = SacksNSuch.getNetwork();
         final ItemStack heldStack = Minecraft.getMinecraft().player.getHeldItemMainhand();
         if (TOGGLE_VOID.isPressed()) {
-            SNSUtils.sendPacketAndStatus(!SNSUtils.isAutoVoid(heldStack), SNSUtils.ToggleType.VOID);
+	        SNSUtils.sendPacketAndStatus(!NBTHelper.isAutoVoid(heldStack), SNSUtils.ToggleType.VOID);
         }
         if (TOGGLE_PICKUP.isPressed()) {
-            SNSUtils.sendPacketAndStatus(!SNSUtils.isAutoPickup(heldStack), SNSUtils.ToggleType.PICKUP);
+	        SNSUtils.sendPacketAndStatus(!NBTHelper.isAutoPickup(heldStack), SNSUtils.ToggleType.PICKUP);
         }
         if (Minecraft.getMinecraft().gameSettings.keyBindPickBlock.isPressed()) {
             network.sendToServer(new PickBlockPacket());

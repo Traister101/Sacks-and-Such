@@ -4,6 +4,7 @@ import mcp.MethodsReturnNonnullByDefault;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.items.ItemSack;
+import mod.traister101.sacks.util.NBTHelper;
 import mod.traister101.sacks.util.SNSUtils;
 import mod.traister101.sacks.util.SackType;
 import net.dries007.tfc.objects.blocks.BlockPlacedItemFlat;
@@ -50,9 +51,7 @@ public final class PickupHandler {
             playPickupSound(player);
         }
 
-        if (itemResult.isEmpty()) {
-            event.setCanceled(true);
-        }
+	    if (itemResult.isEmpty()) event.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -60,21 +59,25 @@ public final class PickupHandler {
         final BlockPos blockPos = event.getPos();
         final World world = event.getWorld();
         final IBlockState blockState = world.getBlockState(blockPos);
+
         if (blockState.getBlock() instanceof BlockPlacedItemFlat) {
             final TEPlacedItemFlat te = Helpers.getTE(world, blockPos, TEPlacedItemFlat.class);
             final ItemStack stack = te.getStack();
             te.setStack(ItemStack.EMPTY);
             world.setBlockToAir(blockPos);
             final EntityPlayer player = event.getEntityPlayer();
+
             if (event.getSide() == Side.SERVER) {
                 final ItemStack itemResult = doPickupHandling(player, stack);
-                if (!itemResult.isEmpty()) {
+
+	            if (!itemResult.isEmpty()) {
                     ItemHandlerHelper.giveItemToPlayer(player, itemResult);
                 } else {
                     playPickupSound(player);
                 }
             }
-            player.swingArm(EnumHand.MAIN_HAND);
+
+	        player.swingArm(EnumHand.MAIN_HAND);
             event.setCancellationResult(EnumActionResult.SUCCESS);
             event.setCanceled(true);
         }
@@ -103,7 +106,7 @@ public final class PickupHandler {
                 // Config pickup disabled for sack type
                 if (!type.doesAutoPickup) continue;
                 // This sack in particular has auto pickup disabled
-                if (!SNSUtils.isAutoPickup(itemContainer)) continue;
+	            if (!NBTHelper.isAutoPickup(itemContainer)) continue;
             }
 
             final IItemHandler containerInv = SNSUtils.getHandler(itemContainer);
@@ -123,7 +126,8 @@ public final class PickupHandler {
                             SNSUtils.toggle(itemContainer, SNSUtils.ToggleType.ITEMS, toggleFlag);
                         }
                     }
-                    if (pickupResult.isEmpty()) {
+
+	                if (pickupResult.isEmpty()) {
                         return ItemStack.EMPTY;
                     } else {
                         itemPickup.setCount(pickupResult.getCount());
@@ -153,7 +157,7 @@ public final class PickupHandler {
         // Type can't void items
         if (!((ItemSack) itemContainer.getItem()).getType().doesVoiding) return false;
         // Returns if this particular sack item has voiding enabled
-        return SNSUtils.isAutoVoid(itemContainer);
+	    return NBTHelper.isAutoVoid(itemContainer);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

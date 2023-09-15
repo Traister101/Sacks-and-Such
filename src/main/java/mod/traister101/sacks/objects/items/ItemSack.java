@@ -4,6 +4,7 @@ import mcp.MethodsReturnNonnullByDefault;
 import mod.traister101.sacks.ConfigSNS;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
+import mod.traister101.sacks.util.NBTHelper;
 import mod.traister101.sacks.util.SNSUtils;
 import mod.traister101.sacks.util.SNSUtils.ToggleType;
 import mod.traister101.sacks.util.SackType;
@@ -49,14 +50,14 @@ public class ItemSack extends Item implements IItemSize {
             if (playerIn.isSneaking()) {
                 if (ConfigSNS.GLOBAL.shiftClickTogglesVoid) {
                     if (type.doesVoiding) {
-                        SNSUtils.sendPacketAndStatus(!SNSUtils.isAutoVoid(heldStack), ToggleType.VOID);
+	                    SNSUtils.sendPacketAndStatus(!NBTHelper.isAutoVoid(heldStack), ToggleType.VOID);
                     } else {
                         final TextComponentTranslation status = new TextComponentTranslation(SacksNSuch.MODID + ".sack.no_void");
                         Minecraft.getMinecraft().player.sendStatusMessage(status, true);
                     }
                 } else {
                     if (type.doesAutoPickup) {
-                        SNSUtils.sendPacketAndStatus(!SNSUtils.isAutoPickup(heldStack), ToggleType.PICKUP);
+	                    SNSUtils.sendPacketAndStatus(!NBTHelper.isAutoPickup(heldStack), ToggleType.PICKUP);
                     } else {
                         final TextComponentTranslation status = new TextComponentTranslation(SacksNSuch.MODID + ".sack.no_pickup");
                         Minecraft.getMinecraft().player.sendStatusMessage(status, true);
@@ -74,10 +75,10 @@ public class ItemSack extends Item implements IItemSize {
     public void addInformation(final ItemStack stack, @Nullable final World worldIn, final List<String> tooltip, ITooltipFlag flagIn) {
         String text = SacksNSuch.MODID + ".sack.tooltip";
         if (GuiScreen.isShiftKeyDown()) {
-            if (SNSUtils.isAutoVoid(stack) && type.doesVoiding) {
+	        if (NBTHelper.isAutoVoid(stack) && type.doesVoiding) {
                 text += ".void";
             }
-            if (SNSUtils.isAutoPickup(stack) && type.doesAutoPickup) {
+	        if (NBTHelper.isAutoPickup(stack) && type.doesAutoPickup) {
                 text += ".pickup";
             }
             text += ".shift";
@@ -87,8 +88,8 @@ public class ItemSack extends Item implements IItemSize {
 
     @Override
     public boolean hasEffect(final ItemStack stack) {
-        if (ConfigSNS.GLOBAL.voidGlint) return SNSUtils.isAutoVoid(stack);
-        return SNSUtils.isAutoPickup(stack);
+	    if (ConfigSNS.GLOBAL.voidGlint) return NBTHelper.isAutoVoid(stack);
+	    return NBTHelper.isAutoPickup(stack);
     }
 
     @Nullable
@@ -106,7 +107,7 @@ public class ItemSack extends Item implements IItemSize {
     @Override
     public Size getSize(ItemStack stack) {
         if (stack.getItem() instanceof ItemSack) {
-            if (SNSUtils.doesSackHaveItems(stack)) {
+	        if (NBTHelper.doesSackHaveItems(stack)) {
                 if (type == SackType.KNAPSACK) return Size.HUGE;
                 return Size.LARGE;
             }

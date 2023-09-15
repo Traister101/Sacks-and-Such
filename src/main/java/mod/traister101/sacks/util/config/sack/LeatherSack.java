@@ -1,7 +1,10 @@
 package mod.traister101.sacks.util.config.sack;
 
 import net.dries007.tfc.api.capability.size.Size;
-import net.minecraftforge.common.config.Config.*;
+import net.minecraftforge.common.config.Config.Comment;
+import net.minecraftforge.common.config.Config.LangKey;
+import net.minecraftforge.common.config.Config.RangeInt;
+import net.minecraftforge.common.config.Config.RequiresMcRestart;
 
 import static mod.traister101.sacks.SacksNSuch.MODID;
 
@@ -32,7 +35,7 @@ public final class LeatherSack {
     @RequiresMcRestart
     @LangKey(LANG_KEY + "size")
     @Comment("The maximum item size allowed in the sack")
-    public Size allowedSize = Size.SMALL;
+    public Size allowedSize = Size.NORMAL;
 
     public static class Dangerous {
 

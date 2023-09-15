@@ -7,7 +7,7 @@ buildscript {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: "net.minecraftforge.gradle.forge"
 
 file "build.properties" withReader {
     def prop = new Properties()
@@ -58,7 +58,7 @@ processResources {
 
     // Copy lisence from project root
     from('.') {
-        include "LICENSE"
+        include("LICENSE")
     }
 }
 

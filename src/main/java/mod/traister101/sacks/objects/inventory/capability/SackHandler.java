@@ -27,7 +27,6 @@ public class SackHandler extends AbstractHandler {
     }
 
     // TODO more ore config
-    // TODO More sacks (like the food sack) will need to be handled
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         if (stack.isEmpty()) return false;

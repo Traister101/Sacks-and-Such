@@ -39,6 +39,7 @@ public final class ClientRegistery {
         registerItemRenderer(item, 0, "inventory");
     }
 
+	@SuppressWarnings("ConstantConditions")
     private static void registerItemRenderer(Item item, int meta, String id) {
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
     }

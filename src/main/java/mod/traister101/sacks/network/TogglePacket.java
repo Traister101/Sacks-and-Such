@@ -36,7 +36,7 @@ public class TogglePacket implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         toggle = buf.readBoolean();
-        type = ToggleType.valueOf(buf.readInt());
+	    type = ToggleType.getEmum(buf.readInt());
     }
 
     public static class Handler implements IMessageHandler<TogglePacket, IMessage> {

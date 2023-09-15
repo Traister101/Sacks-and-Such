@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.StringUtils;
 
-public abstract class AbstractContainerRenameable extends AbstractContainer {
+public abstract class ContainerRenameable extends ExtendedCapacityContainer {
 
-    protected AbstractContainerRenameable(InventoryPlayer playerInv, ItemStack heldStack) {
+	protected ContainerRenameable(InventoryPlayer playerInv, ItemStack heldStack) {
         super(playerInv, heldStack);
     }
 

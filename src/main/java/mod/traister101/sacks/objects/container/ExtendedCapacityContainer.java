@@ -16,20 +16,21 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public abstract class AbstractContainer extends Container {
+public abstract class ExtendedCapacityContainer extends Container {
 
     protected final IItemHandler handler;
-    protected final ItemStack heldStack;
     protected final EntityPlayer player;
     protected final int slotAmount;
     protected boolean isOffhand;
     protected int slotStackCap;
     protected int itemIndex;
 
-    protected AbstractContainer(InventoryPlayer playerInv, ItemStack heldStack) {
+    protected ExtendedCapacityContainer(InventoryPlayer playerInv, ItemStack heldStack) {
         this.player = playerInv.player;
-        this.heldStack = heldStack;
         this.handler = SNSUtils.getHandler(heldStack);
+        if (handler == null) {
+            throw new NullPointerException("This stack doesn't have a Item handler! How did you open this?");
+        }
         this.slotAmount = handler.getSlots();
         this.slotStackCap = handler.getSlotLimit(0);
         if (heldStack == player.getHeldItemMainhand()) {
@@ -130,7 +131,7 @@ public abstract class AbstractContainer extends Container {
             if (hotbarStack.isEmpty() || hoverStack.isEmpty())
                 return super.slotClick(slotID, dragType, clickType, player);
 
-            // If neither stack is too large call vanilla
+            // If neither stack is too large pass to vanilla
             if (hotbarStack.getCount() <= hotbarStack.getMaxStackSize() && hoverStack.getCount() <= hoverStack.getMaxStackSize())
                 return super.slotClick(slotID, dragType, clickType, player);
 

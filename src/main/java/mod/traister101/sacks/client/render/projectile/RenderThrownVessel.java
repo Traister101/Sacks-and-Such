@@ -20,41 +20,35 @@ import javax.annotation.Nonnull;
 @SideOnly(Side.CLIENT)
 public class RenderThrownVessel extends Render<EntityExplosiveVessel> {
 
-    private final RenderItem itemRenderer;
+    private static final RenderItem ITEM_RENDERER = Minecraft.getMinecraft().getRenderItem();
 
     public RenderThrownVessel(RenderManager renderManagerIn) {
         super(renderManagerIn);
-        itemRenderer = Minecraft.getMinecraft().getRenderItem();
     }
 
     public void doRender(@Nonnull EntityExplosiveVessel entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float) x, (float) y, (float) z);
         GlStateManager.enableRescaleNormal();
-        GlStateManager.rotate(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate((float) (renderManager.options.thirdPersonView == 2 ? -1 : 1) * renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-        bindTexture(getEntityTexture(entity));
+        GlStateManager.disableLighting();
 
-        VesselType type = entity.getType();
-        ItemStack stack = ItemStack.EMPTY;
-        switch (type) {
-            case EXPLOSIVE:
-                stack = new ItemStack(ItemsSNS.EXPLOSIVE_VESSEL);
-                break;
-            case STICKY:
-                stack = new ItemStack(ItemsSNS.STICKY_EXPLOSIVE_VESSEL);
-                break;
-            case TINY:
-                stack = new ItemStack(ItemsSNS.TINY_EXPLOSIVE_VESSEL);
-                break;
-            default:
-                break;
+        final float horizontalAngle = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks - 180;
+
+        if (entity.rotationPitch >= 45) {
+            GlStateManager.translate(0, -0.05, 0);
+        } else {
+            GlStateManager.translate(0, 0.05, 0);
         }
 
-        if (!stack.isEmpty())
-            itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.GROUND);
+        GlStateManager.translate(x, y, z);
 
+        GlStateManager.rotate(horizontalAngle, 0, 1, 0);
+        GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+
+        bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
+        ITEM_RENDERER.renderItem(getStackForType(entity.getType()), ItemCameraTransforms.TransformType.GROUND);
+
+        GlStateManager.enableLighting();
         GlStateManager.disableRescaleNormal();
         GlStateManager.popMatrix();
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
@@ -64,5 +58,18 @@ public class RenderThrownVessel extends Render<EntityExplosiveVessel> {
     @Nonnull
     protected ResourceLocation getEntityTexture(@Nonnull EntityExplosiveVessel entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
+    }
+
+    private ItemStack getStackForType(final VesselType type) {
+        switch (type) {
+            case EXPLOSIVE:
+                return new ItemStack(ItemsSNS.EXPLOSIVE_VESSEL);
+            case STICKY:
+                return new ItemStack(ItemsSNS.STICKY_EXPLOSIVE_VESSEL);
+            case TINY:
+                return new ItemStack(ItemsSNS.TINY_EXPLOSIVE_VESSEL);
+            default:
+                return ItemStack.EMPTY;
+        }
     }
 }

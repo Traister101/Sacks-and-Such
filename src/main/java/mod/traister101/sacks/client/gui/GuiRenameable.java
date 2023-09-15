@@ -3,7 +3,7 @@ package mod.traister101.sacks.client.gui;
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonSack;
 import mod.traister101.sacks.network.RenamePacket;
-import mod.traister101.sacks.objects.container.AbstractContainerRenameable;
+import mod.traister101.sacks.objects.container.ContainerRenameable;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -125,7 +125,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
         SacksNSuch.getNetwork().sendToServer(new RenamePacket(name));
         if (StringUtils.isBlank(name)) {
             // Best way I've figured out to set the text box to the default stack name
-            ItemStack heldStack = inventorySlots.getSlot(((AbstractContainerRenameable) inventorySlots).getItemIndex()).getStack();
+	        ItemStack heldStack = inventorySlots.getSlot(((ContainerRenameable) inventorySlots).getItemIndex()).getStack();
             ItemStack itemStack = heldStack.copy();
             itemStack.clearCustomName();
             this.name = itemStack.getDisplayName();

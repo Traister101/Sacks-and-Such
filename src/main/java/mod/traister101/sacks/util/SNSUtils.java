@@ -2,8 +2,6 @@ package mod.traister101.sacks.util;
 
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.network.TogglePacket;
-import mod.traister101.sacks.objects.items.ItemSack;
-import mod.traister101.sacks.objects.items.ItemThrowableVessel;
 import net.dries007.tfc.api.capability.size.Size;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -13,39 +11,14 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class SNSUtils {
 
-    public static boolean isSealed(@Nonnull ItemStack stack) {
-        return stack.getItem() instanceof ItemThrowableVessel && getTagSafely(stack).getBoolean(ToggleType.SEAL.key);
-    }
-
-    public static boolean isAutoVoid(@Nonnull ItemStack stack) {
-        return stack.getItem() instanceof ItemSack && getTagSafely(stack).getBoolean(ToggleType.VOID.key);
-    }
-
-    public static boolean isAutoPickup(@Nonnull ItemStack stack) {
-        if (stack.getItem() instanceof ItemSack)
-            if (!getTagSafely(stack).hasKey(ToggleType.PICKUP.key)) {
-                SacksNSuch.getNetwork().sendToServer(new TogglePacket(true, ToggleType.PICKUP));
-                return true;
-            }
-        return getTagSafely(stack).getBoolean(ToggleType.PICKUP.key);
-    }
-
-    public static boolean doesSackHaveItems(@Nonnull ItemStack stack) {
-        return stack.getItem() instanceof ItemSack && getTagSafely(stack).getBoolean(ToggleType.ITEMS.key);
-    }
-
     public static void toggle(@Nonnull ItemStack stack, @Nonnull ToggleType type, boolean toggle) {
-        final NBTTagCompound tag = getTagSafely(stack);
+        final NBTTagCompound tag = NBTHelper.getTagSafely(stack);
         tag.setBoolean(type.key, toggle);
         stack.setTagCompound(tag);
-    }
-
-    @Nonnull
-    public static NBTTagCompound getTagSafely(@Nonnull ItemStack stack) {
-        return stack.getTagCompound() == null ? new NBTTagCompound() : stack.getTagCompound();
     }
 
     public static boolean isSmallerOrEqualTo(@Nonnull Size size1, @Nonnull Size size2) {
@@ -58,16 +31,24 @@ public final class SNSUtils {
         return null;
     }
 
+    @Nullable
     public static IItemHandler getHandler(@Nonnull ItemStack stack) {
         return stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
     }
 
+    /**
+     * @param type Type to toggle
+     */
     public static void sendPacketAndStatus(boolean flag, @Nonnull ToggleType type) {
         SacksNSuch.getNetwork().sendToServer(new TogglePacket(flag, type));
-        TextComponentTranslation statusMessage = new TextComponentTranslation(SacksNSuch.MODID + type.lang + "." + (flag ? "enabled" : "disabled"));
+        final String translationKey = SacksNSuch.MODID + type.lang + "." + (flag ? "enabled" : "disabled");
+        final TextComponentTranslation statusMessage = new TextComponentTranslation(translationKey);
         Minecraft.getMinecraft().player.sendStatusMessage(statusMessage, true);
     }
 
+    /**
+     * A enum for easy and consistent toggle logic
+     */
     public enum ToggleType {
         SEAL(".explosive_vessel.seal", "seal"),
         VOID(".sack.auto_void", "void"),
@@ -83,16 +64,9 @@ public final class SNSUtils {
             this.key = key;
         }
 
-        private static final ToggleType[] values = values();
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-
         @Nonnull
-        public static ToggleType valueOf(int id) {
-            return id < 0 || id >= values.length ? NULL : values[id];
+        public static ToggleType getEmum(int id) {
+            return id < 0 || id >= values().length ? NULL : values()[id];
         }
     }
 }

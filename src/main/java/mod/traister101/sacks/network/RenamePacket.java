@@ -1,7 +1,7 @@
 package mod.traister101.sacks.network;
 
 import io.netty.buffer.ByteBuf;
-import mod.traister101.sacks.objects.container.AbstractContainerRenameable;
+import mod.traister101.sacks.objects.container.ContainerRenameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -44,8 +44,8 @@ public class RenamePacket implements IMessage {
         }
 
         private void handle(RenamePacket message, MessageContext ctx, EntityPlayer player) {
-            if (player.openContainer instanceof AbstractContainerRenameable) {
-                ((AbstractContainerRenameable) player.openContainer).updateItemName(message.name);
+	        if (player.openContainer instanceof ContainerRenameable) {
+		        ((ContainerRenameable) player.openContainer).updateItemName(message.name);
             }
         }
     }
