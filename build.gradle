@@ -26,14 +26,29 @@ minecraft {
     runDir = "run"
     mappings = "stable_39"
 
+    // Dedicate 4gb
+    clientJvmArgs += "-Xmx4G"
+    clientJvmArgs += "-Xms4G"
+
+    // Turn off the annoying world backups when ID's change
+    clientRunArgs += "-Dfml.doNotBackup=true"
+    clientRunArgs += ["--username", "Dev"]
+
     replace("@MODID@", config.mod.id)
     replace("@MODNAME@", config.mod.name)
     replace("@VERSION@", project.version)
     replaceIn("${config.mod.class}.java")
 }
 
+repositories {
+    // Curse
+    maven {
+        url = "https://cursemaven.com"
+    }
+}
+
 dependencies {
-    compile fileTree(include: ["*.jar"], dir: "libs")
+    deobfCompile("curse.maven:TerraFirmaCraft-${config.tfc.id}:${config.tfc.file}")
 }
 
 processResources {
