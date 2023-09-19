@@ -19,27 +19,22 @@ import static mod.traister101.sacks.SacksNSuch.NAME;
 @Config(modid = MODID, type = Type.INSTANCE, name = NAME)
 public final class ConfigSNS {
 
-    private static final String LANG_KEY = "config." + MODID;
+	@Comment("Global config")
+	@LangKey("config." + MODID + ".global")
+	public static final Global GLOBAL = new Global();
+	@Comment("Sack config")
+	@LangKey("config." + MODID + ".sack_config")
+	public static final SackConfig SACK = new SackConfig();
+	@Comment("Explosive vessel config")
+	@LangKey("config." + MODID + ".explosive_vessel")
+	public static final ExplosiveVessel EXPLOSIVE_VESSEL = new ExplosiveVessel();
+	@LangKey("config." + MODID + ".do_pick_block")
+	public static boolean doPickBlock = true;
 
-    @SubscribeEvent
-    public static void onConfigChangedEvent(OnConfigChangedEvent event) {
-        if (event.getModID().equals(MODID)) {
-            ConfigManager.sync(MODID, Type.INSTANCE);
-        }
-    }
-
-    @Comment("Global config")
-    @LangKey(LANG_KEY + ".global")
-    public static final Global GLOBAL = new Global();
-
-    @Comment("Sack config")
-    @LangKey(LANG_KEY + ".sack_config")
-    public static final SackConfig SACK = new SackConfig();
-
-    @Comment("Explosive vessel config")
-    @LangKey(LANG_KEY + ".explosive_vessel")
-    public static final ExplosiveVessel EXPLOSIVE_VESSEL = new ExplosiveVessel();
-
-    @LangKey(LANG_KEY + ".do_pick_block")
-    public static boolean doPickBlock = true;
+	@SubscribeEvent
+	public static void onConfigChangedEvent(final OnConfigChangedEvent event) {
+		if (event.getModID().equals(MODID)) {
+			ConfigManager.sync(MODID, Type.INSTANCE);
+		}
+	}
 }
