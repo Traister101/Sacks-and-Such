@@ -1,8 +1,7 @@
 package mod.traister101.sacks.objects.container;
 
 import mcp.MethodsReturnNonnullByDefault;
-import mod.traister101.sacks.objects.inventory.capability.AbstractHandler;
-import mod.traister101.sacks.objects.inventory.slot.SlotSNS;
+import mod.traister101.sacks.objects.inventory.capability.ExtendedSlotCapacityHandler;
 import mod.traister101.sacks.util.SNSUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -11,6 +10,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -253,7 +253,7 @@ public abstract class ExtendedCapacityContainer extends Container {
     }
 
     protected void addContainerSlots() {
-        if (handler instanceof AbstractHandler) {
+	    if (handler instanceof ExtendedSlotCapacityHandler) {
             switch (handler.getSlots()) {
                 case 1:
                     // 1 slot container
@@ -279,22 +279,22 @@ public abstract class ExtendedCapacityContainer extends Container {
     }
 
     private void addSlots(final int rows, final int columns, final int startX, final int startY) {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                addSlotToContainer(new SlotSNS(handler, j + i * 18 + 9, startX + j * 18, startY + i * 18));
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                addSlotToContainer(new SlotItemHandler(handler, column + row * columns, startX + column * 18, startY + row * 18));
             }
         }
     }
 
     private void addSlots(final int rows, final int columns) {
-        for (int i = 0; i < rows; i++) {
-            if (i == rows - 1) {
-                for (int j = 0; j < columns; j++) {
-                    addSlotToContainer(new SlotSNS(handler, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
+        for (int row = 0; row < rows; row++) {
+            if (row == rows - 1) {
+                for (int column = 0; column < columns; column++) {
+                    addSlotToContainer(new SlotItemHandler(handler, column + row * 18, 8 + column * 18, 27 + row * 18));
                 }
             } else {
                 for (int j = 0; j < 9; j++) {
-                    addSlotToContainer(new SlotSNS(handler, j + i * 18 + 9, 8 + j * 18, 27 + i * 18));
+                    addSlotToContainer(new SlotItemHandler(handler, j + row * 18, 8 + j * 18, 27 + row * 18));
                 }
             }
         }

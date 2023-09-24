@@ -1,7 +1,6 @@
 package mod.traister101.sacks.client.gui;
 
 import mod.traister101.sacks.SacksNSuch;
-import mod.traister101.sacks.objects.inventory.slot.SlotSNS;
 import net.dries007.tfc.client.button.IButtonTooltip;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -12,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.SlotItemHandler;
 
 @SideOnly(Side.CLIENT)
 public abstract class AbstractGuiContainer extends GuiContainer {
@@ -64,7 +64,8 @@ public abstract class AbstractGuiContainer extends GuiContainer {
         // 27,000 and only cuts the framerate in half I don't think performance is a valid concern
 //        for (int i = 0; i < 1000; i++)
         for (Slot slot : inventorySlots.inventorySlots) {
-            if (slot instanceof SlotSNS) {
+            // TODO fix this
+            if (slot instanceof SlotItemHandler) {
                 final int x = guiLeft + slot.xPos - 1;
                 final int y = guiTop + slot.yPos - 1;
                 drawModalRectWithCustomSizedTexture(x, y, size, size, size, size, size, size);

@@ -18,7 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import javax.annotation.Nullable;
 
 // TODO needs more touch up
-public class SackHandler extends AbstractHandler {
+public class SackHandler extends ExtendedSlotCapacityHandler {
 
 	private final SackType type;
 
@@ -74,5 +74,10 @@ public class SackHandler extends AbstractHandler {
 		}
 
 		return true;
+	}
+
+	// TODO rethink if this is needed
+	public boolean hasItems() {
+		return stacks.stream().anyMatch(itemStack -> !itemStack.isEmpty());
 	}
 }

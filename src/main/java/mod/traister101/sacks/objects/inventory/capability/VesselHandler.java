@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class VesselHandler extends AbstractHandler {
+public class VesselHandler extends ExtendedSlotCapacityHandler {
 
     public VesselHandler(@Nullable NBTTagCompound nbt, VesselType type) {
         super(nbt, type.slots, type.stackCap);
