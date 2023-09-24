@@ -23,7 +23,7 @@ public class GuiContainerSack extends GuiRenameable {
     @Override
     public void initGui() {
         super.initGui();
-        if (((ItemSack) heldStack.getItem()).getType().doesVoiding) {
+        if (((ItemSack) heldStack.getItem()).getType().doesVoiding()) {
             addButton(new GuiVoidButton(1, guiLeft + 130, guiTop + 6, 16, 16, heldStack));
         }
     }

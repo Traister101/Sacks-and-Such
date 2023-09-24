@@ -1,11 +1,11 @@
 package mod.traister101.sacks.util.handlers;
 
 import mod.traister101.sacks.ConfigSNS;
+import mod.traister101.sacks.api.types.SackType;
 import mod.traister101.sacks.objects.inventory.capability.SackHandler;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.NBTHelper;
 import mod.traister101.sacks.util.SNSUtils;
-import mod.traister101.sacks.util.SackType;
 import net.dries007.tfc.objects.blocks.BlockPlacedItemFlat;
 import net.dries007.tfc.objects.te.TEPlacedItemFlat;
 import net.dries007.tfc.util.Helpers;
@@ -64,7 +64,7 @@ public final class PickupHandler {
 			if (itemContainer.getItem() instanceof ItemSack) {
 				final SackType type = ((ItemSack) itemContainer.getItem()).getType();
 				// Config pickup disabled for sack type
-				if (!type.doesAutoPickup) continue;
+				if (!type.doesAutoPickup()) continue;
 				// This sack in particular has auto pickup disabled
 				if (!NBTHelper.isAutoPickup(itemContainer)) continue;
 			}
@@ -118,7 +118,7 @@ public final class PickupHandler {
 		// Not a sack
 		if (!(itemContainer.getItem() instanceof ItemSack)) return false;
 		// Type can't void items
-		if (!((ItemSack) itemContainer.getItem()).getType().doesVoiding) return false;
+		if (!((ItemSack) itemContainer.getItem()).getType().doesVoiding()) return false;
 		// Returns if this particular sack item has voiding enabled
 		return NBTHelper.isAutoVoid(itemContainer);
 	}

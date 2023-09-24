@@ -1,11 +1,31 @@
 package mod.traister101.sacks.api.types;
 
+import mod.traister101.sacks.objects.items.ItemSack;
+import mod.traister101.sacks.util.NBTHelper;
 import net.dries007.tfc.api.capability.size.Size;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import static mod.traister101.sacks.SacksNSuch.MODID;
+import static net.dries007.tfc.util.Helpers.getNull;
+
 public class SackType extends IForgeRegistryEntry.Impl<SackType> {
+
+	@ObjectHolder(MODID + ":thatch_sack")
+	public static final SackType THATCH_SACK = getNull();
+	@ObjectHolder(MODID + ":leather_sack")
+	public static final SackType LEATHER_SACK = getNull();
+	@ObjectHolder(MODID + ":burlap_sack")
+	public static final SackType BURLAP_SACK = getNull();
+	@ObjectHolder(MODID + ":miner_sack")
+	public static final SackType MINER_SACK = getNull();
+	@ObjectHolder(MODID + ":farmer_sack")
+	public static final SackType FARMER_SACK = getNull();
+	@ObjectHolder(MODID + ":knapsack")
+	public static final SackType KNAPSACK = getNull();
 
 	private int slotCount;
 	private int slotCapacity;
@@ -74,5 +94,23 @@ public class SackType extends IForgeRegistryEntry.Impl<SackType> {
 	@SideOnly(Side.CLIENT)
 	public void setAllowedSize(final Size allowedSize) {
 		this.allowedSize = allowedSize;
+	}
+
+	/**
+	 * Abstracted out to allow custom overrides without the need of a new item class.
+	 * Called by {@link ItemSack#getSize(ItemStack)}
+	 *
+	 * @param itemStack The ItemStack instance
+	 *
+	 * @return Size for the stack
+	 */
+	public Size getSize(final ItemStack itemStack) {
+		if (itemStack.getItem() instanceof ItemSack) {
+			if (NBTHelper.doesSackHaveItems(itemStack)) {
+				if (this == KNAPSACK) return Size.HUGE;
+				return Size.LARGE;
+			}
+		}
+		return Size.NORMAL;
 	}
 }

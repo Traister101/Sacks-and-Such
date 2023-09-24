@@ -4,23 +4,13 @@ import mod.traister101.sacks.api.registries.SNSRegistryEvent.RegisterSackEvent;
 import mod.traister101.sacks.api.types.SackType;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import static mod.traister101.sacks.ConfigSNS.SACK;
 import static mod.traister101.sacks.SacksNSuch.MODID;
-import static net.dries007.tfc.util.Helpers.getNull;
 
-@ObjectHolder(MODID)
 @EventBusSubscriber(modid = MODID)
 public final class DefaultSacks {
-
-	public static final SackType THATCH_SACK = getNull();
-	public static final SackType LEATHER_SACK = getNull();
-	public static final SackType BURLAP_SACK = getNull();
-	public static final SackType MINER_SACK = getNull();
-	public static final SackType FARMER_SACK = getNull();
-	public static final SackType KNAPSACK = getNull();
 
 	@SubscribeEvent
 	public static void onSackHolderRegister(final RegisterSackEvent event) {

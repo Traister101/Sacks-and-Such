@@ -21,67 +21,52 @@ import static mod.traister101.sacks.SacksNSuch.MODID;
 
 public final class GuiHandler implements IGuiHandler {
 
-    public static final ResourceLocation BACKGROUND = new ResourceLocation(MODID, "textures/gui/plain.png");
+	public static final ResourceLocation BACKGROUND = new ResourceLocation(MODID, "textures/gui/plain.png");
 
-    public static void openGui(World world, EntityPlayer player, GuiType guiType) {
-        player.openGui(SacksNSuch.getInstance(), guiType.ordinal(), world, 0, 0, 0);
-    }
+	public static void openGui(final World world, final EntityPlayer player, final GuiType guiType) {
+		player.openGui(SacksNSuch.getInstance(), guiType.ordinal(), world, 0, 0, 0);
+	}
 
-    @Override
-    @Nullable
-    public Container getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        final GuiType guiType = GuiType.valueOf(ID);
-        ItemStack stack = player.getHeldItemMainhand();
-        switch (guiType) {
-            case SACK_THATCH:
-            case SACK_LEATHER:
-            case SACK_BURLAP:
-            case SACK_MINER:
-            case SACK_FARMER:
-            case SACK_KNAP:
-                return new ContainerSack(player.inventory, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
-            case VESSEL_EXPLOSIVE:
-                return new ContainerThrowableVessel(player.inventory, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
-            default:
-                return null;
-        }
-    }
+	@Override
+	@Nullable
+	public Container getServerGuiElement(final int ID, final EntityPlayer player, final World world, final int x, final int y, final int z) {
+		final ItemStack heldStack = player.getHeldItemMainhand();
+		switch (GuiType.valueOf(ID)) {
+			case SACK:
+				return new ContainerSack(player.inventory, heldStack.getItem() instanceof ItemSack ? heldStack : player.getHeldItemOffhand());
+			case VESSEL_EXPLOSIVE:
+				return new ContainerThrowableVessel(player.inventory,
+						heldStack.getItem() instanceof ItemThrowableVessel ? heldStack : player.getHeldItemOffhand());
+			default:
+				return null;
+		}
+	}
 
-    @Override
-    @Nullable
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        final Container container = getServerGuiElement(ID, player, world, x, y, z);
-        final GuiType guiType = GuiType.valueOf(ID);
-        ItemStack stack = player.getHeldItemMainhand();
-        switch (guiType) {
-            case SACK_THATCH:
-            case SACK_LEATHER:
-            case SACK_BURLAP:
-            case SACK_MINER:
-            case SACK_KNAP:
-            case SACK_FARMER:
-                // Yeah this seems like it'd cause issues with the variable slots but we render those dynamiclly rather than doing them ahead of time in the texture
-                return new GuiContainerSack(container, player.inventory, BACKGROUND, stack.getItem() instanceof ItemSack ? stack : player.getHeldItemOffhand());
-            case VESSEL_EXPLOSIVE:
-                return new GuiContainerThrowableVessel(container, BACKGROUND, stack.getItem() instanceof ItemThrowableVessel ? stack : player.getHeldItemOffhand());
-            default:
-                return null;
-        }
-    }
+	@Override
+	@Nullable
+	public Object getClientGuiElement(final int ID, final EntityPlayer player, final World world, final int x, final int y, final int z) {
+		final Container container = getServerGuiElement(ID, player, world, x, y, z);
+		final ItemStack heldStack = player.getHeldItemMainhand();
+		switch (GuiType.valueOf(ID)) {
+			case SACK:
+				return new GuiContainerSack(container, player.inventory, BACKGROUND,
+						heldStack.getItem() instanceof ItemSack ? heldStack : player.getHeldItemOffhand());
+			case VESSEL_EXPLOSIVE:
+				return new GuiContainerThrowableVessel(container, BACKGROUND,
+						heldStack.getItem() instanceof ItemThrowableVessel ? heldStack : player.getHeldItemOffhand());
+			default:
+				return null;
+		}
+	}
 
-    public enum GuiType {
-        SACK_THATCH,
-        SACK_LEATHER,
-        SACK_BURLAP,
-        SACK_MINER,
-        SACK_FARMER,
-        VESSEL_EXPLOSIVE,
-        SACK_KNAP,
-        NULL;
+	public enum GuiType {
+		SACK,
+		VESSEL_EXPLOSIVE,
+		NULL;
 
-        @Nonnull
-        public static GuiType valueOf(int id) {
-	        return id < 0 || id >= values().length ? NULL : values()[id];
-        }
-    }
+		@Nonnull
+		public static GuiType valueOf(int id) {
+			return id < 0 || id >= values().length ? NULL : values()[id];
+		}
+	}
 }

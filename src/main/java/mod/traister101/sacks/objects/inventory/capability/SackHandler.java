@@ -1,9 +1,9 @@
 package mod.traister101.sacks.objects.inventory.capability;
 
 import mod.traister101.sacks.ConfigSNS;
+import mod.traister101.sacks.api.types.SackType;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SNSUtils;
-import mod.traister101.sacks.util.SackType;
 import net.dries007.tfc.api.capability.size.CapabilityItemSize;
 import net.dries007.tfc.api.capability.size.IItemSize;
 import net.dries007.tfc.api.capability.size.Size;
@@ -15,69 +15,64 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+// TODO needs more touch up
 public class SackHandler extends AbstractHandler {
 
-    private final SackType type;
+	private final SackType type;
 
-    public SackHandler(NBTTagCompound nbt, SackType type) {
-        super(nbt, type.slots, type.stackCap);
-        this.type = type;
-    }
+	public SackHandler(final @Nullable NBTTagCompound nbt, final SackType type) {
+		super(nbt, type.getSlotCount(), type.getSlotCapacity());
+		this.type = type;
+	}
 
-    // TODO more ore config
-    @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        if (stack.isEmpty()) return false;
-        if (!stack.isStackable()) return false;
-        // Stack is a sack, no sack-ception
-        if (stack.getItem() instanceof ItemSack) return false;
+	@Override
+	public int getStackLimit(final int slotIndex, final ItemStack itemStack) {
+		if (type == SackType.KNAPSACK) return itemStack.getMaxStackSize();
+		return super.getStackLimit(slotIndex, itemStack);
+	}
 
-        final Item item = stack.getItem();
+	// TODO more ore config
+	@Override
+	public boolean isItemValid(final int slotIndex, final ItemStack itemStack) {
+		final Item item = itemStack.getItem();
 
-        if (type == SackType.FARMER) {
-            // Allow other than seeds
-            if (!ConfigSNS.SACK.FARMER_SACK.allowNonSeed) {
-                if (!(item instanceof ItemSeedsTFC)) return false;
-            }
-        }
+		// Stack is a sack, no sack-ception
+		if (item instanceof ItemSack) return false;
 
-        // Food in every sack
-        if (!ConfigSNS.GLOBAL.allAllowFood)
-            if (item instanceof ItemFoodTFC) return false;
+		if (type == SackType.FARMER_SACK) {
+			// Allow other than seeds
+			if (!ConfigSNS.SACK.FARMER_SACK.allowNonSeed) {
+				if (!(item instanceof ItemSeedsTFC)) return false;
+			}
+		}
 
-        if (type == SackType.MINER) {
-            //Allow other than ore
-            if (!ConfigSNS.SACK.MINER_SACK.allowNonOre) {
-                //If item is a TFC ore
-                if (!(item instanceof ItemOreTFC || item instanceof ItemSmallOre)) return false;
-            }
-        }
+		// Food in every sack
+		if (!ConfigSNS.GLOBAL.allAllowFood)
+			if (item instanceof ItemFoodTFC) return false;
 
-        // Ore for all sacks
-        if (!ConfigSNS.GLOBAL.allAllowOre)
-            if (type != SackType.MINER)
-                if (item instanceof ItemOreTFC || item instanceof ItemSmallOre) return false;
+		if (type == SackType.MINER_SACK) {
+			//Allow other than ore
+			if (!ConfigSNS.SACK.MINER_SACK.allowNonOre) {
+				//If item is a TFC ore
+				if (!(item instanceof ItemOreTFC || item instanceof ItemSmallOre)) return false;
+			}
+		}
 
-        final IItemSize stackSize = CapabilityItemSize.getIItemSize(stack);
-        if (stackSize != null) {
-            final Size size = stackSize.getSize(stack);
-            // Larger than the sacks slot size
-            if (!SNSUtils.isSmallerOrEqualTo(size, type.allowedSize)) return false;
-        }
+		// Ore for all sacks
+		if (!ConfigSNS.GLOBAL.allAllowOre)
+			if (type != SackType.MINER_SACK)
+				if (item instanceof ItemOreTFC || item instanceof ItemSmallOre) return false;
 
-        final ItemStack currentStack = getStackInSlot(slot);
-        setStackInSlot(slot, ItemStack.EMPTY);
-        final ItemStack remainder = insertItem(slot, stack, true);
-        setStackInSlot(slot, currentStack);
+		final IItemSize stackSize = CapabilityItemSize.getIItemSize(itemStack);
+		if (stackSize != null) {
+			final Size size = stackSize.getSize(itemStack);
+			// Larger than the sacks slot size
+			//noinspection RedundantIfStatement
+			if (!SNSUtils.isSmallerOrEqualTo(size, type.getAllowedSize())) return false;
+		}
 
-        return remainder.isEmpty() || remainder.getCount() < stack.getCount();
-    }
-
-    @Override
-    public int getStackLimit(int slot, @Nonnull ItemStack stack) {
-        if (type == SackType.KNAPSACK) return stack.getMaxStackSize();
-        return super.getStackLimit(slot, stack);
-    }
+		return true;
+	}
 }
