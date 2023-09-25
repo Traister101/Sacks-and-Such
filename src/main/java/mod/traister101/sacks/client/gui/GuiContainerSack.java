@@ -16,29 +16,29 @@ import java.io.IOException;
 
 public class GuiContainerSack extends GuiRenameable {
 
-    public GuiContainerSack(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack heldStack) {
-        super(container, playerInv, background, heldStack);
-    }
+	public GuiContainerSack(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack heldStack) {
+		super(container, playerInv, background, heldStack);
+	}
 
-    @Override
-    public void initGui() {
-        super.initGui();
-        if (((ItemSack) heldStack.getItem()).getType().doesVoiding()) {
-            addButton(new GuiVoidButton(1, guiLeft + 130, guiTop + 6, 16, 16, heldStack));
-        }
-    }
+	@Override
+	public void initGui() {
+		super.initGui();
+		if (((ItemSack) heldStack.getItem()).getType().doesVoiding()) {
+			addButton(new GuiVoidButton(1, guiLeft + 130, guiTop + 6, 16, 16, heldStack));
+		}
+	}
 
-    @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        final SimpleNetworkWrapper network = SacksNSuch.getNetwork();
-        if (button.id == 1) {
-            if (button instanceof GuiVoidButton) {
-                final GuiVoidButton buttonToggle = (GuiVoidButton) button;
-                network.sendToServer(new TogglePacket(!buttonToggle.isVoid, ToggleType.VOID));
-                buttonToggle.onClick();
-            }
-        } else {
-            super.actionPerformed(button);
-        }
-    }
+	@Override
+	protected void actionPerformed(GuiButton button) throws IOException {
+		final SimpleNetworkWrapper network = SacksNSuch.getNetwork();
+		if (button.id == 1) {
+			if (button instanceof GuiVoidButton) {
+				final GuiVoidButton buttonToggle = (GuiVoidButton) button;
+				network.sendToServer(new TogglePacket(!buttonToggle.isVoid, ToggleType.VOID));
+				buttonToggle.onClick();
+			}
+		} else {
+			super.actionPerformed(button);
+		}
+	}
 }

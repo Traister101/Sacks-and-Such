@@ -21,26 +21,26 @@ import static mod.traister101.sacks.SacksNSuch.MODID;
 @EventBusSubscriber(value = Side.CLIENT, modid = MODID)
 public final class ClientRegistery {
 
-    public static void preInit() {
-        RenderingRegistry.registerEntityRenderingHandler(EntityExplosiveVessel.class, RenderThrownVessel::new);
-    }
+	public static void preInit() {
+		RenderingRegistry.registerEntityRenderingHandler(EntityExplosiveVessel.class, RenderThrownVessel::new);
+	}
 
-    @SubscribeEvent
-    public static void registerModels(ModelRegistryEvent event) {
-        // ITEMS //
-        for (ItemSack sack : ItemsSNS.getAllSacks()) registerBasicItemRenderer(sack);
+	@SubscribeEvent
+	public static void registerModels(ModelRegistryEvent event) {
+		// ITEMS //
+		for (ItemSack sack : ItemsSNS.getAllSacks()) registerBasicItemRenderer(sack);
 
-        for (ItemThrowableVessel vessel : ItemsSNS.getAllThrowableVessels()) registerBasicItemRenderer(vessel);
+		for (ItemThrowableVessel vessel : ItemsSNS.getAllThrowableVessels()) registerBasicItemRenderer(vessel);
 
-        for (Item item : ItemsSNS.getAllSimpleItems()) registerBasicItemRenderer(item);
-    }
+		for (Item item : ItemsSNS.getAllSimpleItems()) registerBasicItemRenderer(item);
+	}
 
-    private static void registerBasicItemRenderer(Item item) {
-        registerItemRenderer(item, 0, "inventory");
-    }
+	private static void registerBasicItemRenderer(Item item) {
+		registerItemRenderer(item, 0, "inventory");
+	}
 
 	@SuppressWarnings("ConstantConditions")
-    private static void registerItemRenderer(Item item, int meta, String id) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
-    }
+	private static void registerItemRenderer(Item item, int meta, String id) {
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
+	}
 }

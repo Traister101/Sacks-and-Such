@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerThrowableVessel extends ExtendedCapacityContainer {
 
-    public ContainerThrowableVessel(InventoryPlayer playerInv, ItemStack heldStack) {
-        super(playerInv, heldStack);
-    }
+	public ContainerThrowableVessel(InventoryPlayer playerInv, ItemStack heldStack) {
+		super(playerInv, heldStack);
+	}
 }

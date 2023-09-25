@@ -13,20 +13,20 @@ public enum VesselType {
 	NULL(0, 0, GuiType.NULL, false);
 
 
-    public final int slots;
-    public final int stackCap;
-    public final GuiType gui;
+	public final int slots;
+	public final int stackCap;
+	public final GuiType gui;
 	public final boolean isSticky;
 
 	VesselType(int slots, int stackCap, GuiType gui, boolean isSticky) {
-        this.slots = slots;
-        this.stackCap = stackCap;
-        this.gui = gui;
+		this.slots = slots;
+		this.stackCap = stackCap;
+		this.gui = gui;
 		this.isSticky = isSticky;
-    }
+	}
 
-    @Nonnull
-    public static VesselType getEmum(int id) {
-	    return id < 0 || id >= values().length ? NULL : values()[id];
-    }
+	@Nonnull
+	public static VesselType getEmum(int id) {
+		return id < 0 || id >= values().length ? NULL : values()[id];
+	}
 }

@@ -14,58 +14,58 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class TogglePacket implements IMessage {
 
-    private ToggleType type;
-    private boolean toggle;
+	private ToggleType type;
+	private boolean toggle;
 
-    @Deprecated
-    @SuppressWarnings("unused")
-    public TogglePacket() {
-    }
+	@Deprecated
+	@SuppressWarnings("unused")
+	public TogglePacket() {
+	}
 
-    public TogglePacket(boolean toggle, ToggleType type) {
-        this.toggle = toggle;
-        this.type = type;
-    }
+	public TogglePacket(boolean toggle, ToggleType type) {
+		this.toggle = toggle;
+		this.type = type;
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeBoolean(toggle);
-        buf.writeInt(type.ordinal());
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		toggle = buf.readBoolean();
+		type = ToggleType.getEmum(buf.readInt());
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        toggle = buf.readBoolean();
-	    type = ToggleType.getEmum(buf.readInt());
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeBoolean(toggle);
+		buf.writeInt(type.ordinal());
+	}
 
-    public static class Handler implements IMessageHandler<TogglePacket, IMessage> {
+	public static class Handler implements IMessageHandler<TogglePacket, IMessage> {
 
-        @Override
-        public IMessage onMessage(TogglePacket message, MessageContext ctx) {
-            final EntityPlayer player = ctx.getServerHandler().player;
-            if (player == null) return null;
-            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
-            return null;
-        }
+		@Override
+		public IMessage onMessage(TogglePacket message, MessageContext ctx) {
+			final EntityPlayer player = ctx.getServerHandler().player;
+			if (player == null) return null;
+			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
+			return null;
+		}
 
-        private void handle(TogglePacket message, MessageContext ctx) {
-            final EntityPlayer player = ctx.getServerHandler().player;
-            ItemStack stack = player.getHeldItemMainhand();
-            // Only throwable vessels can be sealed
-            if (message.type == ToggleType.SEAL) {
-                if (!(stack.getItem() instanceof ItemThrowableVessel)) {
-                    stack = player.getHeldItemOffhand();
-                    if (!(stack.getItem() instanceof ItemThrowableVessel)) return;
-                }
-            } else {
-                if (!(stack.getItem() instanceof ItemSack)) {
-                    stack = player.getHeldItemOffhand();
-                    if (!(stack.getItem() instanceof ItemSack)) return;
-                }
-            }
+		private void handle(TogglePacket message, MessageContext ctx) {
+			final EntityPlayer player = ctx.getServerHandler().player;
+			ItemStack stack = player.getHeldItemMainhand();
+			// Only throwable vessels can be sealed
+			if (message.type == ToggleType.SEAL) {
+				if (!(stack.getItem() instanceof ItemThrowableVessel)) {
+					stack = player.getHeldItemOffhand();
+					if (!(stack.getItem() instanceof ItemThrowableVessel)) return;
+				}
+			} else {
+				if (!(stack.getItem() instanceof ItemSack)) {
+					stack = player.getHeldItemOffhand();
+					if (!(stack.getItem() instanceof ItemSack)) return;
+				}
+			}
 
-            SNSUtils.toggle(stack, message.type, message.toggle);
-        }
-    }
+			SNSUtils.toggle(stack, message.type, message.toggle);
+		}
+	}
 }

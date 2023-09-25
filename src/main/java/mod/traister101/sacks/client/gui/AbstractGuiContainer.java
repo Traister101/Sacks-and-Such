@@ -34,13 +34,6 @@ public abstract class AbstractGuiContainer extends GuiContainer {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        mc.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-        drawSlots();
-    }
-
-    @Override
     protected void renderHoveredToolTip(int mouseX, int mouseY) {
         super.renderHoveredToolTip(mouseX, mouseY);
         // Button Tooltips
@@ -55,6 +48,13 @@ public abstract class AbstractGuiContainer extends GuiContainer {
                 drawGradientRect(x, y, x + button.width, y + button.height, 0x75FFFFFF, 0x75FFFFFF);
             }
         }
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        mc.getTextureManager().bindTexture(background);
+        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        drawSlots();
     }
 
     private void drawSlots() {

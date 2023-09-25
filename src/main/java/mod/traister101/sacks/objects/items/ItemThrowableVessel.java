@@ -38,123 +38,123 @@ import static mod.traister101.sacks.ConfigSNS.EXPLOSIVE_VESSEL;
 @ParametersAreNonnullByDefault
 public class ItemThrowableVessel extends Item implements IItemSize {
 
-    private final VesselType type;
+	private final VesselType type;
 
-    public ItemThrowableVessel(@Nonnull VesselType type) {
-        if (type == VesselType.TINY) {
-            setMaxStackSize(16);
-        } else setMaxStackSize(1);
-        this.type = type;
-    }
+	public ItemThrowableVessel(@Nonnull VesselType type) {
+		if (type == VesselType.TINY) {
+			setMaxStackSize(16);
+		} else setMaxStackSize(1);
+		this.type = type;
+	}
 
-    @Nonnull
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(final World worldIn, final EntityPlayer playerIn, final EnumHand handIn) {
-        final ItemStack heldStack = playerIn.getHeldItem(handIn);
-        // Tiny vessel has no gui so throw it immediately
-        if (type == VesselType.TINY) {
-            throwVessel(worldIn, playerIn, heldStack);
-            return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
-        }
+	@Nonnull
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(final World worldIn, final EntityPlayer playerIn, final EnumHand handIn) {
+		final ItemStack heldStack = playerIn.getHeldItem(handIn);
+		// Tiny vessel has no gui so throw it immediately
+		if (type == VesselType.TINY) {
+			throwVessel(worldIn, playerIn, heldStack);
+			return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+		}
 
-        if (!playerIn.isSneaking()) {
-	        if (NBTHelper.isSealed(heldStack)) {
-                throwVessel(worldIn, playerIn, heldStack);
-                return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
-            }
-        }
+		if (!playerIn.isSneaking()) {
+			if (NBTHelper.isSealed(heldStack)) {
+				throwVessel(worldIn, playerIn, heldStack);
+				return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+			}
+		}
 
-        if (!worldIn.isRemote) {
-            if (playerIn.isSneaking()) {
-	            SNSUtils.sendPacketAndStatus(!NBTHelper.isSealed(heldStack), ToggleType.SEAL);
-                return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
-            }
-            if (!playerIn.isSneaking()) {
-                openContainer(worldIn, playerIn);
-                return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
-            }
-        }
-        return new ActionResult<>(EnumActionResult.FAIL, heldStack);
-    }
+		if (!worldIn.isRemote) {
+			if (playerIn.isSneaking()) {
+				SNSUtils.sendPacketAndStatus(!NBTHelper.isSealed(heldStack), ToggleType.SEAL);
+				return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+			}
+			if (!playerIn.isSneaking()) {
+				openContainer(worldIn, playerIn);
+				return new ActionResult<>(EnumActionResult.SUCCESS, heldStack);
+			}
+		}
+		return new ActionResult<>(EnumActionResult.FAIL, heldStack);
+	}
 
-    private void throwVessel(final World worldIn, final EntityPlayer playerIn, final ItemStack heldStack) {
-        final IItemHandler containerInv = SNSUtils.getHandler(heldStack);
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		if (type == VesselType.TINY) return;
 
-	    if (!playerIn.capabilities.isCreativeMode) {
-            heldStack.shrink(1);
-	    }
+		String text = SacksNSuch.MODID + ".explosive_vessel.tooltip";
+		if (NBTHelper.isSealed(stack)) {
+			text += ".sealed";
+		}
+		tooltip.add(I18n.format(text));
+	}
 
-        worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW,
-                SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+	@Override
+	public boolean hasEffect(ItemStack stack) {
+		return NBTHelper.isSealed(stack);
+	}
 
-        if (!worldIn.isRemote) {
-            final EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, calculateStrength(containerInv), type);
-            entityVessel.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-            worldIn.spawnEntity(entityVessel);
-        }
-    }
+	@Nullable
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+		return new VesselHandler(nbt, type);
+	}
 
-    private void openContainer(World worldIn, EntityPlayer playerIn) {
-        GuiHandler.openGui(worldIn, playerIn, type.gui);
-    }
+	private void throwVessel(final World worldIn, final EntityPlayer playerIn, final ItemStack heldStack) {
+		final IItemHandler containerInv = SNSUtils.getHandler(heldStack);
 
-    private float calculateStrength(final IItemHandler containerInv) {
-        if (type == VesselType.TINY) return (float) EXPLOSIVE_VESSEL.smallPower;
+		if (!playerIn.capabilities.isCreativeMode) {
+			heldStack.shrink(1);
+		}
 
-        int count = 0;
-        for (int i = 0; i < containerInv.getSlots(); i++) {
-            count += containerInv.getStackInSlot(i).getCount();
-            if (count > EXPLOSIVE_VESSEL.strengthItemCap) {
-                count = EXPLOSIVE_VESSEL.strengthItemCap;
-                break;
-            }
-        }
+		worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW,
+				SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-        final double multiplier = EXPLOSIVE_VESSEL.explosionMultiplier;
-        return (float) ((count / 14) * multiplier);
-    }
+		if (!worldIn.isRemote) {
+			final EntityExplosiveVessel entityVessel = new EntityExplosiveVessel(worldIn, playerIn, calculateStrength(containerInv), type);
+			entityVessel.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+			worldIn.spawnEntity(entityVessel);
+		}
+	}
 
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        if (type == VesselType.TINY) return;
+	private void openContainer(World worldIn, EntityPlayer playerIn) {
+		GuiHandler.openGui(worldIn, playerIn, type.gui);
+	}
 
-        String text = SacksNSuch.MODID + ".explosive_vessel.tooltip";
-	    if (NBTHelper.isSealed(stack)) {
-            text += ".sealed";
-        }
-        tooltip.add(I18n.format(text));
-    }
+	private float calculateStrength(final IItemHandler containerInv) {
+		if (type == VesselType.TINY) return (float) EXPLOSIVE_VESSEL.smallPower;
 
-    @Nullable
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-        return new VesselHandler(nbt, type);
-    }
+		int count = 0;
+		for (int i = 0; i < containerInv.getSlots(); i++) {
+			count += containerInv.getStackInSlot(i).getCount();
+			if (count > EXPLOSIVE_VESSEL.strengthItemCap) {
+				count = EXPLOSIVE_VESSEL.strengthItemCap;
+				break;
+			}
+		}
 
-    @Override
-    public boolean hasEffect(ItemStack stack) {
-	    return NBTHelper.isSealed(stack);
-    }
+		final double multiplier = EXPLOSIVE_VESSEL.explosionMultiplier;
+		return (float) ((count / 14) * multiplier);
+	}
 
-    @Nonnull
-    public VesselType getType() {
-        return type;
-    }
+	@Nonnull
+	public VesselType getType() {
+		return type;
+	}
 
-    @Nonnull
-    @Override
-    public Size getSize(@Nonnull ItemStack stack) {
-        return type == VesselType.TINY ? Size.NORMAL : Size.LARGE;
-    }
+	@Nonnull
+	@Override
+	public Size getSize(@Nonnull ItemStack stack) {
+		return type == VesselType.TINY ? Size.NORMAL : Size.LARGE;
+	}
 
-    @Nonnull
-    @Override
-    public Weight getWeight(@Nonnull ItemStack stack) {
-        return type == VesselType.TINY ? Weight.LIGHT : Weight.VERY_HEAVY;
-    }
+	@Nonnull
+	@Override
+	public Weight getWeight(@Nonnull ItemStack stack) {
+		return type == VesselType.TINY ? Weight.LIGHT : Weight.VERY_HEAVY;
+	}
 
-    @Override
-    public boolean canStack(@Nonnull ItemStack stack) {
-        return type == VesselType.TINY;
-    }
+	@Override
+	public boolean canStack(@Nonnull ItemStack stack) {
+		return type == VesselType.TINY;
+	}
 }

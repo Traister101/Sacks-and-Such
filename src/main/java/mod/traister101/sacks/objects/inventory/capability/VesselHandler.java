@@ -10,11 +10,11 @@ import javax.annotation.Nullable;
 
 public class VesselHandler extends ExtendedSlotCapacityHandler {
 
-    public VesselHandler(@Nullable NBTTagCompound nbt, VesselType type) {
-        super(nbt, type.slots, type.stackCap);
-    }
+	public VesselHandler(@Nullable NBTTagCompound nbt, VesselType type) {
+		super(nbt, type.slots, type.stackCap);
+	}
 
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return OreDictionaryHelper.doesStackMatchOre(stack, "gunpowder");
-    }
+	public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+		return OreDictionaryHelper.doesStackMatchOre(stack, "gunpowder");
+	}
 }
