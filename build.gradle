@@ -1,14 +1,22 @@
 buildscript {
     repositories {
-        maven { url = 'https://maven.minecraftforge.net/' }
+        maven { url = "https://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
     }
 }
 
 apply plugin: "net.minecraftforge.gradle.forge"
 
+repositories {
+    // Curse
+    maven {
+        url = "https://cursemaven.com"
+    }
+}
+
+// Read properties
 file "build.properties" withReader {
     def prop = new Properties()
     prop.load(it)
@@ -29,22 +37,15 @@ minecraft {
     // Dedicate 4gb
     clientJvmArgs += "-Xmx4G"
     clientJvmArgs += "-Xms4G"
-
     // Turn off the annoying world backups when ID's change
-    clientRunArgs += "-Dfml.doNotBackup=true"
+    clientJvmArgs += "-Dfml.doNotBackup=true"
+
     clientRunArgs += ["--username", "Dev"]
 
     replace("@MODID@", config.mod.id)
     replace("@MODNAME@", config.mod.name)
     replace("@VERSION@", project.version)
     replaceIn("${config.mod.class}.java")
-}
-
-repositories {
-    // Curse
-    maven {
-        url = "https://cursemaven.com"
-    }
 }
 
 dependencies {
@@ -77,6 +78,6 @@ processResources {
     }
 }
 
-project.tasks.withType(Jar) { jarTask ->
+project.tasks.withType(Jar).configureEach { jarTask ->
     jarTask.appendix = project.minecraft.version
 }
