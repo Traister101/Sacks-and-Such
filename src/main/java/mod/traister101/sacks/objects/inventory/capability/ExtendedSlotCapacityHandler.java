@@ -92,4 +92,9 @@ public class ExtendedSlotCapacityHandler extends ItemStackHandler implements ICa
 	public void onContentsChanged(final int slotIndex) {
 
 	}
+
+	/** @return Stack limit for all slots */
+	public int getSlotStackLimit() {
+		return slotStackLimit;
+	}
 }

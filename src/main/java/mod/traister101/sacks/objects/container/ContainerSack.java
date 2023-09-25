@@ -8,19 +8,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public class ContainerSack extends ContainerRenameable {
 
-    public ContainerSack(InventoryPlayer playerInv, ItemStack heldStack) {
-        super(playerInv, heldStack);
-    }
+	public ContainerSack(final InventoryPlayer playerInv, final ItemStack heldStack) {
+		super(playerInv, heldStack);
+	}
 
-    @Override
-    public void onContainerClosed(EntityPlayer playerIn) {
-        final boolean toggle = ((SackHandler) handler).hasItems();
-        SacksNSuch.getNetwork().sendToServer(new TogglePacket(toggle, SNSUtils.ToggleType.ITEMS));
-        super.onContainerClosed(playerIn);
-    }
+	@Override
+	public void onContainerClosed(final EntityPlayer player) {
+		final boolean toggle = ((SackHandler) handler).hasItems();
+		SacksNSuch.getNetwork().sendToServer(new TogglePacket(toggle, SNSUtils.ToggleType.ITEMS));
+		super.onContainerClosed(player);
+	}
 }

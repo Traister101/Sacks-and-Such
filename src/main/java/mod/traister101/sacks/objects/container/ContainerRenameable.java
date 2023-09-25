@@ -8,32 +8,25 @@ import org.apache.commons.lang3.StringUtils;
 
 public abstract class ContainerRenameable extends ExtendedCapacityContainer {
 
-	protected ContainerRenameable(InventoryPlayer playerInv, ItemStack heldStack) {
-        super(playerInv, heldStack);
-    }
+	protected ContainerRenameable(final InventoryPlayer inventoryPlayer, final ItemStack heldStack) {
+		super(inventoryPlayer, heldStack);
+	}
 
-    public final void updateItemName(String newName) {
+	public final void updateItemName(final String newName) {
+		final Slot slot = getSlot(heldItemIndex);
+		final ItemStack itemStack = slot.getStack();
 
-        ItemStack itemStack = getSlot(itemIndex).getStack();
+		if (StringUtils.isBlank(newName)) {
+			itemStack.clearCustomName();
+		} else {
+			// Sets new name with no italics
+			itemStack.setStackDisplayName(TextFormatting.RESET + newName);
+		}
+		slot.putStack(itemStack);
+		detectAndSendChanges();
+	}
 
-        if (StringUtils.isBlank(newName)) {
-            itemStack.clearCustomName();
-        } else {
-            // Sets new name with no italics
-            itemStack.setStackDisplayName(TextFormatting.RESET + newName);
-        }
-        updateStack(itemStack);
-    }
-
-    private void updateStack(ItemStack itemStack) {
-        ItemStack stack = itemStack.copy();
-
-        Slot slot = inventorySlots.get(itemIndex);
-        slot.inventory.setInventorySlotContents(slot.getSlotIndex(), stack);
-        detectAndSendChanges();
-    }
-
-    public final int getItemIndex() {
-        return itemIndex;
-    }
+	public final int getItemIndex() {
+		return heldItemIndex;
+	}
 }
