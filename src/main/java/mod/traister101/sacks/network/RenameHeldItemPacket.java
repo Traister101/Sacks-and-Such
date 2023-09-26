@@ -14,6 +14,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
+
 public class RenameHeldItemPacket implements IMessage {
 
 	private boolean inMainhand;
@@ -44,6 +46,7 @@ public class RenameHeldItemPacket implements IMessage {
 	public static class Handler implements IMessageHandler<RenameHeldItemPacket, IMessage> {
 
 		@Override
+		@Nullable
 		public IMessage onMessage(final RenameHeldItemPacket message, final MessageContext ctx) {
 			final EntityPlayer player = ctx.getServerHandler().player;
 			if (player == null) return null;

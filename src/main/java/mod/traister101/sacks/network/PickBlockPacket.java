@@ -10,6 +10,10 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class PickBlockPacket implements IMessage {
 
@@ -19,6 +23,7 @@ public class PickBlockPacket implements IMessage {
 	public PickBlockPacket() {
 	}
 
+	@SideOnly(Side.CLIENT)
 	public PickBlockPacket(final ItemStack stackToSelect) {
 		this.stackToSelect = stackToSelect;
 	}
@@ -36,6 +41,7 @@ public class PickBlockPacket implements IMessage {
 	public static class Handler implements IMessageHandler<PickBlockPacket, IMessage> {
 
 		@Override
+		@Nullable
 		public IMessage onMessage(final PickBlockPacket message, final MessageContext ctx) {
 			// Check if we should handle pick block (Server)
 			if (!ConfigSNS.doPickBlock) return null;

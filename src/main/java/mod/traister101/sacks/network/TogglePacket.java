@@ -11,30 +11,34 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class TogglePacket implements IMessage {
 
 	private ToggleType type;
 	private boolean toggle;
 
-	@Deprecated
 	@SuppressWarnings("unused")
 	public TogglePacket() {
 	}
 
-	public TogglePacket(boolean toggle, ToggleType type) {
+	@SideOnly(Side.CLIENT)
+	public TogglePacket(final boolean toggle, final ToggleType type) {
 		this.toggle = toggle;
 		this.type = type;
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(final ByteBuf buf) {
 		toggle = buf.readBoolean();
 		type = ToggleType.getEmum(buf.readInt());
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(final ByteBuf buf) {
 		buf.writeBoolean(toggle);
 		buf.writeInt(type.ordinal());
 	}
@@ -42,30 +46,30 @@ public class TogglePacket implements IMessage {
 	public static class Handler implements IMessageHandler<TogglePacket, IMessage> {
 
 		@Override
-		public IMessage onMessage(TogglePacket message, MessageContext ctx) {
+		@Nullable
+		public IMessage onMessage(final TogglePacket message, final MessageContext ctx) {
 			final EntityPlayer player = ctx.getServerHandler().player;
 			if (player == null) return null;
-			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
+
+			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> {
+				ItemStack stack = player.getHeldItemMainhand();
+				// Only throwable vessels can be sealed
+				if (message.type == ToggleType.SEAL) {
+					if (!(stack.getItem() instanceof ItemThrowableVessel)) {
+						stack = player.getHeldItemOffhand();
+						if (!(stack.getItem() instanceof ItemThrowableVessel)) return;
+					}
+				} else {
+					if (!(stack.getItem() instanceof ItemSack)) {
+						stack = player.getHeldItemOffhand();
+						if (!(stack.getItem() instanceof ItemSack)) return;
+					}
+				}
+
+				SNSUtils.toggle(stack, message.type, message.toggle);
+			});
+
 			return null;
-		}
-
-		private void handle(TogglePacket message, MessageContext ctx) {
-			final EntityPlayer player = ctx.getServerHandler().player;
-			ItemStack stack = player.getHeldItemMainhand();
-			// Only throwable vessels can be sealed
-			if (message.type == ToggleType.SEAL) {
-				if (!(stack.getItem() instanceof ItemThrowableVessel)) {
-					stack = player.getHeldItemOffhand();
-					if (!(stack.getItem() instanceof ItemThrowableVessel)) return;
-				}
-			} else {
-				if (!(stack.getItem() instanceof ItemSack)) {
-					stack = player.getHeldItemOffhand();
-					if (!(stack.getItem() instanceof ItemSack)) return;
-				}
-			}
-
-			SNSUtils.toggle(stack, message.type, message.toggle);
 		}
 	}
 }

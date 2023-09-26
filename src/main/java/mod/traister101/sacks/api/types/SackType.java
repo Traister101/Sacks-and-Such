@@ -12,19 +12,14 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import static mod.traister101.sacks.SacksNSuch.MODID;
 import static net.dries007.tfc.util.Helpers.getNull;
 
+@ObjectHolder(MODID)
 public class SackType extends IForgeRegistryEntry.Impl<SackType> {
 
-	@ObjectHolder(MODID + ":thatch_sack")
 	public static final SackType THATCH_SACK = getNull();
-	@ObjectHolder(MODID + ":leather_sack")
 	public static final SackType LEATHER_SACK = getNull();
-	@ObjectHolder(MODID + ":burlap_sack")
 	public static final SackType BURLAP_SACK = getNull();
-	@ObjectHolder(MODID + ":miner_sack")
 	public static final SackType MINER_SACK = getNull();
-	@ObjectHolder(MODID + ":farmer_sack")
 	public static final SackType FARMER_SACK = getNull();
-	@ObjectHolder(MODID + ":knapsack")
 	public static final SackType KNAPSACK = getNull();
 
 	private int slotCount;
@@ -112,5 +107,11 @@ public class SackType extends IForgeRegistryEntry.Impl<SackType> {
 			}
 		}
 		return Size.NORMAL;
+	}
+
+	@Override
+	public String toString() {
+		//noinspection DataFlowIssue
+		return getRegistryName().toString();
 	}
 }

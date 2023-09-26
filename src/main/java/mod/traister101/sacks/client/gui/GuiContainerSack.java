@@ -6,18 +6,19 @@ import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.SNSUtils.ToggleType;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
+@SideOnly(Side.CLIENT)
 public class GuiContainerSack extends GuiRenameable {
 
-	public GuiContainerSack(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack heldStack) {
-		super(container, playerInv, background, heldStack);
+	public GuiContainerSack(final Container container, final ResourceLocation background, final ItemStack heldStack) {
+		super(container, background, heldStack);
 	}
 
 	@Override
@@ -29,16 +30,15 @@ public class GuiContainerSack extends GuiRenameable {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		final SimpleNetworkWrapper network = SacksNSuch.getNetwork();
+	protected void actionPerformed(final GuiButton button) throws IOException {
+		super.actionPerformed(button);
+
 		if (button.id == 1) {
-			if (button instanceof GuiVoidButton) {
-				final GuiVoidButton buttonToggle = (GuiVoidButton) button;
-				network.sendToServer(new TogglePacket(!buttonToggle.isVoid, ToggleType.VOID));
-				buttonToggle.onClick();
-			}
-		} else {
-			super.actionPerformed(button);
+			if (!(button instanceof GuiVoidButton)) return;
+
+			final GuiVoidButton voidButton = (GuiVoidButton) button;
+			SacksNSuch.getNetwork().sendToServer(new TogglePacket(!voidButton.isVoid, ToggleType.VOID));
+			voidButton.onClick();
 		}
 	}
 }

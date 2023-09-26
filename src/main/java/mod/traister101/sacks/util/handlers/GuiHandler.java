@@ -47,10 +47,11 @@ public final class GuiHandler implements IGuiHandler {
 	public Object getClientGuiElement(final int ID, final EntityPlayer player, final World world, final int x, final int y, final int z) {
 		final Container container = getServerGuiElement(ID, player, world, x, y, z);
 		final ItemStack heldStack = player.getHeldItemMainhand();
+		assert container != null;
+
 		switch (GuiType.valueOf(ID)) {
 			case SACK:
-				return new GuiContainerSack(container, player.inventory, BACKGROUND,
-						heldStack.getItem() instanceof ItemSack ? heldStack : player.getHeldItemOffhand());
+				return new GuiContainerSack(container, BACKGROUND, heldStack.getItem() instanceof ItemSack ? heldStack : player.getHeldItemOffhand());
 			case VESSEL_EXPLOSIVE:
 				return new GuiContainerThrowableVessel(container, BACKGROUND,
 						heldStack.getItem() instanceof ItemThrowableVessel ? heldStack : player.getHeldItemOffhand());

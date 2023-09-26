@@ -10,6 +10,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import javax.annotation.Nullable;
+
 public class SackTypeSync implements IMessage {
 
 	private SackType sackType;
@@ -55,6 +57,7 @@ public class SackTypeSync implements IMessage {
 	public static class Handler implements IMessageHandler<SackTypeSync, IMessage> {
 
 		@Override
+		@Nullable
 		public IMessage onMessage(final SackTypeSync message, final MessageContext ctx) {
 			final SackType sackType = message.sackType;
 
@@ -64,7 +67,7 @@ public class SackTypeSync implements IMessage {
 			sackType.setDoesVoiding(message.doesVoiding);
 			sackType.setAllowedSize(message.allowedSize);
 
-			SacksNSuch.getLog().info("Sycned sack type {} with the server", sackType);
+			SacksNSuch.getLog().info("Sycned {} values with the server", sackType);
 			return null;
 		}
 	}
