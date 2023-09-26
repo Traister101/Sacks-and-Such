@@ -3,7 +3,7 @@ package mod.traister101.sacks;
 import mod.traister101.sacks.client.ClientRegistery;
 import mod.traister101.sacks.client.SNSKeybinds;
 import mod.traister101.sacks.network.PickBlockPacket;
-import mod.traister101.sacks.network.RenamePacket;
+import mod.traister101.sacks.network.RenameHeldItemPacket;
 import mod.traister101.sacks.network.SackTypeSync;
 import mod.traister101.sacks.network.TogglePacket;
 import mod.traister101.sacks.objects.entity.EntitiesSNS;
@@ -51,7 +51,7 @@ public final class SacksNSuch {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 		int id = 0;
-		network.registerMessage(new RenamePacket.Handler(), RenamePacket.class, ++id, Side.SERVER);
+		network.registerMessage(new RenameHeldItemPacket.Handler(), RenameHeldItemPacket.class, ++id, Side.SERVER);
 		network.registerMessage(new TogglePacket.Handler(), TogglePacket.class, ++id, Side.SERVER);
 		network.registerMessage(new PickBlockPacket.Handler(), PickBlockPacket.class, ++id, Side.SERVER);
 		network.registerMessage(new SackTypeSync.Handler(), SackTypeSync.class, ++id, Side.CLIENT);

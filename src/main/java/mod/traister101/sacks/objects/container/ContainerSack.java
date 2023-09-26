@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
-public class ContainerSack extends ContainerRenameable {
+public class ContainerSack extends ExtendedCapacityContainer {
 
-	public ContainerSack(final InventoryPlayer playerInv, final ItemStack heldStack) {
-		super(playerInv, heldStack);
+	public ContainerSack(final InventoryPlayer inventoryPlayer, final ItemStack heldStack) {
+		super(inventoryPlayer, heldStack);
 	}
 
 	@Override

@@ -2,30 +2,27 @@ package mod.traister101.sacks.client.gui;
 
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.client.button.GuiButtonSack;
-import mod.traister101.sacks.network.RenamePacket;
-import mod.traister101.sacks.objects.container.ContainerRenameable;
+import mod.traister101.sacks.network.RenameHeldItemPacket;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 
-public abstract class GuiRenameable extends AbstractGuiContainer {
+@SideOnly(Side.CLIENT)
+public class GuiRenameable extends GuiDynamicSlotContainer {
 
-	protected final InventoryPlayer playerInv;
-	private GuiTextField nameField;
+	private GuiTextField renameField;
 	private boolean renaming;
-	private String name;
 
-	protected GuiRenameable(Container container, InventoryPlayer playerInv, ResourceLocation background, ItemStack heldStack) {
+	protected GuiRenameable(final Container container, final ResourceLocation background, final ItemStack heldStack) {
 		super(container, background, heldStack);
-		this.name = heldStack.getDisplayName();
-		this.playerInv = playerInv;
 	}
 
 	@Override
@@ -33,26 +30,26 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
 		addButton(new GuiButtonSack(0, guiLeft + 152, guiTop + 6, 16, 16, "rename"));
-		nameField = new GuiTextField(0, fontRenderer, guiLeft + 8, guiTop + 6, 120, 15);
-		nameField.setTextColor(-1);
-		nameField.setDisabledTextColour(-1);
-		nameField.setMaxStringLength(20);
-		nameField.setEnableBackgroundDrawing(false);
-		nameField.setText(name);
-		nameField.setEnabled(false);
+		renameField = new GuiTextField(0, fontRenderer, guiLeft + 8, guiTop + 6, 120, 15);
+		renameField.setTextColor(-1);
+		renameField.setDisabledTextColour(-1);
+		renameField.setMaxStringLength(20);
+		renameField.setEnableBackgroundDrawing(false);
+		renameField.setText(heldStack.getDisplayName());
+		renameField.setEnabled(false);
 		renaming = false;
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		if (renaming) nameField.mouseClicked(mouseX, mouseY, mouseButton);
+	protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) throws IOException {
+		if (renaming) renameField.mouseClicked(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	// TODO Text formating (colors and stuff) from player input
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-
+	protected void keyTyped(final char typedChar, final int keyCode) throws IOException {
+		// TODO migrate to if statements?
 		switch (keyCode) {
 			case Keyboard.KEY_ESCAPE:
 				// Text box is enabled when escape is pressed
@@ -75,7 +72,7 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
 			// Not enter or escape
 			default:
 				// Not entered into text box
-				if (!nameField.textboxKeyTyped(typedChar, keyCode)) {
+				if (!renameField.textboxKeyTyped(typedChar, keyCode)) {
 					super.keyTyped(typedChar, keyCode);
 				}
 		}
@@ -88,13 +85,13 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+	protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-		nameField.drawTextBox();
+		renameField.drawTextBox();
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(final GuiButton button) throws IOException {
 		// Rename button
 		if (button.id == 0) {
 			// Toggle text box
@@ -102,34 +99,27 @@ public abstract class GuiRenameable extends AbstractGuiContainer {
 		}
 	}
 
-	// Toggles renaming and the text field
-	private void setRenaming(boolean rename) {
-		if (rename) {
-			renaming = true;
-			nameField.setFocused(true);
-			nameField.setEnabled(true);
-			nameField.setEnableBackgroundDrawing(true);
-		} else {
-			renaming = false;
-			nameField.setFocused(false);
-			nameField.setEnabled(false);
-			nameField.setEnableBackgroundDrawing(false);
-		}
-		nameField.setCursorPositionEnd();
+	/** Sets renaming and the text field */
+	private void setRenaming(final boolean rename) {
+		renaming = rename;
+		renameField.setFocused(rename);
+		renameField.setEnabled(rename);
+		renameField.setEnableBackgroundDrawing(rename);
+		renameField.setCursorPositionEnd();
 	}
 
 	private void renameItem() {
-		String name = nameField.getText();
+		final String renameFieldText = renameField.getText();
 
-		if (StringUtils.equals(name, this.name)) return;
-		SacksNSuch.getNetwork().sendToServer(new RenamePacket(name));
-		if (StringUtils.isBlank(name)) {
-			// Best way I've figured out to set the text box to the default stack name
-			ItemStack heldStack = inventorySlots.getSlot(((ContainerRenameable) inventorySlots).getItemIndex()).getStack();
-			ItemStack itemStack = heldStack.copy();
-			itemStack.clearCustomName();
-			this.name = itemStack.getDisplayName();
-			nameField.setText(this.name);
+		if (StringUtils.equals(renameFieldText, heldStack.getDisplayName())) return;
+
+		{
+			final RenameHeldItemPacket packet = new RenameHeldItemPacket(renameFieldText, heldStack == mc.player.getHeldItemMainhand());
+			SacksNSuch.getNetwork().sendToServer(packet);
+		}
+
+		if (StringUtils.isBlank(renameFieldText)) {
+			renameField.setText(heldStack.getItem().getItemStackDisplayName(heldStack));
 		}
 	}
 }
