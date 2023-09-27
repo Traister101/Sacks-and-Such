@@ -1,7 +1,7 @@
 package mod.traister101.sacks.util.handlers;
 
 import mod.traister101.sacks.SacksNSuch;
-import mod.traister101.sacks.api.SackRegistry;
+import mod.traister101.sacks.api.registries.SackRegistry;
 import mod.traister101.sacks.api.types.SackType;
 import mod.traister101.sacks.network.SackTypeSync;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,6 +17,7 @@ public final class ServerEventHandler {
 		// Syncs the server sack registry values to the client ensuring our config controlled containers are safe
 		for (final SackType sackType : SackRegistry.SACK_TYPES) {
 			SacksNSuch.getNetwork().sendTo(new SackTypeSync(sackType), (EntityPlayerMP) event.player);
+			SacksNSuch.getLog().info("Sycned {} with player {}", sackType, event.player.getName());
 		}
 	}
 }

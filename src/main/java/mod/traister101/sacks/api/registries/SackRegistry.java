@@ -1,4 +1,4 @@
-package mod.traister101.sacks.api;
+package mod.traister101.sacks.api.registries;
 
 import mod.traister101.sacks.SacksNSuch;
 import mod.traister101.sacks.api.types.SackType;

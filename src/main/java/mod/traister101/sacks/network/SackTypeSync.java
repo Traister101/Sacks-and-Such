@@ -2,9 +2,9 @@ package mod.traister101.sacks.network;
 
 import io.netty.buffer.ByteBuf;
 import mod.traister101.sacks.SacksNSuch;
-import mod.traister101.sacks.api.SackRegistry;
+import mod.traister101.sacks.api.registries.SackRegistry;
 import mod.traister101.sacks.api.types.SackType;
-import net.dries007.tfc.api.capability.size.Size;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -14,12 +14,8 @@ import javax.annotation.Nullable;
 
 public class SackTypeSync implements IMessage {
 
+	private NBTTagCompound nbtTagCompound;
 	private SackType sackType;
-	private int slotCount;
-	private int slotCapacity;
-	private boolean doesAutoPickup;
-	private boolean doesVoiding;
-	private Size allowedSize;
 
 	@SuppressWarnings("unused")
 	public SackTypeSync() {
@@ -27,31 +23,19 @@ public class SackTypeSync implements IMessage {
 
 	public SackTypeSync(final SackType sackType) {
 		this.sackType = sackType;
-		this.slotCount = sackType.getSlotCount();
-		this.slotCapacity = sackType.getSlotCapacity();
-		this.doesAutoPickup = sackType.doesAutoPickup();
-		this.doesVoiding = sackType.doesVoiding();
-		this.allowedSize = sackType.getAllowedSize();
+		this.nbtTagCompound = sackType.serializeNBT();
 	}
 
 	@Override
 	public void fromBytes(final ByteBuf buf) {
 		sackType = ByteBufUtils.readRegistryEntry(buf, SackRegistry.SACK_TYPES);
-		slotCount = buf.readInt();
-		slotCapacity = buf.readInt();
-		doesAutoPickup = buf.readBoolean();
-		doesVoiding = buf.readBoolean();
-		allowedSize = Size.values()[buf.readByte()];
+		nbtTagCompound = ByteBufUtils.readTag(buf);
 	}
 
 	@Override
 	public void toBytes(final ByteBuf buf) {
 		ByteBufUtils.writeRegistryEntry(buf, sackType);
-		buf.writeInt(slotCount);
-		buf.writeInt(slotCapacity);
-		buf.writeBoolean(doesAutoPickup);
-		buf.writeBoolean(doesVoiding);
-		buf.writeByte(allowedSize.ordinal());
+		ByteBufUtils.writeTag(buf, nbtTagCompound);
 	}
 
 	public static class Handler implements IMessageHandler<SackTypeSync, IMessage> {
@@ -59,15 +43,9 @@ public class SackTypeSync implements IMessage {
 		@Override
 		@Nullable
 		public IMessage onMessage(final SackTypeSync message, final MessageContext ctx) {
-			final SackType sackType = message.sackType;
+			message.sackType.deserializeNBT(message.nbtTagCompound);
 
-			sackType.setSlotCount(message.slotCount);
-			sackType.setSlotCapacity(message.slotCapacity);
-			sackType.setDoesAutoPickup(message.doesAutoPickup);
-			sackType.setDoesVoiding(message.doesVoiding);
-			sackType.setAllowedSize(message.allowedSize);
-
-			SacksNSuch.getLog().info("Sycned {} values with the server", sackType);
+			SacksNSuch.getLog().info("Sycned {} with the server", message.sackType);
 			return null;
 		}
 	}

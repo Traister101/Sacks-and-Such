@@ -4,16 +4,25 @@ import mod.traister101.sacks.objects.items.ItemSack;
 import mod.traister101.sacks.util.NBTHelper;
 import net.dries007.tfc.api.capability.size.Size;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import static mod.traister101.sacks.SacksNSuch.MODID;
 import static net.dries007.tfc.util.Helpers.getNull;
 
+/**
+ * A type of sack, used to cleanly sync server config to the client, so we can safely have dynamic size containers controlled via config.
+ *
+ * To register your own SackTypes subscribe to the {@link net.dries007.tfc.api.registries.TFCRegistryEvent.RegisterPreBlock} event as these are
+ * also used to automatically register sack items.
+ *
+ * If you extend the sack type make sure you override {@link SackType#serializeNBT()} and {@link SackType#deserializeNBT(NBTTagCompound)} for any
+ * new fields that need to be synced to the client.
+ */
 @ObjectHolder(MODID)
-public class SackType extends IForgeRegistryEntry.Impl<SackType> {
+public class SackType extends IForgeRegistryEntry.Impl<SackType> implements INBTSerializable<NBTTagCompound> {
 
 	public static final SackType THATCH_SACK = getNull();
 	public static final SackType LEATHER_SACK = getNull();
@@ -21,7 +30,6 @@ public class SackType extends IForgeRegistryEntry.Impl<SackType> {
 	public static final SackType MINER_SACK = getNull();
 	public static final SackType FARMER_SACK = getNull();
 	public static final SackType KNAPSACK = getNull();
-
 	private int slotCount;
 	private int slotCapacity;
 	private boolean doesAutoPickup;
@@ -29,9 +37,6 @@ public class SackType extends IForgeRegistryEntry.Impl<SackType> {
 	private Size allowedSize;
 
 	/**
-	 * A type of sack, used to cleanly sync server config to the client, so we can safely have dynamic size containers controlled via config.
-	 * Everything registered here will have its fields synced to the client on login to the world.
-	 *
 	 * @param slotCount The amount of slots the sack should have
 	 * @param slotCapacity The capacity of each slot
 	 * @param doAutoPickup If this sack should have automatic pickup capabilities
@@ -50,45 +55,20 @@ public class SackType extends IForgeRegistryEntry.Impl<SackType> {
 		return slotCount;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void setSlotCount(final int slotCount) {
-		this.slotCount = slotCount;
-	}
-
 	public int getSlotCapacity() {
 		return slotCapacity;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void setSlotCapacity(final int slotCapacity) {
-		this.slotCapacity = slotCapacity;
 	}
 
 	public boolean doesAutoPickup() {
 		return doesAutoPickup;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void setDoesAutoPickup(final boolean doesAutoPickup) {
-		this.doesAutoPickup = doesAutoPickup;
-	}
-
 	public boolean doesVoiding() {
 		return doesVoiding;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void setDoesVoiding(final boolean doesVoiding) {
-		this.doesVoiding = doesVoiding;
-	}
-
 	public Size getAllowedSize() {
 		return allowedSize;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void setAllowedSize(final Size allowedSize) {
-		this.allowedSize = allowedSize;
 	}
 
 	/**
@@ -113,5 +93,25 @@ public class SackType extends IForgeRegistryEntry.Impl<SackType> {
 	public String toString() {
 		//noinspection DataFlowIssue
 		return getRegistryName().toString();
+	}
+
+	@Override
+	public NBTTagCompound serializeNBT() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		compound.setInteger("SlotCount", slotCount);
+		compound.setInteger("SlotCapacity", slotCapacity);
+		compound.setBoolean("DoesAutoPickup", doesAutoPickup);
+		compound.setBoolean("DoesVoiding", doesVoiding);
+		compound.setInteger("AllowedSize", allowedSize.ordinal());
+		return compound;
+	}
+
+	@Override
+	public void deserializeNBT(final NBTTagCompound compound) {
+		slotCount = compound.getInteger("SlotCount");
+		slotCapacity = compound.getInteger("SlotCapacity");
+		doesAutoPickup = compound.getBoolean("DoesAutoPickup");
+		doesVoiding = compound.getBoolean("DoesVoiding");
+		allowedSize = Size.values()[compound.getInteger("AllowedSize")];
 	}
 }

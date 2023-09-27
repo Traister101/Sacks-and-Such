@@ -1,11 +1,11 @@
 package mod.traister101.sacks.types;
 
 import mod.traister101.sacks.SacksNSuch;
-import mod.traister101.sacks.api.SNSRegistryName;
-import mod.traister101.sacks.api.SackRegistry;
-import mod.traister101.sacks.api.registries.SNSRegistryEvent.RegisterSackEvent;
+import mod.traister101.sacks.api.registries.SNSRegistryName;
+import mod.traister101.sacks.api.registries.SackRegistry;
 import mod.traister101.sacks.api.types.SackType;
-import net.minecraft.item.Item;
+import net.dries007.tfc.api.registries.TFCRegistryEvent.RegisterPreBlock;
+import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent.NewRegistry;
 import net.minecraftforge.event.RegistryEvent.Register;
@@ -23,7 +23,7 @@ public final class Registry {
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public static void onItemRegister(final Register<Item> registryEvent) {
-		MinecraftForge.EVENT_BUS.post(new RegisterSackEvent(SNSRegistryName.SACK, SackRegistry.SACK_TYPES));
+	public static void onBlockRegister(final Register<Block> registryEvent) {
+		MinecraftForge.EVENT_BUS.post(new RegisterPreBlock<>(SNSRegistryName.SACK, SackRegistry.SACK_TYPES));
 	}
 }

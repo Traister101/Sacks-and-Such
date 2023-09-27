@@ -1,7 +1,7 @@
-package mod.traister101.sacks.objects;
+package mod.traister101.sacks.types;
 
-import mod.traister101.sacks.api.registries.SNSRegistryEvent.RegisterSackEvent;
 import mod.traister101.sacks.api.types.SackType;
+import net.dries007.tfc.api.registries.TFCRegistryEvent.RegisterPreBlock;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -13,7 +13,7 @@ import static mod.traister101.sacks.SacksNSuch.MODID;
 public final class DefaultSacks {
 
 	@SubscribeEvent
-	public static void onSackHolderRegister(final RegisterSackEvent event) {
+	public static void onSackRegister(final RegisterPreBlock<SackType> event) {
 		final IForgeRegistry<SackType> registry = event.getRegistry();
 		register(registry, "thatch_sack",
 				new SackType(SACK.THATCH_SACK.slotCount, SACK.THATCH_SACK.slotCap, SACK.THATCH_SACK.doPickup, SACK.THATCH_SACK.doVoiding,

@@ -3,7 +3,7 @@ package mod.traister101.sacks.objects.items;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import mod.traister101.sacks.ConfigSNS;
-import mod.traister101.sacks.api.SackRegistry;
+import mod.traister101.sacks.api.registries.SackRegistry;
 import mod.traister101.sacks.api.types.SackType;
 import mod.traister101.sacks.util.VesselType;
 import net.dries007.tfc.api.capability.size.Size;
