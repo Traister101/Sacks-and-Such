@@ -1,6 +1,5 @@
 package mod.traister101.sacks.objects.inventory.capability;
 
-import net.dries007.tfc.objects.inventory.capability.ISlotCallback;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -17,28 +16,16 @@ import javax.annotation.Nullable;
  * ItemHandler for extended stack sizes. Limited to {@link Integer#MAX_VALUE} as that's what {@link ItemStack} uses to store the
  * count internally. This is fine for our usage
  */
-public class ExtendedSlotCapacityHandler extends ItemStackHandler implements ICapabilityProvider, ISlotCallback {
+public class ExtendedSlotCapacityHandler extends ItemStackHandler implements ICapabilityProvider {
 
 	protected final int slotStackLimit;
 
-	protected ExtendedSlotCapacityHandler(final @Nullable NBTTagCompound nbt, final int slotCount, final int slotStackLimit) {
+	public ExtendedSlotCapacityHandler(final @Nullable NBTTagCompound nbt, final int slotCount, final int slotStackLimit) {
 		super(slotCount);
 		this.slotStackLimit = slotStackLimit;
 		if (nbt != null) {
 			deserializeNBT(nbt);
 		}
-	}
-
-	@Override
-	public boolean hasCapability(final Capability<?> capability, @Nullable final EnumFacing facing) {
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-	}
-
-	@Nullable
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(final Capability<T> capability, @Nullable EnumFacing facing) {
-		return hasCapability(capability, facing) ? (T) this : null;
 	}
 
 	@Override
@@ -89,12 +76,14 @@ public class ExtendedSlotCapacityHandler extends ItemStackHandler implements ICa
 	}
 
 	@Override
-	public void onContentsChanged(final int slotIndex) {
-
+	public boolean hasCapability(final Capability<?> capability, @Nullable final EnumFacing facing) {
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	}
 
-	/** @return Stack limit for all slots */
-	public int getSlotStackLimit() {
-		return slotStackLimit;
+	@Nullable
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(final Capability<T> capability, @Nullable EnumFacing facing) {
+		return hasCapability(capability, facing) ? (T) this : null;
 	}
 }

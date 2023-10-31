@@ -1,6 +1,5 @@
 package mod.traister101.sacks.objects.container;
 
-import mod.traister101.sacks.objects.inventory.capability.ExtendedSlotCapacityHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
@@ -11,42 +10,40 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public abstract class ExtendedCapacityContainer extends Container {
+public class ExtendedCapacityContainer extends Container {
 
-	protected final ExtendedSlotCapacityHandler handler;
-	protected final EntityPlayer player;
+	protected final IItemHandler handler;
+	/**
+	 * Shorthand for {@link IItemHandler#getSlots()} as we need the count in lots of places.
+	 * This does issues if the handler dynamically resizes although that isn't really supported anyway
+	 */
 	protected final int slotCount;
-	protected int slotStackCap;
 	/** Index of the item container, so we can prevent moving it */
-	protected int heldItemIndex;
+	protected final int heldItemIndex;
 
-	protected ExtendedCapacityContainer(final InventoryPlayer inventoryPlayer, final ItemStack heldStack) {
-		this.player = inventoryPlayer.player;
-
-		{
+	public ExtendedCapacityContainer(final InventoryPlayer inventoryPlayer, final ItemStack heldStack) {
+		{ // TODO refactor to just pass the handler in?
 			if (!heldStack.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 				throw new IllegalArgumentException("The given ItemStack requires Item handling capability");
 
-			final IItemHandler itemHandler = heldStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-
-			if (!(itemHandler instanceof ExtendedSlotCapacityHandler))
-				throw new IllegalArgumentException("The capability MUST BE or extend ExtendedSlotCapacityHandler");
-
-			this.handler = (ExtendedSlotCapacityHandler) itemHandler;
+			this.handler = heldStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			assert handler != null;
 		}
 
 		this.slotCount = handler.getSlots();
-		this.slotStackCap = handler.getSlotStackLimit();
 
 		// Initalize the heldItemIndex
-		if (heldStack == player.getHeldItemMainhand()) {
-			// Mainhand opened inventory
-			this.heldItemIndex = inventoryPlayer.currentItem + 27;
-		} else {
-			// Offhand, so ignore this rule as we can't click it
-			this.heldItemIndex = -100;
+		{
+			final int heldItemIndex;
+			if (heldStack == inventoryPlayer.player.getHeldItemMainhand()) {
+				// Mainhand opened inventory
+				heldItemIndex = inventoryPlayer.currentItem + 27;
+			} else {
+				// Offhand, so ignore this rule as we can't click it
+				heldItemIndex = -100;
+			}
+			this.heldItemIndex = heldItemIndex + handler.getSlots();
 		}
-		this.heldItemIndex += slotCount;
 
 		addContainerSlots();
 		addPlayerInventorySlots(inventoryPlayer);
@@ -59,7 +56,7 @@ public abstract class ExtendedCapacityContainer extends Container {
 		if (slot.getHasStack()) {
 			final ItemStack slotStack = slot.getStack();
 
-			if (slotCount > slotIdex) {
+			if (slotIdex < slotCount) {
 				if (!mergeItemStack(slotStack, slotCount, inventorySlots.size(), true)) return ItemStack.EMPTY;
 			} else if (!mergeItemStack(slotStack, 0, slotCount, false)) return ItemStack.EMPTY;
 
@@ -73,54 +70,52 @@ public abstract class ExtendedCapacityContainer extends Container {
 	}
 
 	@Override
-	public final ItemStack slotClick(final int slotID, final int dragType, final ClickType clickType, final EntityPlayer player) {
+	public final ItemStack slotClick(final int slotIndex, final int dragType, final ClickType clickType, final EntityPlayer player) {
 		// Not a slot, let vanilla handle it
-		if (0 > slotID) return super.slotClick(slotID, dragType, clickType, player);
+		if (0 > slotIndex) return super.slotClick(slotIndex, dragType, clickType, player);
 
 		// Prevent moving of the item stack that is currently open
-		if (heldItemIndex == slotID) return ItemStack.EMPTY;
+		if (heldItemIndex == slotIndex) return ItemStack.EMPTY;
 
 		// Keybind swap
 		if (clickType == ClickType.SWAP && 0 <= dragType && 9 > dragType) {
-			final ItemStack hoverStack = inventorySlots.get(slotID).getStack();
+			final ItemStack hoverStack = inventorySlots.get(slotIndex).getStack();
 			final ItemStack hotbarStack = player.inventory.getStackInSlot(dragType);
 			// Blocks the held stack from being moved
 			if (hoverStack == player.getHeldItemMainhand() || player.getHeldItemMainhand() == hotbarStack) return ItemStack.EMPTY;
 
 			// If either stack is empty pass it to vanilla
-			if (hotbarStack.isEmpty() || hoverStack.isEmpty()) return super.slotClick(slotID, dragType, clickType, player);
+			if (hotbarStack.isEmpty() || hoverStack.isEmpty()) return super.slotClick(slotIndex, dragType, clickType, player);
 
 			// If neither stack is too large pass to vanilla
 			if (hotbarStack.getCount() <= hotbarStack.getMaxStackSize() && hoverStack.getCount() <= hoverStack.getMaxStackSize())
-				return super.slotClick(slotID, dragType, clickType, player);
+				return super.slotClick(slotIndex, dragType, clickType, player);
 
 			return ItemStack.EMPTY;
 		}
 
 		// Vanilla slot, pass to vanilla
-		if (slotCount - 1 < slotID) return super.slotClick(slotID, dragType, clickType, player);
+		if (slotCount - 1 < slotIndex) return super.slotClick(slotIndex, dragType, clickType, player);
 
-		final Slot slot = getSlot(slotID);
+		final Slot slot = getSlot(slotIndex);
 
 		// Shift click
 		if (clickType == ClickType.QUICK_MOVE) {
 			if (!slot.canTakeStack(player)) return ItemStack.EMPTY;
 
-			return transferStackInSlot(player, slotID);
+			return transferStackInSlot(player, slotIndex);
 		}
 
 		final ItemStack slotStack = slot.getStack();
-		// Slot is empty give to vanilla
-		if (slotStack.isEmpty()) return super.slotClick(slotID, dragType, clickType, player);
 
 		// Pressing q
 		if (clickType == ClickType.THROW && player.inventory.getItemStack().isEmpty()) {
 			// ctrl + q
 			if (dragType == 1) {
-				final ItemStack tossStack = handler.extractItem(slotID, slotStack.getMaxStackSize(), false);
+				final ItemStack tossStack = handler.extractItem(slotIndex, slotStack.getMaxStackSize(), false);
 				player.dropItem(tossStack, false);
 				return slotStack;
-			} else return super.slotClick(slotID, dragType, clickType, player);
+			} else return super.slotClick(slotIndex, dragType, clickType, player);
 		}
 
 		if (clickType == ClickType.PICKUP) {
@@ -129,15 +124,25 @@ public abstract class ExtendedCapacityContainer extends Container {
 
 			// Holding an item
 			if (!mouseStack.isEmpty()) {
+				// If we should try place the item into the container
+				if (slotStack.isEmpty() && slot.isItemValid(mouseStack)) {
+					int placeCount = dragType == 0 ? mouseStack.getCount() : 1;
+
+					if (placeCount > slot.getItemStackLimit(mouseStack)) {
+						placeCount = slot.getItemStackLimit(mouseStack);
+					}
+
+					slot.putStack(mouseStack.splitStack(placeCount));
+					return ItemStack.EMPTY;
+				}
+
 				// If we should try to swap the stacks
 				if (!ItemStack.areItemsEqual(slotStack, mouseStack)) {
-					if (isStacksSwappable(slotStack, mouseStack, slotID)) {
+					if (mouseStack.getCount() <= slot.getSlotStackLimit()) {
 						slot.putStack(mouseStack);
 						playerInventory.setItemStack(slotStack);
 						return mouseStack;
-					} else {
-						return slotStack;
-					}
+					} else return slotStack;
 				}
 
 				// Stack is full
@@ -145,10 +150,10 @@ public abstract class ExtendedCapacityContainer extends Container {
 
 				// If we should try to merge the stacks
 				if (ItemStack.areItemsEqual(slotStack, mouseStack)) {
-					if (slotStack.isStackable() && slotStack.getCount() <= slotStackCap) {
+					if (slotStack.isStackable() && slotStack.getCount() <= slot.getSlotStackLimit()) {
 						if (dragType == 0) {
 							// This is a left click
-							final ItemStack remainer = handler.insertItem(slotID, mouseStack, false);
+							final ItemStack remainer = handler.insertItem(slotIndex, mouseStack, false);
 							playerInventory.setItemStack(remainer);
 						} else {
 							// This is a rightclick
@@ -161,18 +166,19 @@ public abstract class ExtendedCapacityContainer extends Container {
 				}
 			}
 			//Stack size is within the normal bounds. Example: cobble = 64 or less
-			if (slotStack.getCount() <= slotStack.getMaxStackSize()) return super.slotClick(slotID, dragType, clickType, player);
+			if (slotStack.getCount() <= slotStack.getMaxStackSize()) return super.slotClick(slotIndex, dragType, clickType, player);
 
 			// Grabbing items from sack
 			if (mouseStack.isEmpty()) {
 				int amount = slotStack.getMaxStackSize();
 				if (dragType == 1) amount = amount / 2;
-				final ItemStack extractedItem = handler.extractItem(slotID, amount, false);
+				final ItemStack extractedItem = handler.extractItem(slotIndex, amount, false);
 				playerInventory.setItemStack(extractedItem);
 				return ItemStack.EMPTY;
 			}
 		}
-		return super.slotClick(slotID, dragType, clickType, player);
+
+		return super.slotClick(slotIndex, dragType, clickType, player);
 	}
 
 	@Override
@@ -181,44 +187,59 @@ public abstract class ExtendedCapacityContainer extends Container {
 	}
 
 	@Override
-	protected final boolean mergeItemStack(final ItemStack stackIn, final int startIndex, final int endIndex, final boolean reverseDirection) {
-		boolean mergedStack = false;
-		int slotIndex = startIndex;
+	protected final boolean mergeItemStack(final ItemStack mergeStack, final int startIndex, final int endIndex, final boolean reverseDirection) {
+		boolean haveMergedStack = false;
+		// Start iterating from the end if we merge in reverse order
+		int slotIndex = reverseDirection ? endIndex - 1 : startIndex;
 
-		if (reverseDirection) slotIndex = endIndex - 1;
+		if (mergeStack.isStackable()) {
+			while (!mergeStack.isEmpty()) {
+				if (reverseDirection) {
+					if (slotIndex < startIndex) break;
+				} else if (slotIndex >= endIndex) break;
 
-		while (!stackIn.isEmpty()) {
-			if (reverseDirection) {
-				if (slotIndex < startIndex) break;
-			} else if (slotIndex >= endIndex) break;
+				final Slot slot = getSlot(slotIndex);
+				final ItemStack slotStack = slot.getStack();
 
-			final Slot slot = getSlot(slotIndex);
-			final ItemStack slotStack = slot.getStack();
-
-			if (!slotStack.isEmpty() && slotStack.getItem() == stackIn.getItem() && (stackIn.getMetadata() == slotStack.getMetadata()) &&
-					ItemStack.areItemStackTagsEqual(stackIn, slotStack)) {
-
-				if (slotCount > slotIndex) {
-					final ItemStack remainer = handler.insertItem(slotIndex, stackIn, false);
-					stackIn.setCount(remainer.getCount());
-				} else {
-					final int total = slotStack.getCount() + stackIn.getCount();
-					final int maxSize = Math.min(slot.getSlotStackLimit(), stackIn.getMaxStackSize());
-					if (total <= maxSize) {
-						stackIn.setCount(0);
-						slotStack.setCount(total);
-					} else if (slotStack.getCount() < maxSize) {
-						stackIn.shrink(maxSize - slotStack.getCount());
-						slotStack.setCount(slotStack.getMaxStackSize());
-					}
-					slot.onSlotChanged();
-					mergedStack = true;
+				// Can't merge these stacks
+				if (!mergeStack.isItemEqual(slotStack) || !ItemStack.areItemStackTagsEqual(mergeStack, slotStack)) {
+					slotIndex += (reverseDirection) ? -1 : 1;
+					continue;
 				}
+
+				final int total = slotStack.getCount() + mergeStack.getCount();
+
+				final int maxSize;
+				// If it's our container slots use the slot limit to determine the max stack size
+				if (slotIndex < slotCount) {
+					maxSize = slot.getSlotStackLimit();
+				} else maxSize = Math.min(slot.getSlotStackLimit(), mergeStack.getMaxStackSize());
+
+				// Can fully consume the merge stack
+				if (maxSize >= total) {
+					mergeStack.setCount(0);
+					slotStack.setCount(total);
+					slot.onSlotChanged();
+					haveMergedStack = true;
+					slotIndex += (reverseDirection) ? -1 : 1;
+					continue;
+				}
+
+				// Can only partially consume the stack
+				if (maxSize > slotStack.getCount()) {
+					mergeStack.shrink(maxSize - slotStack.getCount());
+					slotStack.grow(maxSize - slotStack.getCount());
+					slot.onSlotChanged();
+					haveMergedStack = true;
+					slotIndex += (reverseDirection) ? -1 : 1;
+					continue;
+				}
+				slotIndex += (reverseDirection) ? -1 : 1;
 			}
-			slotIndex += (reverseDirection) ? -1 : 1;
 		}
 
-		if (!stackIn.isEmpty()) {
+		// Try and fill empty slots now
+		if (!mergeStack.isEmpty()) {
 			if (reverseDirection) {
 				slotIndex = endIndex - 1;
 			} else slotIndex = startIndex;
@@ -229,46 +250,39 @@ public abstract class ExtendedCapacityContainer extends Container {
 				} else if (slotIndex >= endIndex) break;
 
 				final Slot slot = getSlot(slotIndex);
-				final ItemStack slotStack = slot.getStack();
 
-				if (slotStack.isEmpty() && slot.isItemValid(stackIn)) {
-					if (slotCount > slotIndex) {
-						slot.putStack(stackIn.splitStack(slotStackCap));
-					} else if (stackIn.getCount() > stackIn.getMaxStackSize()) {
-						slot.putStack(stackIn.splitStack(stackIn.getMaxStackSize()));
-					} else {
-						slot.putStack(stackIn.splitStack(stackIn.getCount()));
-					}
-					slot.onSlotChanged();
-					mergedStack = true;
+				// Continue early if we can't put anything in this slot
+				if (slot.getHasStack() || !slot.isItemValid(mergeStack)) {
+					slotIndex += (reverseDirection) ? -1 : 1;
+					continue;
 				}
+
+				// If it's our container slots use the slots stack cap
+				if (slotIndex < slotCount) {
+					slot.putStack(mergeStack.splitStack(slot.getSlotStackLimit()));
+					haveMergedStack = true;
+					slotIndex += (reverseDirection) ? -1 : 1;
+					continue;
+				}
+
+				{
+					final int splitSize = Math.min(slot.getItemStackLimit(mergeStack), mergeStack.getMaxStackSize());
+					// Can merge
+					if (mergeStack.getCount() > splitSize) {
+						slot.putStack(mergeStack.splitStack(splitSize));
+						haveMergedStack = true;
+						slotIndex += (reverseDirection) ? -1 : 1;
+						continue;
+					}
+				}
+
+				// Put the whole stack in the slot
+				slot.putStack(mergeStack.splitStack(mergeStack.getCount()));
+				haveMergedStack = true;
 				slotIndex += (reverseDirection) ? -1 : 1;
 			}
 		}
-		return mergedStack;
-	}
-
-	/**
-	 * Checks if the two stacks are swappable
-	 *
-	 * @param stackA Stack A to compare
-	 * @param stackB Stack B to compare
-	 * @param slotIndex SlotIndex to check if Stack B is valid
-	 *
-	 * @return If the stacks are swapabled
-	 */
-	private boolean isStacksSwappable(final ItemStack stackA, final ItemStack stackB, final int slotIndex) {
-		final int countA = stackA.getCount();
-		final int countB = stackB.getCount();
-
-		boolean swappableA = false;
-		boolean swappableB = false;
-
-		if (countA <= slotStackCap && countA <= stackA.getMaxStackSize()) swappableA = true;
-
-		if (countB <= slotStackCap && countB <= stackB.getMaxStackSize() && handler.isItemValid(slotIndex, stackB)) swappableB = true;
-
-		return swappableA && swappableB;
+		return haveMergedStack;
 	}
 
 	/**
