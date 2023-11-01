@@ -16,21 +16,14 @@ repositories {
     }
 }
 
-// Read properties
-file "build.properties" withReader {
-    def prop = new Properties()
-    prop.load(it)
-    ext.config = new ConfigSlurper().parse prop
-}
-
-version = "${config.mod.version}"
-group = "mod.traister101.${config.mod.id}"
-archivesBaseName = "${config.mod.name}"
+version = modID
+group = "mod.traister101.${modID}"
+archivesBaseName = modName
 
 sourceCompatibility = targetCompatibility = 1.8
 
 minecraft {
-    version = "${config.minecraft.version}-${config.forge.version}"
+    version = "${project.minecraftVersion}-${project.forgeVersion}"
     runDir = "run"
     mappings = "stable_39"
 
@@ -41,21 +34,16 @@ minecraft {
     clientJvmArgs += "-Dfml.doNotBackup=true"
 
     clientRunArgs += ["--username", "Dev"]
-
-    replace("@MODID@", config.mod.id)
-    replace("@MODNAME@", config.mod.name)
-    replace("@VERSION@", project.version)
-    replaceIn("${config.mod.class}.java")
 }
 
 dependencies {
-    deobfCompile("curse.maven:TerraFirmaCraft-${config.tfc.id}:${config.tfc.file}")
+    deobfCompile("curse.maven:TerraFirmaCraft-${tfcID}:${tfcFile}")
 }
 
 processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property("moid", config.mod.id)
-    inputs.property("modname", config.mod.name)
+    inputs.property("moid", project.modID)
+    inputs.property("modname", project.modName)
     inputs.property("version", project.version)
     inputs.property("mcversion", project.minecraft.version)
 
@@ -64,7 +52,7 @@ processResources {
         include("mcmod.info", "pack.mcmeta")
 
         // replace version, mcversion and modname
-        expand("modid": config.mod.id, "version": project.version, "modname": config.mod.name, "mcversion": project.minecraft.version)
+        expand("modid": project.modID, "version": project.version, "modname": project.modName, "mcversion": project.minecraft.version)
     }
 
     // copy everything else

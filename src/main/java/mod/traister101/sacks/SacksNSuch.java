@@ -22,13 +22,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("FieldMayBeFinal")
-@Mod(modid = SacksNSuch.MODID, name = SacksNSuch.NAME, version = SacksNSuch.VERSION, dependencies = "required-after:tfc@1.7.18.176", useMetadata = true)
+@Mod(modid = SacksNSuch.MODID, useMetadata = true)
 public final class SacksNSuch {
 
-	public static final String MODID = "@MODID@";
-	public static final String NAME = "@MODNAME@";
-	public static final String VERSION = "@VERSION@";
-
+	public static final String MODID = "sns";
+	public static final String NAME = "Sacks 'N Such";
 	@Instance
 	private static SacksNSuch INSTANCE = null;
 	private final Logger log = LogManager.getLogger(MODID);

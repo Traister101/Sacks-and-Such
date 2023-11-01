@@ -12,8 +12,12 @@
     "credits": "",
     "logoFile": "/assets/tfc/textures/gui/logo.png",
     "screenshots": [],
-    "dependencies": [
+    "useDependencyInformation": true,
+    "requiredMods": [
       "tfc"
+    ],
+    "dependencies": [
+      "after:tfc@[1.7.18.176,)"
     ]
   }
 ]
