@@ -1,13 +1,9 @@
-buildscript {
-    repositories {
-        maven { url = "https://files.minecraftforge.net/maven" }
-    }
-    dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-    }
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'wtf.gofancy.fancygradle' version '1.1.+'
 }
-
-apply plugin: "net.minecraftforge.gradle.forge"
 
 repositories {
     // Curse
@@ -16,43 +12,93 @@ repositories {
     }
 }
 
-version = modID
+version = modVersion
 group = "mod.traister101.${modID}"
-archivesBaseName = modName
+archivesBaseName = "${modName}-${minecraftVersion}"
 
 sourceCompatibility = targetCompatibility = 1.8
 
+fancyGradle {
+    patches {
+        resources
+        coremods
+        asm
+    }
+}
+
+idea {
+    module {
+        downloadJavadoc = true;
+
+        // Add directory exlusions
+        ["run", ".gradle", "build"].forEach { excludeDirs.add(file(it)) }
+    }
+}
+
 minecraft {
-    version = "${project.minecraftVersion}-${project.forgeVersion}"
-    runDir = "run"
-    mappings = "stable_39"
+    mappings channel: 'stable', version: '39-1.12'
 
-    // Dedicate 4gb
-    clientJvmArgs += "-Xmx4G"
-    clientJvmArgs += "-Xms4G"
-    // Turn off the annoying world backups when ID's change
-    clientJvmArgs += "-Dfml.doNotBackup=true"
+    runs {
 
-    clientRunArgs += ["--username", "Dev"]
+        all {
+            // Give MC 4gb and dissable annoying world backups
+            jvmArgs("-Xmx4G", "-Xms4G", "-Dfml.doNotBackup=true")
+            // Recommended logging level for the console
+            property('forge.logging.console.level', 'debug')
+            // Recommended logging data for a userdev environment
+            property('forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP')
+        }
+
+        client {
+            workingDirectory("run/client")
+
+            args("--username", "Dev")
+        }
+
+        server {
+            workingDirectory("run/server")
+        }
+    }
 }
 
 dependencies {
-    deobfCompile("curse.maven:TerraFirmaCraft-${tfcID}:${tfcFile}")
+    minecraft("net.minecraftforge:forge:1.12.2-14.23.5.2854")
+
+    // TFC
+    implementation(fg.deobf("curse.maven:TerraFirmaCraft-${tfcID}:${tfcFile}"))
+}
+
+jar {
+    from(sourceSets.main.output.resourcesDir)
+
+    manifest {
+        attributes([
+                "Specification-Title"     : modName,
+                "Specification-Vendor"    : "traister101",
+                "Specification-Version"   : modVersion, // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.version,
+                "Implementation-Vendor"   : "traister101",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
 
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
     // this will ensure that this task is redone when the versions change.
     inputs.property("moid", project.modID)
     inputs.property("modname", project.modName)
     inputs.property("version", project.version)
-    inputs.property("mcversion", project.minecraft.version)
+    inputs.property("mcversion", project.minecraftVersion)
 
     // replace stuff in mcmod.info and pack.mcmeta
     from(sourceSets.main.resources.srcDirs) {
         include("mcmod.info", "pack.mcmeta")
 
         // replace version, mcversion and modname
-        expand("modid": project.modID, "version": project.version, "modname": project.modName, "mcversion": project.minecraft.version)
+        expand("modid": project.modID, "version": project.version, "modname": project.modName, "mcversion": project.minecraftVersion)
     }
 
     // copy everything else
@@ -64,8 +110,4 @@ processResources {
     from('.') {
         include("LICENSE")
     }
-}
-
-project.tasks.withType(Jar).configureEach { jarTask ->
-    jarTask.appendix = project.minecraft.version
 }
