@@ -32,7 +32,7 @@ def generate(rm: ResourceManager):
 
     for sack in constants.SACKS:
         if sack != "frame_pack":
-            rm.item_tag("curios:belt", *constants.SACKS)
+            rm.item_tag("curios:belt", sack)
     rm.item_tag("curios:back", "frame_pack")
 
     # rm.data("curios/slots/belt", {})
