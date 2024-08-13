@@ -33,7 +33,7 @@ public final class ServerConfig {
 		burlapSack = buildSackConfig(builder, "Burlap Sack", true, false, 8, 48, Size.SMALL);
 		oreSack = buildSackConfig(builder, "Ore Sack", true, false, 1, 512, Size.SMALL);
 		seedPouch = buildSackConfig(builder, "Seed Pouch", true, false, 27, 64, Size.VERY_SMALL);
-		framePack = buildSackConfig(builder, "Knapsack", false, false, 18, 64, Size.LARGE);
+		framePack = buildSackConfig(builder, "Frame Pack", false, false, 18, 64, Size.LARGE);
 
 		builder.pop();
 
