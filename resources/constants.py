@@ -10,7 +10,7 @@ PACKS = [
     "frame_pack"
 ]
 
-CONTAINERS = SACKS.append(PACKS)
+ALL_CONTAINERS = SACKS.append(PACKS)
 
 DEFAULT_LANG = {
     # Keybinds
