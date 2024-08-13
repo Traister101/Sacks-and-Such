@@ -30,10 +30,9 @@ def generate(rm: ResourceManager):
     item_size(rm, "reinforced_fabric", "sns:reinforced_fabric", Size.small, Weight.very_light)
     item_size(rm, "pack_frame", "sns:pack_frame", Size.large, Weight.medium)
 
-    for sack in constants.SACKS:
-        if sack != "frame_pack":
-            rm.item_tag("curios:belt", sack)
-    rm.item_tag("curios:back", "frame_pack")
+    rm.item_tag("curios:belt", *constants.SACKS)
+
+    rm.item_tag("curios:back", *constants.PACKS)
 
     # rm.data("curios/slots/belt", {})
     rm.data("curios/entities/belt", {

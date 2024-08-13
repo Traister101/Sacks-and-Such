@@ -3,9 +3,14 @@ SACKS = [
     "leather_sack",
     "burlap_sack",
     "ore_sack",
-    "seed_pouch",
+    "seed_pouch"
+]
+
+PACKS = [
     "frame_pack"
 ]
+
+CONTAINERS = SACKS.append(PACKS)
 
 DEFAULT_LANG = {
     # Keybinds
