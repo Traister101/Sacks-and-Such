@@ -29,7 +29,7 @@ public class SackHandler extends ExtendedSlotCapacityHandler {
 
 	@Override
 	public int getStackLimit(final int slotIndex, final ItemStack itemStack) {
-		if (type == DefaultSacks.KNAPSACK) return itemStack.getMaxStackSize();
+		if (type == DefaultSacks.FRAME_PACK) return itemStack.getMaxStackSize();
 		return super.getStackLimit(slotIndex, itemStack);
 	}
 
@@ -51,13 +51,13 @@ public class SackHandler extends ExtendedSlotCapacityHandler {
 	public boolean isItemValid(final int slotIndex, final ItemStack itemStack) {
 		if (itemStack.is(SNSTags.Items.PREVENTED_IN_SACKS)) return false;
 
-		if (type == DefaultSacks.FARMER_SACK && !itemStack.is(Items.ALLOWED_IN_FARMER_SACK)) return false;
+		if (type == DefaultSacks.SEED_POUCH && !itemStack.is(Items.ALLOWED_IN_SEED_POUCH)) return false;
 
 		if (!SNSConfig.SERVER.allAllowFood.get() && itemStack.is(Items.TFC_FOODS)) return false;
 
-		if (type == DefaultSacks.MINER_SACK && itemStack.is(Items.TFC_ORE)) return true;
+		if (type == DefaultSacks.ORE_SACK && itemStack.is(Items.TFC_ORE)) return true;
 
-		if (!SNSConfig.SERVER.allAllowOre.get() && type != DefaultSacks.MINER_SACK && itemStack.is(Items.TFC_ORE)) return false;
+		if (!SNSConfig.SERVER.allAllowOre.get() && type != DefaultSacks.ORE_SACK && itemStack.is(Items.TFC_ORE)) return false;
 
 		final IItemSize stackSize = ItemSizeManager.get(itemStack);
 		final Size size = stackSize.getSize(itemStack);

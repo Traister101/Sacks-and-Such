@@ -2,19 +2,16 @@
   "__comment__": "This file was automatically created by mcresources",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-	"FFF",
-	"FSF",
-	"FFF"
+    "RRR",
+    "R R",
+    "RRR"
   ],
   "key": {
-	"F": {
-	  "item": "sns:reinforced_fabric"
-	},
-	"S": {
-	  "tag": "forge:sheets/steel"
-	}
+    "R": {
+      "tag": "forge:rods/steel"
+    }
   },
   "result": {
-	"item": "sns:steel_reinforced_fabric"
+    "item": "sns:pack_frame"
   }
 }

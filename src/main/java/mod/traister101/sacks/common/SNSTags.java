@@ -32,7 +32,7 @@ public final class SNSTags {
 		 */
 		public static final TagKey<Item> PREVENTED_IN_SACKS = create("prevented_in_sacks");
 
-		public static final TagKey<Item> ALLOWED_IN_FARMER_SACK = create("allowed_in_farmer_sack");
+		public static final TagKey<Item> ALLOWED_IN_SEED_POUCH = create("allowed_in_seed_pouch");
 
 		private static TagKey<Item> fromTFC(final String name) {
 			return TagKey.create(Registries.ITEM, Helpers.identifier(name));

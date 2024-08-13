@@ -2,15 +2,15 @@
   "__comment__": "This file was automatically created by mcresources",
   "sns.key.pickup": "Toggle Sack Pickup",
   "sns.key.void": "Toggle Sack Voiding",
-  "sns.creative_tab.sacks": "Sacks",
+  "sns.creative_tab.sacks": "Sacks n Such",
   "item.sns.unfinished_leather_sack": "Unfinished Leather Sack",
   "item.sns.reinforced_fiber": "Reinforced Fiber",
   "item.sns.reinforced_fabric": "Reinforced Fabric",
-  "item.sns.steel_reinforced_fabric": "Steel Reinforced Fabric",
-  "item.sns.thatch_sack": "Thatch Sack",
+  "item.sns.pack_frame": "Pack Frame",
+  "item.sns.thatch_basket": "Thatch Basket",
   "item.sns.leather_sack": "Leather Sack",
   "item.sns.burlap_sack": "Burlap Sack",
-  "item.sns.miner_sack": "Miner Sack",
-  "item.sns.farmer_sack": "Farmer Sack",
-  "item.sns.knapsack": "Knapsack"
+  "item.sns.ore_sack": "Ore Sack",
+  "item.sns.seed_pouch": "Seed Pouch",
+  "item.sns.frame_pack": "Frame Pack"
 }

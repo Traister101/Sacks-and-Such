@@ -2,19 +2,19 @@
   "__comment__": "This file was automatically created by mcresources",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-	"JJJ",
-	"SSS",
-	"JJJ"
+    "JJJ",
+    "SSS",
+    "JJJ"
   ],
   "key": {
-	"J": {
-	  "item": "tfc:jute_fiber"
-	},
-	"S": {
-	  "tag": "forge:string"
-	}
+    "J": {
+      "item": "tfc:jute_fiber"
+    },
+    "S": {
+      "tag": "forge:string"
+    }
   },
   "result": {
-	"item": "sns:reinforced_fiber"
+    "item": "sns:reinforced_fiber"
   }
 }

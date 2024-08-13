@@ -10,12 +10,12 @@ import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
 public final class ServerConfig {
 
-	public final SackConfig thatchSack;
+	public final SackConfig thatchBasket;
 	public final SackConfig leatherSack;
 	public final SackConfig burlapSack;
-	public final SackConfig minerSack;
-	public final SackConfig farmerSack;
-	public final SackConfig knapsack;
+	public final SackConfig oreSack;
+	public final SackConfig seedPouch;
+	public final SackConfig framePack;
 	public final BooleanValue doPickup;
 	public final BooleanValue doVoiding;
 	public final BooleanValue allPickup;
@@ -28,12 +28,12 @@ public final class ServerConfig {
 
 		builder.push("Sack Config");
 
-		thatchSack = buildSackConfig(builder, "Thatch Sack", true, true, 4, 32, Size.SMALL);
+		thatchBasket = buildSackConfig(builder, "Thatch Basket", true, true, 4, 32, Size.SMALL);
 		leatherSack = buildSackConfig(builder, "Leather Sack", true, true, 4, 64, Size.NORMAL);
 		burlapSack = buildSackConfig(builder, "Burlap Sack", true, false, 8, 48, Size.SMALL);
-		minerSack = buildSackConfig(builder, "Miner Sack", true, false, 1, 512, Size.SMALL);
-		farmerSack = buildSackConfig(builder, "Farmer Sack", true, false, 27, 64, Size.VERY_SMALL);
-		knapsack = buildSackConfig(builder, "Knapsack", false, false, 18, 64, Size.LARGE);
+		oreSack = buildSackConfig(builder, "Ore Sack", true, false, 1, 512, Size.SMALL);
+		seedPouch = buildSackConfig(builder, "Seed Pouch", true, false, 27, 64, Size.VERY_SMALL);
+		framePack = buildSackConfig(builder, "Knapsack", false, false, 18, 64, Size.LARGE);
 
 		builder.pop();
 

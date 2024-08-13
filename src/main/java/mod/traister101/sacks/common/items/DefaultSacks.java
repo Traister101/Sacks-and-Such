@@ -12,12 +12,12 @@ import java.util.Locale;
 
 public enum DefaultSacks implements SackType {
 
-	THATCH_SACK(SNSConfig.SERVER.thatchSack),
+	THATCH_BASKET(SNSConfig.SERVER.thatchBasket),
 	LEATHER_SACK(SNSConfig.SERVER.leatherSack),
 	BURLAP_SACK(SNSConfig.SERVER.burlapSack),
-	MINER_SACK(SNSConfig.SERVER.minerSack),
-	FARMER_SACK(SNSConfig.SERVER.farmerSack),
-	KNAPSACK(SNSConfig.SERVER.knapsack);
+	ORE_SACK(SNSConfig.SERVER.oreSack),
+	SEED_POUCH(SNSConfig.SERVER.seedPouch),
+	FRAME_PACK(SNSConfig.SERVER.framePack);
 
 	private final SackConfig sackConfig;
 
@@ -52,7 +52,7 @@ public enum DefaultSacks implements SackType {
 
 	@Override
 	public Size getSize(final ItemStack itemStack) {
-		if (this == KNAPSACK) return Size.HUGE;
+		if (this == FRAME_PACK) return Size.HUGE;
 		return Size.NORMAL;
 	}
 

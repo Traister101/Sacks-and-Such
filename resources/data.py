@@ -28,7 +28,7 @@ def generate(rm: ResourceManager):
     item_size(rm, "unfinished_leather_sack", "sns:unfinished_leather_sack", Size.small, Weight.medium)
     item_size(rm, "reinforced_fiber", "sns:reinforced_fiber", Size.small, Weight.very_light)
     item_size(rm, "reinforced_fabric", "sns:reinforced_fabric", Size.small, Weight.very_light)
-    item_size(rm, "steel_reinforced_fabric", "sns:steel_reinforced_fabric", Size.large, Weight.medium)
+    item_size(rm, "pack_frame", "sns:pack_frame", Size.large, Weight.medium)
 
     rm.item_tag("curios:belt", *constants.SACKS)
 

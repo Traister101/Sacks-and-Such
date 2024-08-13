@@ -1,10 +1,10 @@
 SACKS = [
-    "thatch_sack",
+    "thatch_basket",
     "leather_sack",
     "burlap_sack",
-    "miner_sack",
-    "farmer_sack",
-    "knapsack"
+    "ore_sack",
+    "seed_pouch",
+    "frame_pack"
 ]
 
 DEFAULT_LANG = {
@@ -12,5 +12,5 @@ DEFAULT_LANG = {
     "sns.key.pickup": "Toggle Sack Pickup",
     "sns.key.void": "Toggle Sack Voiding",
     # Creative Tab
-    "sns.creative_tab.sacks": "Sacks"
+    "sns.creative_tab.sacks": "Sacks n Such"
 }

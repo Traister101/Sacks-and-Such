@@ -2,11 +2,11 @@
   "__comment__": "This file was automatically created by mcresources",
   "replace": false,
   "values": [
-	"sns:thatch_sack",
-	"sns:leather_sack",
-	"sns:burlap_sack",
-	"sns:miner_sack",
-	"sns:farmer_sack",
-	"sns:knapsack"
+    "sns:thatch_basket",
+    "sns:leather_sack",
+    "sns:burlap_sack",
+    "sns:ore_sack",
+    "sns:seed_pouch",
+    "sns:frame_pack"
   ]
 }

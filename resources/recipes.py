@@ -9,33 +9,37 @@ def generate(rm: ResourceManager):
                        {"J": "tfc:jute_fiber", "S": "#forge:string"},
                        "sns:reinforced_fiber").with_advancement("tfc:jute_fiber")
 
-    rm.crafting_shaped("crafting/steel_reinforced_fabric", ["FFF", "FSF", "FFF"],
-                       {"F": "sns:reinforced_fabric", "S": "#forge:sheets/steel"},
-                       "sns:steel_reinforced_fabric").with_advancement("#forge:ingots/steel")
+    rm.crafting_shaped("crafting/pack_frame", ["RRR", "R R", "RRR"],
+                       {"R": "#forge:rods/steel"},
+                       "sns:pack_frame").with_advancement("#forge:ingots/steel")
 
     # Sack recipes
-    damage_shaped(rm, "crafting/thatch_sack", ["JJJ", "T T", " TK"],
+    damage_shaped(rm, "crafting/thatch_basket", ["JJJ", "T T", " TK"],
                   {"J": "tfc:jute_fiber", "T": "tfc:thatch", "K": "#tfc:knives"},
-                  "sns:thatch_sack").with_advancement("tfc:jute_fiber")
+                  "sns:thatch_basket").with_advancement("tfc:jute_fiber")
 
-    damage_shaped(rm, "crafting/leather_sack", ["JJJ", "LUL", " LK"],
+    damage_shaped(rm, "crafting/leather_sack", ["JJJ", "LUL", " LN"],
                   {"J": "tfc:jute_fiber", "U": "sns:unfinished_leather_sack", "L": "#forge:leather",
-                   "K": "#tfc:knives"},
+                   "N": "#tfc:sewing_needles"},
                   "sns:leather_sack").with_advancement("sns:unfinished_leather_sack")
 
-    damage_shaped(rm, "crafting/burlap_sack", ["JJJ", "B B", " BK"],
-                  {"J": "tfc:jute_fiber", "B": "tfc:burlap_cloth", "K": "#tfc:knives"},
+    damage_shaped(rm, "crafting/burlap_sack", ["JJJ", "B B", " BN"],
+                  {"J": "tfc:jute_fiber", "B": "tfc:burlap_cloth", "N": "#tfc:sewing_needles"},
                   "sns:burlap_sack").with_advancement("tfc:burlap_cloth")
 
-    damage_shaped(rm, "crafting/farmer_sack", ["RRR", "LUL", " LK"],
-                  {"R": "sns:reinforced_fiber", "L": "#forge:leather", "U": "sns:unfinished_leather_sack",
-                   "K": "#tfc:knives"},
-                  "sns:farmer_sack").with_advancement("sns:unfinished_leather_sack")
+    damage_shaped(rm, "crafting/seed_pouch", ["SSS", "WUW", "  N"],
+                  {"S": "#forge:string", "W": "tfc:wool_cloth", "U": "sns:burlap_sack",
+                   "N": "#tfc:sewing_needles"},
+                  "sns:seed_pouch").with_advancement("sns:burlap_sack")
 
-    damage_shaped(rm, "crafting/knapsack", ["RFR", "FCF", "RFS"],
-                  {"R": "sns:reinforced_fiber", "F": "sns:steel_reinforced_fabric", "C": "#forge:chests",
-                   "S": "minecraft:stick"},
-                  "sns:knapsack").with_advancement("sns:steel_reinforced_fabric")
+    damage_shaped(rm, "crafting/ore_sack", ["RRR", "LUL", " LN"],
+                  {"R": "sns:reinforced_fiber", "L": "#forge:leather", "U": "sns:burlap_sack",
+                   "N": "#tfc:sewing_needles"},
+                  "sns:ore_sack").with_advancement("sns:unfinished_leather_sack")
+
+    damage_shaped(rm, "crafting/frame_pack", ["RFR", "LLL", " FN"],
+                  {"R": "sns:reinforced_fiber", "F": "sns:pack_frame", "L": "sns:unfinished_leather_sack", "N": "#tfc:sewing_needles"},
+                  "sns:frame_pack").with_advancement("sns:pack_frame")
 
     # Leather knapping recipes
     leather_knapping(rm, "knapping/leather/unfinished_leather_sack", [" XXX ", "XXXXX", "XXXXX", "XXXXX", " XXX "],

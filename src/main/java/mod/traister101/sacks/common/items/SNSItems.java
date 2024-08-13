@@ -21,7 +21,7 @@ public final class SNSItems {
 	public static final RegistryObject<Item> UNFINISHED_LEATHER_SACK = registerSimple("unfinished_leather_sack");
 	public static final RegistryObject<Item> REINFORCED_FIBER = registerSimple("reinforced_fiber");
 	public static final RegistryObject<Item> REINFORCED_FABRIC = registerSimple("reinforced_fabric");
-	public static final RegistryObject<Item> STEEL_REINFORCED_FABRIC = registerSimple("steel_reinforced_fabric");
+    public static final RegistryObject<Item> PACK_FRAME = registerSimple("pack_frame");
 
 	/**
 	 * All our sacks
