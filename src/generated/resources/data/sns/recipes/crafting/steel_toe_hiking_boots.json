@@ -1,0 +1,39 @@
+{
+  "type": "tfc:advanced_shaped_crafting",
+  "category": "misc",
+  "input_column": 1,
+  "input_row": 0,
+  "key": {
+    "B": {
+      "item": "minecraft:leather_boots"
+    },
+    "L": {
+      "item": "sns:bound_leather_strip"
+    },
+    "R": {
+      "item": "sns:reinforced_fiber"
+    },
+    "T": {
+	  "tag": "forge:sheets/steel"
+    },
+    "W": {
+      "item": "sns:buckle"
+    }
+  },
+  "pattern": [
+    "RWR",
+    "LLL",
+    "TBT"
+  ],
+  "result": {
+    "modifiers": [
+      {
+        "type": "tfc:copy_forging_bonus"
+      }
+    ],
+    "stack": {
+      "item": "sns:steel_toe_hiking_boots"
+    }
+  },
+  "show_notification": true
+}

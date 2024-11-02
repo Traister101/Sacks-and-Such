@@ -1,8 +1,10 @@
 package mod.traister101.sns.common.menu;
 
-import mod.trasiter101.esc.common.capability.ExtendedSlotCapacityHandler;
+import com.google.common.base.Supplier;
+import mod.traister101.sns.common.items.SNSItems;
 import mod.trasiter101.esc.common.menu.ExtendedSlotCapacityMenu;
 import mod.trasiter101.esc.common.slot.ExtendedSlotItemHandler;
+import top.theillusivec4.curios.api.*;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
@@ -14,47 +16,134 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 
+	public static final int OFFHAND_MAGIC_INDEX = -1;
 	private static final Set<ClickType> ILLEGAL_ITEM_CLICKS = EnumSet.of(ClickType.QUICK_MOVE, ClickType.PICKUP, ClickType.THROW, ClickType.SWAP);
-	protected final Player player;
-	protected final InteractionHand hand;
+	/**
+	 * The stack supplier for this menus container item stack
+	 */
+	public final Supplier<ItemStack> containerStackSupplier;
 	/**
 	 * Index in the hotbar. Between [0, 9), or -1 if this is the offhand
 	 */
-	protected final int heldItemIndex;
-	protected final IItemHandler handler;
+	protected final int hotbarIndex;
 	/**
 	 * Index into the slot for the hotbar slot. Hotbar is at the end of the inventory.
 	 */
-	protected int itemIndex;
+	protected int containerItemIndex;
 
-	public ContainerItemMenu(final int windowId, final Inventory inventory, final IItemHandler handler, final InteractionHand hand,
-			final int hotbarSlot) {
-		super(SNSMenus.SACK_MENU.get(), windowId, handler.getSlots());
-		this.player = inventory.player;
-		this.hand = hand;
-		this.heldItemIndex = hotbarSlot;
-		this.handler = handler;
+	private ContainerItemMenu(final int windowId, final Inventory inventory, final IItemHandler handler, final InteractionHand hand) {
+		super(SNSMenus.CONTAINER_ITEM_MENU.get(), windowId, handler.getSlots());
 
-		if (this.hand == InteractionHand.MAIN_HAND) {
-			this.itemIndex = containerSlots + heldItemIndex + 27;
+		if (hand == InteractionHand.MAIN_HAND) {
+			this.hotbarIndex = inventory.selected;
+			this.containerItemIndex = containerSlots + inventory.selected + 27;
 		} else {
-			this.itemIndex = -100;
+			this.hotbarIndex = OFFHAND_MAGIC_INDEX;
+			this.containerItemIndex = Integer.MIN_VALUE;
 		}
 
-		this.addContainerSlots();
+		this.containerStackSupplier = () -> hand == InteractionHand.MAIN_HAND ?
+				slots.get(containerItemIndex).getItem() :
+				inventory.player.getOffhandItem();
+
+		this.addContainerSlots(handler);
 		this.addPlayerInventorySlots(inventory);
 	}
 
-	static ContainerItemMenu fromNetwork(final int windowId, final Inventory inventory, final FriendlyByteBuf byteBuf) {
-		final InteractionHand hand = byteBuf.readBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+	private ContainerItemMenu(final int windowId, final Inventory inventory, final IItemHandler handler, final int inventorySlotIndex) {
+		super(SNSMenus.CONTAINER_ITEM_MENU.get(), windowId, handler.getSlots());
+		this.hotbarIndex = Integer.MIN_VALUE;
+		this.containerItemIndex = containerSlots + inventorySlotIndex - 9;
+		this.containerStackSupplier = () -> inventory.getItem(inventorySlotIndex);
 
-		final ItemStack heldStack = inventory.player.getItemInHand(hand);
-		final IItemHandler itemHandler = heldStack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-				.orElse(new ExtendedSlotCapacityHandler(byteBuf.readInt(), byteBuf.readInt()));
-		return new ContainerItemMenu(windowId, inventory, itemHandler, hand, hand == InteractionHand.OFF_HAND ? -1 : inventory.selected);
+		this.addContainerSlots(handler);
+		this.addPlayerInventorySlots(inventory);
+	}
+
+	private ContainerItemMenu(final int windowId, final Inventory inventory, final IItemHandler handler,
+			final Supplier<ItemStack> containerStackSupplier) {
+		super(SNSMenus.CONTAINER_ITEM_MENU.get(), windowId, handler.getSlots());
+		this.hotbarIndex = Integer.MIN_VALUE;
+		this.containerItemIndex = Integer.MIN_VALUE;
+		this.containerStackSupplier = containerStackSupplier;
+
+		this.addContainerSlots(handler);
+		this.addPlayerInventorySlots(inventory);
+	}
+
+	public static Consumer<FriendlyByteBuf> writeCurios(final String identifier, final int index) {
+		return friendlyByteBuf -> {
+			friendlyByteBuf.writeEnum(Type.WORN);
+			friendlyByteBuf.writeUtf(identifier);
+			friendlyByteBuf.writeVarInt(index);
+		};
+	}
+
+	public static Consumer<FriendlyByteBuf> writeInventory(final int slotIndex) {
+		return friendlyByteBuf -> {
+			friendlyByteBuf.writeEnum(Type.INVENTORY);
+			friendlyByteBuf.writeVarInt(slotIndex);
+		};
+	}
+
+	public static Consumer<FriendlyByteBuf> writeHeld(final InteractionHand hand) {
+		return friendlyByteBuf -> {
+			friendlyByteBuf.writeEnum(Type.HELD);
+			friendlyByteBuf.writeBoolean(hand == InteractionHand.MAIN_HAND);
+		};
+	}
+
+	static ContainerItemMenu fromNetwork(final int windowId, final Inventory inventory, final FriendlyByteBuf byteBuf) {
+		return switch (byteBuf.readEnum(Type.class)) {
+			case HELD -> {
+				final InteractionHand hand = byteBuf.readBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+
+				final ItemStack heldStack = inventory.player.getItemInHand(hand);
+				final IItemHandler itemHandler = heldStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+
+				yield forHeld(windowId, inventory, itemHandler, hand);
+			}
+
+			case INVENTORY -> {
+				final int slotIndex = byteBuf.readVarInt();
+				final IItemHandler itemHandler = inventory.getItem(slotIndex).getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+
+				yield forInventory(windowId, inventory, itemHandler, slotIndex);
+			}
+
+			case WORN -> {
+				final var curiosItemHandler = CuriosApi.getCuriosInventory(inventory.player).resolve().orElseThrow();
+
+				final SlotResult slotResult = curiosItemHandler.findFirstCurio(SNSItems.FRAME_PACK.get()).orElseThrow();
+				final ItemStack stack = slotResult.stack();
+
+				final var itemHandler = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+
+				yield forUnIndexableStack(windowId, inventory, itemHandler, slotResult::stack);
+			}
+		};
+	}
+
+	public static ContainerItemMenu forHeld(final int windowId, final Inventory inventory, final IItemHandler handler, final InteractionHand hand) {
+		return new ContainerItemMenu(windowId, inventory, handler, hand);
+	}
+
+	public static ContainerItemMenu forInventory(final int windowId, final Inventory inventory, final IItemHandler handler,
+			final int inventorySlotIndex) {
+		return new ContainerItemMenu(windowId, inventory, handler, inventorySlotIndex);
+	}
+
+	public static ContainerItemMenu forUnIndexableStack(final int windowId, final Inventory inventory, final IItemHandler handler,
+			final Supplier<ItemStack> containerStackSupplier) {
+		return new ContainerItemMenu(windowId, inventory, handler, containerStackSupplier);
+	}
+
+	public int getContainerSlots() {
+		return containerSlots;
 	}
 
 	@Override
@@ -84,32 +173,36 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 		// the slot is the item index, and it's an illegal action (like, swapping the items)
 		// the hotbar item is being swapped out
 		// the action is "pickup all" (this ignores every slot, so we cannot allow it)
-		if (slotIndex == itemIndex && ILLEGAL_ITEM_CLICKS.contains(clickType)) return;
-		if (mouseButtom == heldItemIndex && clickType == ClickType.SWAP) return;
-		if (mouseButtom == 40 && clickType == ClickType.SWAP && hand == InteractionHand.OFF_HAND) return;
+		if (slotIndex == containerItemIndex && ILLEGAL_ITEM_CLICKS.contains(clickType)) return;
+		if (mouseButtom == hotbarIndex && clickType == ClickType.SWAP) return;
+		if (mouseButtom == Inventory.SLOT_OFFHAND && clickType == ClickType.SWAP && hotbarIndex == OFFHAND_MAGIC_INDEX) return;
 
 		super.clicked(slotIndex, mouseButtom, clickType, player);
 	}
 
 	@Override
 	public boolean stillValid(final Player player) {
-		return !(hand == InteractionHand.MAIN_HAND ? slots.get(itemIndex).getItem() : this.player.getOffhandItem()).isEmpty();
+		return !getContainerStack().isEmpty();
+	}
+
+	public final ItemStack getContainerStack() {
+		return containerStackSupplier.get();
 	}
 
 	/**
 	 * Adds the slots for this container
 	 */
-	protected void addContainerSlots() {
+	protected void addContainerSlots(final IItemHandler handler) {
 		switch (containerSlots) {
-			case 1 -> addSlots(1, 1, 80, 32);
-			case 4 -> addSlots(2, 2, 71, 23);
-			case 8 -> addSlots(2, 4, 53, 23);
-			case 18 -> addSlots(2, 9, 8, 23);
+			case 1 -> addSlots(handler, 1, 1, 80, 32);
+			case 4 -> addSlots(handler, 2, 2, 71, 23);
+			case 8 -> addSlots(handler, 2, 4, 53, 23);
+			case 18 -> addSlots(handler, 2, 9, 8, 23);
 			default -> {
 				// We want to round up, integer math rounds down
 				final int rows = Math.round((float) containerSlots / 9);
 				final int columns = containerSlots / rows;
-				addSlots(rows, columns);
+				addSlots(handler, rows, columns);
 			}
 		}
 	}
@@ -122,7 +215,7 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 	 * @param startX The X starting position
 	 * @param startY The Y starting position
 	 */
-	private void addSlots(final int rows, final int columns, final int startX, final int startY) {
+	private void addSlots(final IItemHandler handler, final int rows, final int columns, final int startX, final int startY) {
 		assert rows != 0 : "Cannot have zero rows of slots";
 		assert columns != 0 : "Cannot have zero columns of slots";
 
@@ -142,9 +235,9 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 	 * @param rows How many rows of slots
 	 * @param columns How many columns of slots
 	 */
-	private void addSlots(final int rows, final int columns) {
+	private void addSlots(final IItemHandler handler, final int rows, final int columns) {
 		if (rows > 1) {
-			addSlots(rows - 1, 9, 8, 18);
+			addSlots(handler, rows - 1, 9, 8, 18);
 		}
 
 		for (int column = 0; column < columns; column++) {
@@ -170,5 +263,11 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 		for (int k = 0; k < 9; k++) {
 			addSlot(new Slot(inventory, k, 8 + k * 18, 142));
 		}
+	}
+
+	enum Type {
+		HELD,
+		INVENTORY,
+		WORN
 	}
 }

@@ -1,6 +1,7 @@
 package mod.traister101.sns.common.capability;
 
 import mod.traister101.sns.common.SNSItemTags;
+import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.util.ContainerType;
 import mod.trasiter101.esc.common.capability.ExtendedSlotCapacityHandler;
 import net.dries007.tfc.common.capabilities.size.*;
@@ -8,23 +9,31 @@ import net.dries007.tfc.common.capabilities.size.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ContainerItemHandler extends ExtendedSlotCapacityHandler {
+import org.jetbrains.annotations.Nullable;
+import java.util.*;
+import java.util.function.IntConsumer;
+
+public class ContainerItemHandler extends ExtendedSlotCapacityHandler implements IVoidingItemHandler {
 
 	public final ContainerType type;
+	protected final ItemStack handlerStack;
+	private final Set<Integer> voidSlots = new HashSet<>();
 	@Nullable
 	private Weight cachedWeight;
 
-	public ContainerItemHandler(final ContainerType type) {
+	public ContainerItemHandler(final ContainerType type, final ItemStack handlerStack) {
 		super(type.getSlotCount(), type.getSlotCapacity());
 		this.type = type;
+		this.handlerStack = handlerStack;
 	}
 
 	@Override
 	public CompoundTag serializeNBT() {
 		final CompoundTag compoundTag = super.serializeNBT();
 		compoundTag.putByte("weight", (byte) (cachedWeight != null ? cachedWeight.ordinal() : -1));
+		compoundTag.putIntArray("voidSlots", voidSlots.stream().mapToInt(Integer::intValue).toArray());
 		return compoundTag;
 	}
 
@@ -33,6 +42,23 @@ public class ContainerItemHandler extends ExtendedSlotCapacityHandler {
 		super.deserializeNBT(compoundTag);
 		final byte weight = compoundTag.getByte("weight");
 		if (weight != -1) cachedWeight = Weight.valueOf(weight);
+		voidSlots.clear();
+		voidSlots.addAll(Arrays.stream(compoundTag.getIntArray("voidSlots")).boxed().toList());
+	}
+
+	@Override
+	public ItemStack insertItem(final int slotIndex, final ItemStack insertStack, final boolean simulate) {
+		final ItemStack remainder = super.insertItem(slotIndex, insertStack, simulate);
+
+		if (remainder.isEmpty()) return ItemStack.EMPTY;
+
+		if (!SNSConfig.SERVER.doVoiding.get()) return remainder;
+
+		if (!type.doesVoiding()) return remainder;
+
+		if (voidSlots.contains(slotIndex) && ItemHandlerHelper.canItemStacksStack(insertStack, getStackInSlot(slotIndex))) return ItemStack.EMPTY;
+
+		return remainder;
 	}
 
 	@Override
@@ -95,5 +121,26 @@ public class ContainerItemHandler extends ExtendedSlotCapacityHandler {
 		}
 
 		return cachedWeight = Weight.VERY_LIGHT;
+	}
+
+	@Override
+	public void forEachVoidSlot(final IntConsumer consumer) {
+		voidSlots.forEach(consumer::accept);
+	}
+
+	@Override
+	public boolean isVoidingEnabled() {
+		return !voidSlots.isEmpty();
+	}
+
+	@Override
+	public void toggleVoidSlot(final int slotIndex) {
+		if (!type.doesVoiding()) return;
+
+		if (voidSlots.contains(slotIndex)) {
+			voidSlots.remove(slotIndex);
+		} else {
+			voidSlots.add(slotIndex);
+		}
 	}
 }

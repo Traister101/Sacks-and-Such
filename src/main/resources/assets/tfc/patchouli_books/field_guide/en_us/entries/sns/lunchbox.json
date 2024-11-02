@@ -1,0 +1,17 @@
+{
+  "name": "The Lunchbox",
+  "category": "tfc:sacks_n_such",
+  "icon": "sns:lunchbox",
+  "pages": [
+	{
+	  "type": "patchouli:spotlight",
+	  "item": "sns:lunchbox",
+	  "text": "The $(item)Lunchbox$() is one of the more intresting containers this mod adds. As you might expect from the name these hold food items and even allow you to consume food out of them."
+	},
+	{
+	  "type": "patchouli:text",
+	  "text": "For modpack authors or simply people wishing to add extra foods see the item tag $(bold)sns:lunchbox_food$() most addons should be automatically supported"
+	}
+  ],
+  "read_by_default": true
+}

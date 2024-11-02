@@ -218,6 +218,7 @@ dependencies {
     })
 
     // Patchouli
+    compileOnly(fg.deobf("vazkii.patchouli:Patchouli:$minecraftVersion-$patchouliVersion-FORGE:api"))
     runtimeOnly(fg.deobf("vazkii.patchouli:Patchouli:$minecraftVersion-$patchouliVersion-FORGE"))
 
     // Jade

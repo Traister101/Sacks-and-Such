@@ -3,6 +3,7 @@ package mod.traister101.sns.datagen.providers.tags;
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.SNSItemTags;
 import mod.traister101.sns.common.items.SNSItems;
+import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.*;
 import top.theillusivec4.curios.api.CuriosApi;
 
@@ -29,8 +30,7 @@ public class BuiltInItemTags extends ItemTagsProvider {
 	@Override
 	protected void addTags(final Provider provider) {
 		tag(SNSItemTags.PREVENTED_IN_ITEM_CONTAINERS).add(SNSItems.STRAW_BASKET.get(), SNSItems.LEATHER_SACK.get(), SNSItems.BURLAP_SACK.get(),
-				SNSItems.ORE_SACK.get(), SNSItems.SEED_POUCH.get(),
-				SNSItems.FRAME_PACK.get()/*TODO add back when content done, SNSItems.LUNCHBOX.get()*/);
+				SNSItems.ORE_SACK.get(), SNSItems.SEED_POUCH.get(), SNSItems.FRAME_PACK.get(), SNSItems.LUNCHBOX.get());
 		tag(SNSItemTags.ALLOWED_IN_SEED_POUCH).addTag(SNSItemTags.TFC_SEEDS);
 		tag(SNSItemTags.ALLOWED_IN_ORE_SACK).addTag(SNSItemTags.TFC_SMALL_ORE_PIECES).addTag(SNSItemTags.TFC_ORE_PIECES);
 		tag(SNSItemTags.LUNCHBOX_FOOD).add(TFCItems.FOOD.get(Food.BARLEY_BREAD_SANDWICH).get(),
@@ -39,12 +39,18 @@ public class BuiltInItemTags extends ItemTagsProvider {
 						TFCItems.FOOD.get(Food.OAT_BREAD_JAM_SANDWICH).get(), TFCItems.FOOD.get(Food.RYE_BREAD_SANDWICH).get(),
 						TFCItems.FOOD.get(Food.RYE_BREAD_JAM_SANDWICH).get(), TFCItems.FOOD.get(Food.RICE_BREAD_SANDWICH).get(),
 						TFCItems.FOOD.get(Food.RICE_BREAD_JAM_SANDWICH).get(), TFCItems.FOOD.get(Food.WHEAT_BREAD_SANDWICH).get(),
-						TFCItems.FOOD.get(Food.WHEAT_BREAD_JAM_SANDWICH).get())
+						TFCItems.FOOD.get(Food.WHEAT_BREAD_JAM_SANDWICH).get(), TFCItems.FOOD.get(Food.COOKED_EGG).get(),
+						TFCItems.FOOD.get(Food.BOILED_EGG).get())
+				.addTag(SNSItemTags.TFC_SOUPS)
+				.addTag(SNSItemTags.TFC_SALADS)
 				.addTag(SNSItemTags.TFC_BREADS)
 				.addTag(SNSItemTags.TFC_COOKED_MEATS)
 				.addTag(SNSItemTags.TFC_DAIRY)
 				.addTag(SNSItemTags.TFC_FIRUITS)
 				.addTag(SNSItemTags.TFC_VEGETABLES);
+
+		tag(TFCTags.Items.USABLE_ON_TOOL_RACK).add(SNSItems.STRAW_BASKET.get(), SNSItems.LEATHER_SACK.get(), SNSItems.BURLAP_SACK.get(),
+				SNSItems.ORE_SACK.get(), SNSItems.SEED_POUCH.get(), SNSItems.FRAME_PACK.get(), SNSItems.LUNCHBOX.get());
 
 		// Curios
 		tag(TagKey.create(Registries.ITEM, new ResourceLocation(CuriosApi.MODID, "belt"))).add(SNSItems.LEATHER_SACK.get(),

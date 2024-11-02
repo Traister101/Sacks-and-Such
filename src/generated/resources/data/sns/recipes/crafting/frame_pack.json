@@ -1,30 +1,30 @@
 {
   "type": "tfc:damage_inputs_shaped_crafting",
   "recipe": {
-	"type": "minecraft:crafting_shaped",
-	"category": "misc",
-	"key": {
-	  "F": {
-		"item": "sns:reinforced_fabric"
-	  },
-	  "L": {
-		"tag": "forge:leather"
-	  },
-	  "N": {
-		"tag": "tfc:sewing_needles"
-	  },
-	  "P": {
-		"item": "sns:pack_frame"
-	  }
-	},
-	"pattern": [
-	  " F ",
-	  "LPL",
-	  " FN"
-	],
-	"result": {
-	  "item": "sns:frame_pack"
-	},
-	"show_notification": true
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+      "F": {
+        "item": "sns:reinforced_fabric"
+      },
+      "L": {
+        "item": "sns:bound_leather_strip"
+      },
+      "N": {
+        "tag": "tfc:sewing_needles"
+      },
+      "P": {
+        "item": "sns:pack_frame"
+      }
+    },
+    "pattern": [
+      "LFL",
+      "LPL",
+      " FN"
+    ],
+    "result": {
+      "item": "sns:frame_pack"
+    },
+    "show_notification": true
   }
 }

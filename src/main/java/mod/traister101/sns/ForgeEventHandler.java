@@ -3,7 +3,7 @@ package mod.traister101.sns;
 import mod.traister101.sns.util.handlers.PickupHandler;
 
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.EventPriority;
 
 import lombok.experimental.UtilityClass;
 
@@ -11,9 +11,10 @@ import lombok.experimental.UtilityClass;
 public final class ForgeEventHandler {
 
 	public static void init() {
-		final IEventBus eventBus = MinecraftForge.EVENT_BUS;
+		final var eventBus = MinecraftForge.EVENT_BUS;
 
 		eventBus.addListener(PickupHandler::onPickupItem);
-		eventBus.addListener(PickupHandler::onBlockActivated);
+		// We want to handle this last to ensure we don't trample on anybody else
+		eventBus.addListener(EventPriority.LOWEST, PickupHandler::onGroundBlockInteract);
 	}
 }

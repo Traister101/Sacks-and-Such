@@ -1,0 +1,85 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+	"has_bound_leather_strip": {
+	  "conditions": {
+		"items": [
+		  {
+			"items": [
+			  "sns:bound_leather_strip"
+			]
+		  }
+		]
+	  },
+	  "trigger": "minecraft:inventory_changed"
+	},
+	"has_buckle": {
+	  "conditions": {
+		"items": [
+		  {
+			"items": [
+			  "sns:buckle"
+			]
+		  }
+		]
+	  },
+	  "trigger": "minecraft:inventory_changed"
+	},
+	"has_double_steel_sheet": {
+	  "conditions": {
+		"items": [
+		  {
+			"tag": "forge:sheets/black_steel"
+		  }
+		]
+	  },
+	  "trigger": "minecraft:inventory_changed"
+	},
+	"has_leather_boots": {
+	  "conditions": {
+		"items": [
+		  {
+			"items": [
+			  "minecraft:leather_boots"
+			]
+		  }
+		]
+	  },
+	  "trigger": "minecraft:inventory_changed"
+	},
+	"has_reinforced_fiber": {
+	  "conditions": {
+		"items": [
+		  {
+			"items": [
+			  "sns:reinforced_fiber"
+			]
+		  }
+		]
+	  },
+	  "trigger": "minecraft:inventory_changed"
+	},
+	"has_the_recipe": {
+	  "conditions": {
+		"recipe": "sns:crafting/black_steel_toe_hiking_boots"
+	  },
+	  "trigger": "minecraft:recipe_unlocked"
+	}
+  },
+  "requirements": [
+	[
+	  "has_reinforced_fiber",
+	  "has_buckle",
+	  "has_bound_leather_strip",
+	  "has_double_steel_sheet",
+	  "has_leather_boots",
+	  "has_the_recipe"
+	]
+  ],
+  "rewards": {
+	"recipes": [
+	  "sns:crafting/black_steel_toe_hiking_boots"
+	]
+  },
+  "sends_telemetry_event": false
+}

@@ -34,9 +34,7 @@ public interface ContainerType extends StringRepresentable {
 	static boolean canDoItemVoiding(final ItemStack itemStack) {
 		if (!(itemStack.getItem() instanceof ContainerItem containerItem)) return false;
 
-		if (!containerItem.type.doesVoiding()) return false;
-
-		return NBTHelper.isAutoVoid(itemStack);
+		return containerItem.type.doesVoiding();
 	}
 
 	/**
@@ -86,6 +84,6 @@ public interface ContainerType extends StringRepresentable {
 	 * @return The {@link ICapabilityProvider} for the {@link ContainerItem}s of this {@link ContainerType}
 	 */
 	default ICapabilityProvider getCapabilityProvider(final ItemStack itemStack, final @Nullable CompoundTag nbt) {
-		return new LazySerializedCapabilityProvider<>(() -> new ContainerItemHandler(this), ForgeCapabilities.ITEM_HANDLER);
+		return new LazySerializedCapabilityProvider<>(() -> new ContainerItemHandler(this, itemStack), ForgeCapabilities.ITEM_HANDLER);
 	}
 }

@@ -1,0 +1,11 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "sns:metal/horseshoe/blue_steel"
+  },
+  "result_fluid": {
+    "amount": 100,
+    "fluid": "tfc:metal/blue_steel"
+  },
+  "temperature": 1540.0
+}

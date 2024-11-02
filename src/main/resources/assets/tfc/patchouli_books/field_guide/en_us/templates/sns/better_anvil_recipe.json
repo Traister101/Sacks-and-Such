@@ -1,0 +1,61 @@
+{
+  "include": [
+	{
+	  "template": "tfc:sns/anvil_recipe",
+	  "as": "first",
+	  "using": {
+		"recipe": "#recipe"
+	  }
+	},
+	{
+	  "template": "tfc:sns/anvil_recipe",
+	  "as": "second",
+	  "y": 25,
+	  "using": {
+		"recipe": "#recipe2"
+	  }
+	},
+	{
+	  "template": "tfc:sns/anvil_recipe",
+	  "as": "second",
+	  "y": 50,
+	  "using": {
+		"recipe": "#recipe3"
+	  }
+	},
+	{
+	  "template": "tfc:sns/anvil_recipe",
+	  "as": "second",
+	  "y": 75,
+	  "using": {
+		"recipe": "#recipe4"
+	  }
+	}
+  ],
+  "components": [
+	{
+	  "type": "patchouli:text",
+	  "x": 0,
+	  "y": 25,
+	  "text": "#text"
+	},
+	{
+	  "type": "patchouli:text",
+	  "x": 0,
+	  "y": 50,
+	  "text": "#text2"
+	},
+	{
+	  "type": "patchouli:text",
+	  "x": 0,
+	  "y": 75,
+	  "text": "#text3"
+	},
+	{
+	  "type": "patchouli:text",
+	  "x": 0,
+	  "y": 100,
+	  "text": "#text4"
+	}
+  ]
+}

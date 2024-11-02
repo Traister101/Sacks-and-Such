@@ -19,8 +19,6 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.network.NetworkHooks;
-
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
@@ -38,7 +36,7 @@ public class LunchBoxItem extends ContainerItem {
 		final ItemStack heldStack = player.getItemInHand(hand);
 
 		if (!player.isShiftKeyDown()) {
-			return heldStack.getCapability(LunchboxCapability.LUNCHBOX).map(lunchboxHandler -> {
+			return heldStack.getCapability(SNSCapabilities.LUNCHBOX).map(lunchboxHandler -> {
 				final ItemStack targetFood = lunchboxHandler.getSelectedStack();
 				if (targetFood.isEmpty()) return InteractionResultHolder.pass(heldStack);
 				final FoodProperties targetFoodProperties = targetFood.getFoodProperties(player);
@@ -53,11 +51,7 @@ public class LunchBoxItem extends ContainerItem {
 
 		if (!level.isClientSide) {
 			if (player.isShiftKeyDown()) {
-				NetworkHooks.openScreen((ServerPlayer) player, createMenuProvider(player, hand, heldStack), byteBuf -> {
-					byteBuf.writeBoolean(hand == InteractionHand.MAIN_HAND);
-					byteBuf.writeInt(type.getSlotCount());
-					byteBuf.writeInt(type.getSlotCapacity());
-				});
+				openMenu(((ServerPlayer) player), hand, heldStack);
 				return InteractionResultHolder.consume(heldStack);
 			}
 		}
@@ -69,7 +63,7 @@ public class LunchBoxItem extends ContainerItem {
 	public void appendHoverText(final ItemStack itemStack, @Nullable final Level level, final List<Component> tooltip, final TooltipFlag flagIn) {
 		if (Screen.hasShiftDown()) {
 			tooltip.add(Component.translatable(SELECTED_SLOT_TOOLTIP,
-					SNSUtils.intComponent(itemStack.getCapability(LunchboxCapability.LUNCHBOX).map(ILunchboxHandler::getSelectedSlot).orElse(0) + 1)
+					SNSUtils.intComponent(itemStack.getCapability(SNSCapabilities.LUNCHBOX).map(ILunchboxHandler::getSelectedSlot).orElse(0) + 1)
 							.withStyle(ChatFormatting.WHITE)).withStyle(ChatFormatting.GRAY));
 			super.appendHoverText(itemStack, level, tooltip, flagIn);
 			return;
@@ -86,7 +80,7 @@ public class LunchBoxItem extends ContainerItem {
 
 	@Override
 	public ItemStack finishUsingItem(final ItemStack itemStack, final Level level, final LivingEntity livingEntity) {
-		return itemStack.getCapability(LunchboxCapability.LUNCHBOX)
+		return itemStack.getCapability(SNSCapabilities.LUNCHBOX)
 				.map(itemHandler -> itemHandler.consumeSelected(itemStack, level, livingEntity))
 				.orElse(itemStack);
 	}
@@ -98,7 +92,7 @@ public class LunchBoxItem extends ContainerItem {
 
 	@Override
 	public int getUseDuration(final ItemStack itemStack) {
-		return itemStack.getCapability(LunchboxCapability.LUNCHBOX)
+		return itemStack.getCapability(SNSCapabilities.LUNCHBOX)
 				.map(lunchboxHandler -> lunchboxHandler.getSelectedStack().getUseDuration())
 				.orElse(32);
 	}
@@ -106,7 +100,7 @@ public class LunchBoxItem extends ContainerItem {
 	@Nullable
 	@Override
 	public FoodProperties getFoodProperties(final ItemStack itemStack, final @Nullable LivingEntity entity) {
-		final var capability = itemStack.getCapability(LunchboxCapability.LUNCHBOX).resolve();
+		final var capability = itemStack.getCapability(SNSCapabilities.LUNCHBOX).resolve();
 		return capability.map(lunchboxHandler -> lunchboxHandler.getSelectedFoodProperties(entity)).orElse(null);
 	}
 
@@ -116,8 +110,8 @@ public class LunchBoxItem extends ContainerItem {
 		public static final String SELECTED_SLOT_KEY = "selectedSlot";
 		private int selectedSlot = 0;
 
-		public LunchboxHandler(final ContainerType type) {
-			super(type);
+		public LunchboxHandler(final ContainerType type, final ItemStack itemStack) {
+			super(type, itemStack);
 		}
 
 		@Override
@@ -134,6 +128,15 @@ public class LunchBoxItem extends ContainerItem {
 		}
 
 		@Override
+		public ItemStack insertItem(final int slotIndex, final ItemStack insertStack, final boolean simulate) {
+			final ItemStack insert = insertStack.copy();
+			FoodCapability.applyTrait(insert, LunchboxFoodTrait.LUNCHBOX);
+			final ItemStack remainder = super.insertItem(slotIndex, insert, simulate);
+			FoodCapability.removeTrait(remainder, LunchboxFoodTrait.LUNCHBOX);
+			return remainder;
+		}
+
+		@Override
 		public boolean isItemValid(final int slotIndex, final ItemStack itemStack) {
 			return itemStack.is(SNSItemTags.LUNCHBOX_FOOD) && super.isItemValid(slotIndex, itemStack);
 		}
@@ -142,15 +145,6 @@ public class LunchBoxItem extends ContainerItem {
 		public void setStackInSlot(final int slotIndex, final ItemStack itemStack) {
 			FoodCapability.applyTrait(itemStack, LunchboxFoodTrait.LUNCHBOX);
 			super.setStackInSlot(slotIndex, itemStack);
-		}
-
-		@Override
-		public ItemStack insertItem(final int slotIndex, final ItemStack itemStack, final boolean simulate) {
-			final ItemStack insert = itemStack.copy();
-			FoodCapability.applyTrait(insert, LunchboxFoodTrait.LUNCHBOX);
-			final ItemStack remainder = super.insertItem(slotIndex, insert, simulate);
-			FoodCapability.removeTrait(remainder, LunchboxFoodTrait.LUNCHBOX);
-			return remainder;
 		}
 
 		@Override

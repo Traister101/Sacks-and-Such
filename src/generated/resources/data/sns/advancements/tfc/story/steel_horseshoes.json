@@ -1,0 +1,39 @@
+{
+  "parent": "tfc:story/steel_age",
+  "criteria": {
+	"has_steel_horseshoes": {
+	  "conditions": {
+		"items": [
+		  {
+			"items": [
+			  "sns:metal/horseshoes/steel"
+			]
+		  }
+		]
+	  },
+	  "trigger": "minecraft:inventory_changed"
+	}
+  },
+  "display": {
+	"announce_to_chat": true,
+	"description": {
+	  "translate": "sns.advancements.steel_horseshoes.description"
+	},
+	"frame": "challenge",
+	"hidden": false,
+	"icon": {
+	  "item": "sns:metal/horseshoes/steel",
+	  "nbt": "{Damage:0}"
+	},
+	"show_toast": true,
+	"title": {
+	  "translate": "sns.advancements.steel_horseshoes.title"
+	}
+  },
+  "requirements": [
+	[
+	  "has_steel_horseshoes"
+	]
+  ],
+  "sends_telemetry_event": true
+}

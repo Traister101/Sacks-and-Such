@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_horseshoe": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sns:metal/horseshoe/red_steel"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sns:crafting/metal/horseshoes/red_steel"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_horseshoe",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "sns:crafting/metal/horseshoes/red_steel"
+    ]
+  },
+  "sends_telemetry_event": false
+}

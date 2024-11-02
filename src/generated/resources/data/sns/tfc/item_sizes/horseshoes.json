@@ -1,0 +1,18 @@
+{
+  "ingredient": [
+	{
+	  "item": "sns:metal/horseshoes/steel"
+	},
+	{
+	  "item": "sns:metal/horseshoes/black_steel"
+	},
+	{
+	  "item": "sns:metal/horseshoes/blue_steel"
+	},
+	{
+	  "item": "sns:metal/horseshoes/red_steel"
+	}
+  ],
+  "size": "normal",
+  "weight": "medium"
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "sns:metal/horseshoe/red_steel"
+    },
+    {
+      "item": "sns:metal/horseshoe/red_steel"
+    },
+    {
+      "item": "sns:metal/horseshoe/red_steel"
+    },
+    {
+      "item": "sns:metal/horseshoe/red_steel"
+    }
+  ],
+  "result": {
+    "item": "sns:metal/horseshoes/red_steel"
+  }
+}

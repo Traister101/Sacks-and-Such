@@ -1,0 +1,8 @@
+{
+  "forging_temperature": 1540.0,
+  "heat_capacity": 2.857143,
+  "ingredient": {
+	"item": "sns:metal/horseshoes/steel"
+  },
+  "welding_temperature": 400.0
+}

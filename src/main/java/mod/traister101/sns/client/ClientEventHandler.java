@@ -4,14 +4,13 @@ import mod.traister101.sns.client.models.*;
 import mod.traister101.sns.client.screen.ContainerItemScreen;
 import mod.traister101.sns.common.menu.SNSMenus;
 import mod.traister101.sns.compat.curios.CuriosCompat;
-import top.theillusivec4.curios.api.CuriosApi;
+import mod.traister101.sns.util.SNSUtils;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -31,16 +30,14 @@ public final class ClientEventHandler {
 
 	private static void onClientSetup(final FMLClientSetupEvent event) {
 		event.enqueueWork(() -> {
-			MenuScreens.register(SNSMenus.SACK_MENU.get(), ContainerItemScreen::new);
-			if (ModList.get().isLoaded(CuriosApi.MODID)) {
-				CuriosCompat.clientSetup();
-			}
+			MenuScreens.register(SNSMenus.CONTAINER_ITEM_MENU.get(), ContainerItemScreen::new);
+			if (SNSUtils.isCuriosPresent()) CuriosCompat.clientSetup();
 		});
 	}
 
 	private static void registerKeyBindings(final RegisterKeyMappingsEvent event) {
-		event.register(SNSKeybinds.TOGGLE_VOID);
 		event.register(SNSKeybinds.TOGGLE_PICKUP);
+		event.register(SNSKeybinds.OPEN_ITEM_CONTAINER);
 	}
 
 	private static void registerLayers(final RegisterLayerDefinitions event) {

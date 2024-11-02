@@ -28,8 +28,12 @@ public final class DataGenerators {
 		generator.addProvider(event.includeServer(), new BuiltInEntityTags(packOutput, lookupProvider, existingFileHelper));
 		generator.addProvider(event.includeServer(), new BuiltInRecipes(packOutput));
 		generator.addProvider(event.includeServer(), new BuiltInCurios(packOutput, existingFileHelper, lookupProvider));
+		generator.addProvider(event.includeServer(), new BuiltInItemSizes(packOutput));
+		generator.addProvider(event.includeServer(), new BuiltInItemHeats(packOutput));
+		final var provider = BuiltInAvdancements.create(packOutput, lookupProvider, existingFileHelper);
+		generator.addProvider(event.includeServer(), provider);
 
-		generator.addProvider(event.includeClient(), new BuiltIntLanguage(packOutput));
+		generator.addProvider(event.includeClient(), new BuiltIntLanguage(packOutput, provider));
 		generator.addProvider(event.includeClient(), new BuiltInItemModels(packOutput, existingFileHelper));
 	}
 }

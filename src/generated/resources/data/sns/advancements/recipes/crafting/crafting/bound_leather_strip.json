@@ -1,0 +1,59 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_leather_strip": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sns:leather_strip"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_reinforced_fiber": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sns:reinforced_fiber"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_sewing_needle": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "tfc:sewing_needles"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sns:crafting/bound_leather_strip"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_leather_strip",
+      "has_reinforced_fiber",
+      "has_sewing_needle",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "sns:crafting/bound_leather_strip"
+    ]
+  },
+  "sends_telemetry_event": false
+}

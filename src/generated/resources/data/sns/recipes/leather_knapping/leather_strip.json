@@ -1,0 +1,15 @@
+{
+  "type": "tfc:knapping",
+  "knapping_type": "tfc:leather",
+  "pattern": [
+    "X X X",
+    "X X X",
+    "X X X",
+    "X X X",
+    "X X X"
+  ],
+  "result": {
+    "count": 3,
+    "item": "sns:leather_strip"
+  }
+}

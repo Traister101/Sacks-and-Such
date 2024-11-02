@@ -1,0 +1,14 @@
+{
+  "components": [
+	{
+	  "type": "patchouli:custom",
+	  "class": "mod.traister101.sns.compat.patchouli.component.AnvilComponent",
+	  "recipe": "#recipe"
+	},
+	{
+	  "type": "patchouli:text",
+	  "y": 45,
+	  "text": "#text"
+	}
+  ]
+}

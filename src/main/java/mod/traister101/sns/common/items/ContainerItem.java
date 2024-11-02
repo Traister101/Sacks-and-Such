@@ -1,7 +1,7 @@
 package mod.traister101.sns.common.items;
 
 import mod.traister101.sns.SacksNSuch;
-import mod.traister101.sns.common.capability.ContainerItemHandler;
+import mod.traister101.sns.common.capability.*;
 import mod.traister101.sns.common.menu.ContainerItemMenu;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.util.*;
@@ -34,8 +34,7 @@ public class ContainerItem extends Item implements IItemSize {
 
 	public static final String CONTENTS_TAG = "contents";
 	public static final String TYPE_NO_PICKUP = SacksNSuch.MODID + ".status.item_container.no_pickup";
-	public static final String TYPE_NO_VOID = SacksNSuch.MODID + ".status.item_container.no_void";
-	public static final String HOLD_SHIFT_TOOLTIP = SacksNSuch.MODID + "tooltip.item_container.tooltip.shift";
+	public static final String HOLD_SHIFT_TOOLTIP = SacksNSuch.MODID + ".tooltip.item_container.tooltip.shift";
 	public static final String PICKUP_TOOLTIP = SacksNSuch.MODID + ".tooltip.item_container.tooltip.pickup";
 	public static final String VOID_TOOLTIP = SacksNSuch.MODID + ".tooltip.item_container.tooltip.void";
 	public static final String SLOT_COUNT_TOOLTIP = SacksNSuch.MODID + ".tooltip.item_container.slot_count";
@@ -50,11 +49,15 @@ public class ContainerItem extends Item implements IItemSize {
 		this.type = type;
 	}
 
-	protected static SimpleMenuProvider createMenuProvider(final Player player, final InteractionHand hand, final ItemStack heldStack) {
-		//noinspection OptionalGetWithoutIsPresent our Sack should always have this capability
-		final IItemHandler itemHandler = heldStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get();
-		return new SimpleMenuProvider((windowId, inventory, unused) -> new ContainerItemMenu(windowId, inventory, itemHandler, hand,
-				hand == InteractionHand.OFF_HAND ? -1 : player.getInventory().selected), heldStack.getHoverName());
+	private static SimpleMenuProvider createMenuProvider(final InteractionHand hand, final ItemStack heldStack) {
+		final IItemHandler itemHandler = heldStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+
+		return new SimpleMenuProvider((windowId, inventory, unused) -> ContainerItemMenu.forHeld(windowId, inventory, itemHandler, hand),
+				heldStack.getHoverName());
+	}
+
+	protected static void openMenu(final ServerPlayer player, final InteractionHand hand, final ItemStack heldStack) {
+		NetworkHooks.openScreen(player, createMenuProvider(hand, heldStack), ContainerItemMenu.writeHeld(hand));
 	}
 
 	@Override
@@ -63,17 +66,6 @@ public class ContainerItem extends Item implements IItemSize {
 
 		if (level.isClientSide) {
 			if (!player.isShiftKeyDown()) return InteractionResultHolder.success(heldStack);
-
-			if (SNSConfig.CLIENT.shiftClickTogglesVoid.get()) {
-				if (type.doesVoiding()) {
-					final boolean flag = !NBTHelper.isAutoVoid(heldStack);
-					SNSUtils.sendTogglePacket(ToggleType.VOID, flag);
-					player.displayClientMessage(ToggleType.VOID.getTooltip(flag), true);
-				} else {
-					player.displayClientMessage(Component.translatable(TYPE_NO_VOID, this.getName(heldStack)), true);
-				}
-				return InteractionResultHolder.consume(heldStack);
-			}
 
 			if (type.doesAutoPickup()) {
 				final boolean flag = !NBTHelper.isAutoPickup(heldStack);
@@ -87,11 +79,7 @@ public class ContainerItem extends Item implements IItemSize {
 		}
 
 		if (!player.isShiftKeyDown()) {
-			NetworkHooks.openScreen(((ServerPlayer) player), createMenuProvider(player, hand, heldStack), byteBuf -> {
-				byteBuf.writeBoolean(hand == InteractionHand.MAIN_HAND);
-				byteBuf.writeInt(type.getSlotCount());
-				byteBuf.writeInt(type.getSlotCapacity());
-			});
+			openMenu((ServerPlayer) player, hand, heldStack);
 			return InteractionResultHolder.consume(heldStack);
 		}
 
@@ -224,11 +212,14 @@ public class ContainerItem extends Item implements IItemSize {
 		}
 
 		if (type.doesVoiding()) {
-			tooltip.add(Component.translatable(VOID_TOOLTIP, SNSUtils.toggleTooltip(NBTHelper.isAutoVoid(itemStack))).withStyle(ChatFormatting.GRAY));
+			tooltip.add(Component.translatable(VOID_TOOLTIP, SNSUtils.toggleTooltip(
+							itemStack.getCapability(SNSCapabilities.ITEM_VOIDING_ITEM_HANDLER).map(IVoidingItemHandler::isVoidingEnabled).orElse(false)))
+					.withStyle(ChatFormatting.GRAY));
 		}
 
-		tooltip.add(Component.translatable(INVENTORY_INTERACTION_TOOLTIP, SNSUtils.toggleTooltip(type.doesInventoryInteraction()))
-				.withStyle(ChatFormatting.GRAY));
+		if (type.doesInventoryInteraction()) {
+			tooltip.add(Component.translatable(INVENTORY_INTERACTION_TOOLTIP, SNSUtils.toggleTooltip(true)).withStyle(ChatFormatting.GRAY));
+		}
 	}
 
 	@Override
@@ -261,7 +252,9 @@ public class ContainerItem extends Item implements IItemSize {
 
 	@Override
 	public boolean isFoil(final ItemStack itemStack) {
-		return SNSConfig.CLIENT.voidGlint.get() ? NBTHelper.isAutoVoid(itemStack) : NBTHelper.isAutoPickup(itemStack);
+		return SNSConfig.CLIENT.voidGlint.get() ?
+				itemStack.getCapability(SNSCapabilities.ITEM_VOIDING_ITEM_HANDLER).map(IVoidingItemHandler::isVoidingEnabled).orElse(false) :
+				NBTHelper.isAutoPickup(itemStack);
 	}
 
 	@Nullable
@@ -315,7 +308,9 @@ public class ContainerItem extends Item implements IItemSize {
 	@Override
 	public Weight getWeight(final ItemStack itemStack) {
 		return itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-				.map(handler -> handler instanceof final ContainerItemHandler containerItemHandler ? containerItemHandler.getWeight() : Weight.VERY_HEAVY)
+				.map(handler -> handler instanceof final ContainerItemHandler containerItemHandler ?
+						containerItemHandler.getWeight() :
+						Weight.VERY_HEAVY)
 				.orElse(Weight.VERY_HEAVY);
 	}
 

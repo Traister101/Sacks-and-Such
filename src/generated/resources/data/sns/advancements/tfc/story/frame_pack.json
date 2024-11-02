@@ -1,0 +1,38 @@
+{
+  "parent": "tfc:story/steel_age",
+  "criteria": {
+	"has_frame_pack": {
+	  "conditions": {
+		"items": [
+		  {
+			"items": [
+			  "sns:frame_pack"
+			]
+		  }
+		]
+	  },
+	  "trigger": "minecraft:inventory_changed"
+	}
+  },
+  "display": {
+	"announce_to_chat": true,
+	"description": {
+	  "translate": "sns.advancements.frame_pack.description"
+	},
+	"frame": "challenge",
+	"hidden": false,
+	"icon": {
+	  "item": "sns:frame_pack"
+	},
+	"show_toast": true,
+	"title": {
+	  "translate": "sns.advancements.frame_pack.title"
+	}
+  },
+  "requirements": [
+	[
+	  "has_frame_pack"
+	]
+  ],
+  "sends_telemetry_event": true
+}
