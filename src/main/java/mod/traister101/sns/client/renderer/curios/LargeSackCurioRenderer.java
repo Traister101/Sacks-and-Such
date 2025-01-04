@@ -32,7 +32,7 @@ public class LargeSackCurioRenderer implements ICurioRenderer {
 	}
 
 	public static Supplier<ICurioRenderer> create(final ResourceLocation texture) {
-		return () -> new SmallSackCurioRenderer(texture);
+		return () -> new LargeSackCurioRenderer(texture);
 	}
 
 	@Override
@@ -40,23 +40,23 @@ public class LargeSackCurioRenderer implements ICurioRenderer {
 			final PoseStack poseStack, final RenderLayerParent<T, M> renderLayerParent, final MultiBufferSource bufferSource, final int packedLight,
 			final float limbSwing, final float limbSwingAmount, final float partialTicks, final float ageInTicks, final float netHeadYaw,
 			final float headPitch) {
+		if (itemStack.isEmpty()) return;
 
-		if (!itemStack.isEmpty()) {
-			final LivingEntity entity = slotContext.entity();
-			poseStack.pushPose();
+		final LivingEntity entity = slotContext.entity();
+		poseStack.pushPose();
 
-			poseStack.mulPose(Axis.YP.rotationDegrees(90));
+		final boolean oddSlot = (slotContext.index() % 2) == 1;
+		poseStack.mulPose(Axis.YP.rotationDegrees(oddSlot ? 90 : -90));
 
-			poseStack.scale(0.75F, 0.75F, 0.75F);
-			poseStack.translate(0, -0.15, 0.80);
-			if (entity.isCrouching()) {
-				poseStack.translate(-0.35, 0.1875F, 0);
-			}
-
-			model.setupAnim(limbSwing, limbSwingAmount);
-			model.renderToBuffer(poseStack, bufferSource.getBuffer(model.renderType(texture)), packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-
-			poseStack.popPose();
+		poseStack.scale(0.75F, 0.75F, 0.75F);
+		poseStack.translate(0, -0.15, 0.8);
+		if (entity.isCrouching()) {
+			poseStack.translate(-0.35, 0.1875F, 0);
 		}
+
+		model.setupAnim(limbSwing, limbSwingAmount);
+		model.renderToBuffer(poseStack, bufferSource.getBuffer(model.renderType(texture)), packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+
+		poseStack.popPose();
 	}
 }
