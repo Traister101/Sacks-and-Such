@@ -94,7 +94,7 @@ public class BuiltInRecipes extends RecipeProvider {
 		final Metal.Tier tier = metal.metalTier();
 		writer.accept(new AnvilRecipe(Ingredient.of(steelRodsTag), new ItemStack(horseshoe), tier.ordinal(),
 				new ForgeRule[] {ForgeRule.BEND_THIRD_LAST, ForgeRule.BEND_SECOND_LAST, ForgeRule.UPSET_LAST}, false));
-		HeatingRecipe.melt(horseshoe, metal.getMeltTemp(), metal.meltMetal(), 100).save(writer);
+		HeatingRecipe.melt(horseshoe, metal.getMeltTemp(), metal.meltMetal(), 50).save(writer);
 	}
 
 	private static void containerItems(final Consumer<FinishedRecipe> writer) {
@@ -192,7 +192,7 @@ public class BuiltInRecipes extends RecipeProvider {
 	private static void horseshoesRecipes(final Consumer<FinishedRecipe> writer, final HorseshoesItem horseshoes, final Item horseshoe,
 			final MetalData metal) {
 		CraftingRecipeBuilder.shapeless(horseshoes).requires(horseshoe, 4).unlockedBy("has_horseshoe", has(horseshoe)).save(writer);
-		HeatingRecipe.melt(horseshoes, metal.getMeltTemp(), metal.meltMetal(), 400).save(writer);
+		HeatingRecipe.melt(horseshoes, metal.getMeltTemp(), metal.meltMetal(), 200).save(writer);
 	}
 
 	private static void safetyToeHikingBoots(final HikingBootsItem hikingBootsItem, final TagKey<Item> metalSheetsTag,

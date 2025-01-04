@@ -44,6 +44,12 @@ public class BuiltInItemModels extends ItemModelProvider {
 		basicItem(SNSItems.QUIVER);
 		basicItem(SNSItems.STEEL_HORSESHOE);
 		basicItem(SNSItems.STEEL_HORSESHOES);
+		basicItem(SNSItems.BLACK_STEEL_HORSESHOE);
+		basicItem(SNSItems.BLACK_STEEL_HORSESHOES);
+		basicItem(SNSItems.BLUE_STEEL_HORSESHOE);
+		basicItem(SNSItems.BLUE_STEEL_HORSESHOES);
+		basicItem(SNSItems.RED_STEEL_HORSESHOE);
+		basicItem(SNSItems.RED_STEEL_HORSESHOES);
 
 		iconWithHeldModel(SNSItems.STRAW_BASKET);
 		iconWithHeldModel(SNSItems.LEATHER_SACK,

@@ -4,7 +4,7 @@
     "item": "sns:metal/horseshoes/steel"
   },
   "result_fluid": {
-    "amount": 400,
+    "amount": 200,
     "fluid": "tfc:metal/steel"
   },
   "temperature": 1540.0
