@@ -169,11 +169,8 @@ public final class PickupHandler {
 			remainder = ItemHandlerHelper.insertItem(maybeContainerInv.get(), remainder, false);
 
 			if (remainder.isEmpty()) return ItemStack.EMPTY;
-			if (SNSConfig.SERVER.doVoiding.get() && !ContainerType.canDoItemVoiding(itemContainer)) continue;
-
+			if (!SNSConfig.SERVER.doVoiding.get() || !ContainerType.canDoItemVoiding(itemContainer)) continue;
 			if (!voidedItem(remainder, maybeContainerInv.get())) return ItemStack.EMPTY;
-
-			return ItemStack.EMPTY;
 		}
 		return remainder;
 	}
