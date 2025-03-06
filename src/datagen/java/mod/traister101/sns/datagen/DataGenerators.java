@@ -48,7 +48,5 @@ public final class DataGenerators {
 		generator.addProvider(event.includeClient(), new BuiltInLanguage(packOutput, advancementProvider));
 		generator.addProvider(event.includeClient(), new BuiltInItemModels(packOutput, existingFileHelper));
 		generator.addProvider(event.includeClient(), new BuiltInSpriteSources(packOutput, existingFileHelper));
-
-		generator.addProvider(event.includeClient() || event.includeDev(), new CopyTextures(packOutput, event.getInputs()));
 	}
 }
