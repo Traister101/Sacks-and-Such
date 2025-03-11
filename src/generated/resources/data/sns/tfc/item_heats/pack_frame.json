@@ -1,0 +1,8 @@
+{
+  "forging_temperature": 1540.0,
+  "heat_capacity": 2.857143,
+  "ingredient": {
+    "item": "sns:pack_frame"
+  },
+  "welding_temperature": 400.0
+}

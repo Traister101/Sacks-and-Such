@@ -14,7 +14,7 @@
         "tag": "forge:string"
       },
       "W": {
-        "item": "tfc:wool_cloth"
+        "tag": "tfc:high_quality_cloth"
       }
     },
     "pattern": [

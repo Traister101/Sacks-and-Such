@@ -1,0 +1,11 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "sns:pack_frame"
+  },
+  "result_fluid": {
+    "amount": 400,
+    "fluid": "tfc:metal/steel"
+  },
+  "temperature": 1540.0
+}

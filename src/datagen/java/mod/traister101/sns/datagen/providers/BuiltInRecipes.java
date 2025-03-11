@@ -2,9 +2,10 @@ package mod.traister101.sns.datagen.providers;
 
 import com.google.gson.*;
 import mod.traister101.sns.SacksNSuch;
+import mod.traister101.sns.common.SNSItemTags;
 import mod.traister101.sns.common.items.*;
-import mod.traister101.sns.datagen.recipes.CraftingRecipeBuilder;
 import mod.traister101.sns.datagen.recipes.*;
+import mod.traister101.sns.datagen.recipes.CraftingRecipeBuilder;
 import mod.traister101.sns.datagen.tfc.data.*;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.TFCBlocks;
@@ -52,6 +53,7 @@ public class BuiltInRecipes extends RecipeProvider {
 					.define('R', steelRodsTag)
 					.unlockedBy("has_steel_rod", has(steelRodsTag))
 					.save(writer);
+			HeatingRecipe.melt(SNSItems.PACK_FRAME.get(), DefaultMetal.STEEL.meltTemp, DefaultMetal.STEEL.meltMetal(), 400).save(writer);
 		}
 
 		CraftingRecipeBuilder.shapeless(SNSItems.BOUND_LEATHER_STRIP.get())
@@ -137,11 +139,11 @@ public class BuiltInRecipes extends RecipeProvider {
 				.damageInputs()
 				.pattern("SSS", "WBW", " WN")
 				.define('S', Tags.Items.STRING)
-				.define('W', TFCItems.WOOL_CLOTH.get())
+				.define('W', SNSItemTags.TFC_HIGH_QUALITY_CLOTH)
 				.define('B', TFCItems.BURLAP_CLOTH.get())
 				.define('N', TFCTags.Items.SEWING_NEEDLES)
 				.unlockedBy("has_string", has(Tags.Items.STRING))
-				.unlockedBy("has_wool_cloth", has(TFCItems.WOOL_CLOTH.get()))
+				.unlockedBy("has_wool_cloth", has(SNSItemTags.TFC_HIGH_QUALITY_CLOTH))
 				.unlockedBy("has_burlap_cloth", has(TFCItems.BURLAP_CLOTH.get()))
 				.unlockedBy("has_sewing_needle", has(TFCTags.Items.SEWING_NEEDLES))
 				.save(writer);

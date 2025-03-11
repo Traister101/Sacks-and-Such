@@ -68,6 +68,11 @@ public final class SNSItemTags {
 	public static final TagKey<Item> TFC_JAVELINS = fromTFC("javelins");
 
 	/**
+	 * TFCs high quality cloth tag
+	 */
+	public static final TagKey<Item> TFC_HIGH_QUALITY_CLOTH = fromTFC("high_quality_cloth");
+
+	/**
 	 * Tag for items that shouldn't go inside sacks. We only put our sacks in this
 	 */
 	public static final TagKey<Item> PREVENTED_IN_ITEM_CONTAINERS = create("prevented_in_item_containers");

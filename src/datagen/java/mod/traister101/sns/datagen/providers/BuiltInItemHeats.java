@@ -15,6 +15,7 @@ public class BuiltInItemHeats extends ItemHeatProvider {
 	@Override
 	protected void addHeats() {
 		ingotHeat(SNSItems.BUCKLE.get(), DefaultMetal.WROUGHT_IRON, 100);
+		ingotHeat(SNSItems.PACK_FRAME.get(), DefaultMetal.STEEL, 400);
 
 		ingotHeat(SNSItems.STEEL_HORSESHOE.get(), DefaultMetal.STEEL, 100);
 		ingotHeat(SNSItems.BLACK_STEEL_HORSESHOE.get(), DefaultMetal.BLACK_STEEL, 100);

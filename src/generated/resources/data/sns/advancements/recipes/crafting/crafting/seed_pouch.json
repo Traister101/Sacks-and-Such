@@ -43,9 +43,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "tfc:wool_cloth"
-            ]
+            "tag": "tfc:high_quality_cloth"
           }
         ]
       },
