@@ -36,12 +36,13 @@ public class BuiltInItemModels extends ItemModelProvider {
 		basicItem(SNSItems.BOUND_LEATHER_STRIP);
 		basicItem(SNSItems.LEATHER_STRIP);
 		basicItem(SNSItems.BOUND_LEATHER_STRIP);
+		basicItem(SNSItems.BUCKLE);
 		basicItem(SNSItems.HIKING_BOOTS);
 		basicItem(SNSItems.STEEL_TOE_HIKING_BOOTS, new ResourceLocation(SacksNSuch.MODID, "item/hiking_boots"));
 		basicItem(SNSItems.BLACK_STEEL_TOE_HIKING_BOOTS, new ResourceLocation(SacksNSuch.MODID, "item/hiking_boots"));
 		basicItem(SNSItems.BLUE_STEEL_TOE_HIKING_BOOTS, new ResourceLocation(SacksNSuch.MODID, "item/hiking_boots"));
 		basicItem(SNSItems.RED_STEEL_TOE_HIKING_BOOTS, new ResourceLocation(SacksNSuch.MODID, "item/hiking_boots"));
-		basicItem(SNSItems.QUIVER);
+		basicItem(SNSItems.MOB_NET_ITEM);
 		basicItem(SNSItems.STEEL_HORSESHOE);
 		basicItem(SNSItems.STEEL_HORSESHOES);
 		basicItem(SNSItems.BLACK_STEEL_HORSESHOE);
@@ -60,6 +61,8 @@ public class BuiltInItemModels extends ItemModelProvider {
 		iconWithHeldModel(SNSItems.SEED_POUCH,
 				withExistingParent("item/held/seed_pouch", SMALL_SACK).texture("sack", modLoc("item/held/seed_pouch")));
 		iconWithHeldModel(SNSItems.FRAME_PACK);
+		basicItem(SNSItems.LUNCHBOX);
+		basicItem(SNSItems.QUIVER);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ version = "${file.jarVersion}"
 displayName = "Sacks 'N Such"
 logoFile = "icon.png"
 authors = "Traister101"
-credits = "Majority of art assets and models by Alekiponi, Boots assets by coachthesexprime"
+credits = "Majority of art assets and models by Alekiponi, Boots assets by coachthesexprime. Buckle, Mob Net and Lunchbox assets created by bloodstar962"
 description = '''An addon for TFC focusing on bringing vessel like handheld containers for all your adventuring needs'''
 
 [[dependencies.sns]]
