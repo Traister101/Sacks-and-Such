@@ -1,27 +1,27 @@
 {
   "type": "tfc:damage_inputs_shaped_crafting",
   "recipe": {
-	"type": "minecraft:crafting_shaped",
-	"category": "misc",
-	"key": {
-	  "K": {
-		"tag": "tfc:knives"
-	  },
-	  "S": {
-		"item": "tfc:straw"
-	  },
-	  "T": {
-		"item": "tfc:thatch"
-	  }
-	},
-	"pattern": [
-	  "SSS",
-	  "T T",
-	  " TK"
-	],
-	"result": {
-	  "item": "sns:straw_basket"
-	},
-	"show_notification": true
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+      "K": {
+        "tag": "tfc:knives"
+      },
+      "S": {
+        "item": "tfc:straw"
+      },
+      "T": {
+        "item": "tfc:thatch"
+      }
+    },
+    "pattern": [
+      "SSS",
+      "T T",
+      " TK"
+    ],
+    "result": {
+      "item": "sns:straw_basket"
+    },
+    "show_notification": true
   }
 }

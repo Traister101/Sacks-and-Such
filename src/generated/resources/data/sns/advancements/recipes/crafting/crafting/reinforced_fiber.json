@@ -1,46 +1,46 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-	"has_jute": {
-	  "conditions": {
-		"items": [
-		  {
-			"items": [
-			  "tfc:jute_fiber"
-			]
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	},
-	"has_string": {
-	  "conditions": {
-		"items": [
-		  {
-			"tag": "forge:string"
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	},
-	"has_the_recipe": {
-	  "conditions": {
-		"recipe": "sns:crafting/reinforced_fiber"
-	  },
-	  "trigger": "minecraft:recipe_unlocked"
-	}
+    "has_jute": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tfc:jute_fiber"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_string": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:string"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sns:crafting/reinforced_fiber"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
   },
   "requirements": [
-	[
-	  "has_jute",
-	  "has_string",
-	  "has_the_recipe"
-	]
+    [
+      "has_jute",
+      "has_string",
+      "has_the_recipe"
+    ]
   ],
   "rewards": {
-	"recipes": [
-	  "sns:crafting/reinforced_fiber"
-	]
+    "recipes": [
+      "sns:crafting/reinforced_fiber"
+    ]
   },
   "sends_telemetry_event": false
 }

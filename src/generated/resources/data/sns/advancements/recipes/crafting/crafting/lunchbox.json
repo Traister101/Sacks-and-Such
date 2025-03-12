@@ -1,0 +1,70 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_bound_leather_strip": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sns:bound_leather_strip"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_reinforced_fabric": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sns:reinforced_fabric"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sns:crafting/lunchbox"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_wrought_iron_rods": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:rods/wrought_iron"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_wrought_iron_sheets": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:sheets/wrought_iron"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_wrought_iron_rods",
+      "has_bound_leather_strip",
+      "has_wrought_iron_sheets",
+      "has_reinforced_fabric",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "sns:crafting/lunchbox"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -12,6 +12,6 @@ public final class SNSMenus {
 
 	public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, SacksNSuch.MODID);
 
-	public static final RegistryObject<MenuType<ContainerItemMenu>> SACK_MENU = MENUS.register("sack_menu",
+	public static final RegistryObject<MenuType<ContainerItemMenu>> CONTAINER_ITEM_MENU = MENUS.register("container_item_menu",
 			() -> IForgeMenuType.create(ContainerItemMenu::fromNetwork));
 }

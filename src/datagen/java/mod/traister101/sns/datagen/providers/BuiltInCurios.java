@@ -5,7 +5,6 @@ import top.theillusivec4.curios.api.CuriosDataProvider;
 
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.entity.EntityType;
 
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -19,7 +18,6 @@ public class BuiltInCurios extends CuriosDataProvider {
 
 	@Override
 	public void generate(final Provider registries, final ExistingFileHelper fileHelper) {
-		createEntities("held").addEntities(EntityType.PLAYER).addSlots("belt");
-		createEntities("worn").addEntities(EntityType.PLAYER).addSlots("back");
+		createEntities("default_slots").addSlots("belt", "back").addPlayer();
 	}
 }

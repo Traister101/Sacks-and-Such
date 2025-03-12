@@ -1,0 +1,24 @@
+{
+  "type": "tfc:damage_inputs_shapeless_crafting",
+  "recipe": {
+    "type": "minecraft:crafting_shapeless",
+    "category": "misc",
+    "ingredients": [
+      {
+        "item": "sns:leather_strip"
+      },
+      {
+        "item": "sns:reinforced_fiber"
+      },
+      {
+        "item": "sns:leather_strip"
+      },
+      {
+        "tag": "tfc:sewing_needles"
+      }
+    ],
+    "result": {
+      "item": "sns:bound_leather_strip"
+    }
+  }
+}

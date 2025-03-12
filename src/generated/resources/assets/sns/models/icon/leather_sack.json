@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-	"layer0": "sns:item/icon/leather_sack"
-  }
-}

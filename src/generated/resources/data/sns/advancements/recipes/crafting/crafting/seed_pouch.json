@@ -1,70 +1,68 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-	"has_burlap_cloth": {
-	  "conditions": {
-		"items": [
-		  {
-			"items": [
-			  "tfc:burlap_cloth"
-			]
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	},
-	"has_sewing_needle": {
-	  "conditions": {
-		"items": [
-		  {
-			"tag": "tfc:sewing_needles"
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	},
-	"has_string": {
-	  "conditions": {
-		"items": [
-		  {
-			"tag": "forge:string"
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	},
-	"has_the_recipe": {
-	  "conditions": {
-		"recipe": "sns:crafting/seed_pouch"
-	  },
-	  "trigger": "minecraft:recipe_unlocked"
-	},
-	"has_wool_cloth": {
-	  "conditions": {
-		"items": [
-		  {
-			"items": [
-			  "tfc:wool_cloth"
-			]
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	}
+    "has_burlap_cloth": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tfc:burlap_cloth"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_sewing_needle": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "tfc:sewing_needles"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_string": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:string"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sns:crafting/seed_pouch"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_wool_cloth": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "tfc:high_quality_cloth"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
   },
   "requirements": [
-	[
-	  "has_string",
-	  "has_wool_cloth",
-	  "has_burlap_cloth",
-	  "has_sewing_needle",
-	  "has_the_recipe"
-	]
+    [
+      "has_string",
+      "has_wool_cloth",
+      "has_burlap_cloth",
+      "has_sewing_needle",
+      "has_the_recipe"
+    ]
   ],
   "rewards": {
-	"recipes": [
-	  "sns:crafting/seed_pouch"
-	]
+    "recipes": [
+      "sns:crafting/seed_pouch"
+    ]
   },
   "sends_telemetry_event": false
 }

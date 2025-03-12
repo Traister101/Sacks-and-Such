@@ -1,13 +1,16 @@
 package mod.traister101.sns.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.*;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(makeFinal = true, level = AccessLevel.PUBLIC)
 public final class CommonConfig {
 
-	public final BooleanValue doPickBlock;
+	BooleanValue doPickBlock;
 
-	public CommonConfig(final ForgeConfigSpec.Builder builder) {
-		doPickBlock = builder.comment("Do pick block for sacks. Server will trump client config!").define("doPickBlock", true);
+	CommonConfig(final Builder builder) {
+		doPickBlock = builder.comment("Do pick block for Item Container. Server will trump client config!").define("doPickBlock", true);
 	}
 }

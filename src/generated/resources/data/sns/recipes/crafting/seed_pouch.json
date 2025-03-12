@@ -1,30 +1,30 @@
 {
   "type": "tfc:damage_inputs_shaped_crafting",
   "recipe": {
-	"type": "minecraft:crafting_shaped",
-	"category": "misc",
-	"key": {
-	  "B": {
-		"item": "tfc:burlap_cloth"
-	  },
-	  "N": {
-		"tag": "tfc:sewing_needles"
-	  },
-	  "S": {
-		"tag": "forge:string"
-	  },
-	  "W": {
-		"item": "tfc:wool_cloth"
-	  }
-	},
-	"pattern": [
-	  "SSS",
-	  "WBW",
-	  " WN"
-	],
-	"result": {
-	  "item": "sns:seed_pouch"
-	},
-	"show_notification": true
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+      "B": {
+        "item": "tfc:burlap_cloth"
+      },
+      "N": {
+        "tag": "tfc:sewing_needles"
+      },
+      "S": {
+        "tag": "forge:string"
+      },
+      "W": {
+        "tag": "tfc:high_quality_cloth"
+      }
+    },
+    "pattern": [
+      "SSS",
+      "WBW",
+      " WN"
+    ],
+    "result": {
+      "item": "sns:seed_pouch"
+    },
+    "show_notification": true
   }
 }

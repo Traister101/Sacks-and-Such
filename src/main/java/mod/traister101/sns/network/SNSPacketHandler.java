@@ -38,11 +38,15 @@ public final class SNSPacketHandler {
 		register(ServerboundTogglePacket.class, ServerboundTogglePacket::encode, ServerboundTogglePacket::new, ServerboundTogglePacket::handle);
 		register(ServerboundPacketCycleSlotPacket.class, ServerboundPacketCycleSlotPacket::encode, ServerboundPacketCycleSlotPacket::new,
 				ServerboundPacketCycleSlotPacket::handle);
+		register(ServerboundToggleSlotVoidingPacket.class, ServerboundToggleSlotVoidingPacket::encode, ServerboundToggleSlotVoidingPacket::new,
+				ServerboundToggleSlotVoidingPacket::handle);
+		register(ServerboundOpenContainerPacket.class, ServerboundOpenContainerPacket::encode, ServerboundOpenContainerPacket::new,
+				ServerboundOpenContainerPacket::handle);
 	}
 
 	@SuppressWarnings("unused")
-	private static <T> void register(final Class<T> clazz, final BiConsumer<T, FriendlyByteBuf> encoder, final Function<FriendlyByteBuf, T> decoder,
-			final Consumer<T> handler) {
+	private static <T> void register(@SuppressWarnings("SameParameterValue") final Class<T> clazz, final BiConsumer<T, FriendlyByteBuf> encoder,
+			final Function<FriendlyByteBuf, T> decoder, final Consumer<T> handler) {
 		register(clazz, encoder, decoder, (packet, player) -> handler.accept(packet));
 	}
 

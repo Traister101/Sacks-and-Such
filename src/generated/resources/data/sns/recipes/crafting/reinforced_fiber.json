@@ -10,9 +10,9 @@
     }
   },
   "pattern": [
-	"JJJ",
-	"SSS",
-	"JJJ"
+    "JJJ",
+    "SSS",
+    "JJJ"
   ],
   "result": {
     "item": "sns:reinforced_fiber"

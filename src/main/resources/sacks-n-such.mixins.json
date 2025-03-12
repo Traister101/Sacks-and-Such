@@ -4,8 +4,15 @@
   "package": "mod.traister101.sns.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+	"common.AbstractArrowMixin",
+	"common.AbstractHorseMixin",
+	"common.HorseInventoryMenuMixin",
+	"common.JavelinItemMixin",
+	"common.PlayerMixin",
+	"common.accessor.AbstractHorseInventoryAccessor"
   ],
   "client": [
+	"client.HorseInventoryScreenMixin",
 	"client.invoker.AddCustomNbtDataInvoker"
   ],
   "injectors": {

@@ -1,6 +1,6 @@
 {
   "parent": "sns:item/held/small_sack",
   "textures": {
-	"sack": "sns:item/held/seed_pouch"
+    "sack": "sns:item/held/seed_pouch"
   }
 }

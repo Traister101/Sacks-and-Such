@@ -1,0 +1,13 @@
+{
+  "name": "The Ore Sack",
+  "category": "tfc:sacks_n_such",
+  "icon": "sns:ore_sack",
+  "pages": [
+	{
+	  "type": "patchouli:spotlight",
+	  "item": "sns:ore_sack",
+	  "text": "The $(item)Ore Sack$() is a souped up sack holding large amounts of a single ore like item making it extremely useful when going mining."
+	}
+  ],
+  "read_by_default": true
+}

@@ -1,15 +1,15 @@
 {
   "name": "Item Containers",
   "category": "tfc:sacks_n_such",
-  "icon": "sns:frame_pack",
+  "icon": "sns:straw_basket",
   "pages": [
 	{
 	  "type": "patchouli:text",
-	  "text": "Item Containers are the primairy items this mod adds. They have 6 main stats which can be seen by hoilding $(3)Shift$(clear) while hovering over the stack with your mouse. $(li)Slot count (the amount of slots it has) $(li)Slot capacity (how many items a slot can hold) $(li)Allowed size (what's the largest TFC size allowed in the slots)"
+	  "text": "$(thing)Item Containers$() are the primary items this mod adds. They have 6 main stats which can be seen by holding $(3)Shift$(clear) while hovering over the stack with your mouse. $(li)$(thing)Slot count$(): the amount of slots it has. $(li)$(thing)Slot Capacity$(): how many items a slot can hold $(li)$(thing)Allowed Size$(): what's the largest $(l:getting_started/size_and_weight)TFC Size$() allowed in the slots."
 	},
 	{
 	  "type": "patchouli:text",
-	  "text": "$(li)Item pickup if it can pickup item entities from the world. Shift right click or use $(k:sns.key.pickup) to toggle $(li)Item voiding if it can void excess items picked up from the world. Use $(k:sns.key.void) to toggle $(li)Inventory interaction if you can insert and extract from it by clicking on the stack like TFC vessels or vanilla bundles"
+	  "text": "$(li)$(thing)Item Pickup$() if it can pickup item entities from the world. Shift right click or use $(k:sns.key.pickup) to toggle. $(li)$(thing)Item Voiding$() if it can void excess items picked up from the world. To toggle Ctrl + Left Click slots. $(li)$(thing)Inventory interaction$() if you can insert and extract from it by clicking on the stack like TFC vessels or vanilla bundles. $(br)All $(thing)Item Containers$() support vanilla pick block via $(k:pickItem)"
 	},
 	{
 	  "type": "patchouli:crafting",
@@ -25,6 +25,14 @@
 	  "type": "patchouli:crafting",
 	  "recipe": "sns:crafting/seed_pouch",
 	  "recipe2": "sns:crafting/frame_pack"
+	},
+	{
+	  "type": "patchouli:crafting",
+	  "recipe": "sns:crafting/lunchbox"
+	},
+	{
+	  "type": "patchouli:text",
+	  "text": "For modpack authors or simply people wanting to configure things. All$(thing) Item Containers$() respect the item tag $(bold)sns:prevented_in_item_containers$() it's name should be self explanatory. If you wanted you could even remove the item containers from this tag to let you nest them. If you do that beware your player NBT getting too large, it will brick your player among other bad things"
 	}
   ],
   "read_by_default": true

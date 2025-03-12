@@ -1,5 +1,6 @@
 {
   "values": [
-	"sns:frame_pack"
+    "sns:frame_pack",
+    "sns:quiver"
   ]
 }

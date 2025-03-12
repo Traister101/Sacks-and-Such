@@ -1,0 +1,16 @@
+{
+  "type": "tfc:anvil",
+  "apply_forging_bonus": true,
+  "input": {
+    "item": "tfc:metal/ingot/wrought_iron"
+  },
+  "result": {
+    "item": "sns:buckle"
+  },
+  "rules": [
+    "punch_last",
+    "punch_last",
+    "punch_last"
+  ],
+  "tier": 3
+}

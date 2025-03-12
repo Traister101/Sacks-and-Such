@@ -1,70 +1,72 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-	"has_jute": {
-	  "conditions": {
-		"items": [
-		  {
-			"items": [
-			  "tfc:jute_fiber"
-			]
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	},
-	"has_leather": {
-	  "conditions": {
-		"items": [
-		  {
-			"tag": "forge:leather"
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	},
-	"has_sewing_needle": {
-	  "conditions": {
-		"items": [
-		  {
-			"tag": "tfc:sewing_needles"
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	},
-	"has_the_recipe": {
-	  "conditions": {
-		"recipe": "sns:crafting/leather_sack"
-	  },
-	  "trigger": "minecraft:recipe_unlocked"
-	},
-	"has_unfinished_sack": {
-	  "conditions": {
-		"items": [
-		  {
-			"items": [
-			  "sns:unfinished_leather_sack"
-			]
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	}
+    "has_jute": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tfc:jute_fiber"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_leather_strip": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sns:leather_strip"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_sewing_needle": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "tfc:sewing_needles"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sns:crafting/leather_sack"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_unfinished_sack": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sns:unfinished_leather_sack"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
   },
   "requirements": [
-	[
-	  "has_jute",
-	  "has_leather",
-	  "has_unfinished_sack",
-	  "has_sewing_needle",
-	  "has_the_recipe"
-	]
+    [
+      "has_jute",
+      "has_leather_strip",
+      "has_unfinished_sack",
+      "has_sewing_needle",
+      "has_the_recipe"
+    ]
   ],
   "rewards": {
-	"recipes": [
-	  "sns:crafting/leather_sack"
-	]
+    "recipes": [
+      "sns:crafting/leather_sack"
+    ]
   },
   "sends_telemetry_event": false
 }

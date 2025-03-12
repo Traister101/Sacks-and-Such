@@ -1,0 +1,11 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "sns:buckle"
+  },
+  "result_fluid": {
+    "amount": 100,
+    "fluid": "tfc:metal/cast_iron"
+  },
+  "temperature": 1535.0
+}

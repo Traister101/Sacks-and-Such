@@ -1,19 +1,21 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
 license = "MIT"
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+issueTrackerURL = "https://github.com/Traister101/Sacks-and-Such/issues"
+
 [[mods]]
 modId = "sns"
 version = "${file.jarVersion}"
 displayName = "Sacks 'N Such"
 logoFile = "icon.png"
 authors = "Traister101"
+credits = "Majority of art assets and models by Alekiponi, Boots assets by coachthesexprime. Buckle, Mob Net and Lunchbox assets created by bloodstar962"
 description = '''An addon for TFC focusing on bringing vessel like handheld containers for all your adventuring needs'''
 
 [[dependencies.sns]]
 modId = "tfc"
 mandatory = true
-versionRange = "[3.1.9,)"
+versionRange = "[3.2.11,)"
 ordering = "AFTER"
 side = "BOTH"
 
@@ -34,7 +36,7 @@ side = "BOTH"
 [[dependencies.sns]]
 modId = "esc"
 mandatory = true
-versionRange = "[1.1,)"
+versionRange = "[1.2,)"
 ordering = "AFTER"
 side = "BOTH"
 
@@ -47,6 +49,6 @@ side = "BOTH"
 
 [mc-publish]
 dependencies = [
-	"tfc@3.1.9{modrinth:JaCEZUhg}",
+	"tfc@3.2.11{modrinth:JaCEZUhg}",
 	"curios@5.4.5{modrinth:vvuO3ImH}"
 ]

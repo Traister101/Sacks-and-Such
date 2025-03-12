@@ -1,0 +1,16 @@
+{
+  "type": "tfc:anvil",
+  "apply_forging_bonus": false,
+  "input": {
+    "tag": "forge:rods/blue_steel"
+  },
+  "result": {
+    "item": "sns:metal/horseshoe/blue_steel"
+  },
+  "rules": [
+    "bend_third_last",
+    "bend_second_last",
+    "upset_last"
+  ],
+  "tier": 6
+}

@@ -1,7 +1,7 @@
 package mod.traister101.sns.util.handlers;
 
 import mod.traister101.sns.config.SNSConfig;
-import mod.traister101.sns.util.ContainerType;
+import mod.traister101.sns.util.*;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.dries007.tfc.common.blocks.wood.FallenLeavesBlock;
@@ -24,7 +24,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.eventbus.api.Event.Result;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.*;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
@@ -67,7 +66,7 @@ public final class PickupHandler {
 	/**
 	 * Intercept block right clicks, so we can yoink TFC ground items
 	 */
-	public static void onBlockActivated(final RightClickBlock event) {
+	public static void onGroundBlockInteract(final RightClickBlock event) {
 		if (!SNSConfig.SERVER.doPickup.get()) return;
 
 		final BlockPos blockPos = event.getPos();
@@ -129,7 +128,7 @@ public final class PickupHandler {
 
 		if (remainder.isEmpty()) return ItemStack.EMPTY;
 
-		if (ModList.get().isLoaded(CuriosApi.MODID)) {
+		if (SNSUtils.isCuriosPresent()) {
 			final var maybeCuriosItemHandler = CuriosApi.getCuriosInventory(player).resolve();
 
 			if (maybeCuriosItemHandler.isPresent()) {
@@ -168,30 +167,11 @@ public final class PickupHandler {
 
 			remainder = ItemHandlerHelper.insertItem(maybeContainerInv.get(), remainder, false);
 
-			if (remainder.isEmpty()) return ItemStack.EMPTY;
-			if (SNSConfig.SERVER.doVoiding.get() && !ContainerType.canDoItemVoiding(itemContainer)) continue;
-
-			if (!voidedItem(remainder, maybeContainerInv.get())) return ItemStack.EMPTY;
+			if (!remainder.isEmpty()) continue;
 
 			return ItemStack.EMPTY;
 		}
 		return remainder;
-	}
-
-	/**
-	 * @param itemStack The Item Stack to try and void
-	 *
-	 * @return If the item was voided
-	 */
-	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
-	private static boolean voidedItem(final ItemStack itemStack, final IItemHandler itemHandler) {
-		// Make sure there's a slot with the same type of item before voiding the pickup
-		for (int slotIndex = 0; slotIndex < itemHandler.getSlots(); slotIndex++) {
-			final ItemStack slotStack = itemHandler.getStackInSlot(slotIndex);
-			if (!ItemStack.isSameItem(slotStack, itemStack)) continue;
-			return true;
-		}
-		return false;
 	}
 
 	/**

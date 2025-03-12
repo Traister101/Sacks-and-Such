@@ -1,6 +1,6 @@
 {
   "parent": "sns:item/held/small_sack",
   "textures": {
-	"sack": "sns:item/held/burlap_sack"
+    "sack": "sns:item/held/burlap_sack"
   }
 }

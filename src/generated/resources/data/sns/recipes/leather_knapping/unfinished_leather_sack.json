@@ -2,13 +2,13 @@
   "type": "tfc:knapping",
   "knapping_type": "tfc:leather",
   "pattern": [
-	" XXX ",
-	"XXXXX",
-	"XXXXX",
-	"XXXXX",
-	" XXX "
+    " XXX ",
+    "XXXXX",
+    "XXXXX",
+    "XXXXX",
+    " XXX "
   ],
   "result": {
-	"item": "sns:unfinished_leather_sack"
+    "item": "sns:unfinished_leather_sack"
   }
 }

@@ -6,13 +6,13 @@
   "loader": "forge:separate_transforms",
   "perspectives": {
     "fixed": {
-      "parent": "sns:icon/straw_basket"
+      "parent": "sns:item/icon/straw_basket"
     },
     "ground": {
-      "parent": "sns:icon/straw_basket"
+      "parent": "sns:item/icon/straw_basket"
     },
     "gui": {
-      "parent": "sns:icon/straw_basket"
+      "parent": "sns:item/icon/straw_basket"
     }
   }
 }

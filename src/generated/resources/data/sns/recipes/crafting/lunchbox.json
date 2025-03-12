@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "sns:reinforced_fabric"
+    },
+    "L": {
+      "item": "sns:bound_leather_strip"
+    },
+    "R": {
+      "tag": "forge:rods/wrought_iron"
+    },
+    "S": {
+      "tag": "forge:sheets/wrought_iron"
+    }
+  },
+  "pattern": [
+    "RLR",
+    "SFS",
+    " S "
+  ],
+  "result": {
+    "item": "sns:lunchbox"
+  },
+  "show_notification": true
+}

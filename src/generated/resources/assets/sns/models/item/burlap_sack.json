@@ -1,18 +1,18 @@
 {
   "parent": "forge:item/default",
   "base": {
-	"parent": "sns:item/held/burlap_sack"
+    "parent": "sns:item/held/burlap_sack"
   },
   "loader": "forge:separate_transforms",
   "perspectives": {
-	"fixed": {
-	  "parent": "sns:icon/burlap_sack"
-	},
-	"ground": {
-	  "parent": "sns:icon/burlap_sack"
-	},
-	"gui": {
-	  "parent": "sns:icon/burlap_sack"
-	}
+    "fixed": {
+      "parent": "sns:item/icon/burlap_sack"
+    },
+    "ground": {
+      "parent": "sns:item/icon/burlap_sack"
+    },
+    "gui": {
+      "parent": "sns:item/icon/burlap_sack"
+    }
   }
 }

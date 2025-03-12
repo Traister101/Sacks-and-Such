@@ -1,6 +1,6 @@
 {
   "parent": "sns:item/held/large_sack",
   "textures": {
-	"sack": "sns:item/held/ore_sack"
+    "sack": "sns:item/held/ore_sack"
   }
 }

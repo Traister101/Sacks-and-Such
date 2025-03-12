@@ -34,20 +34,19 @@ public class FramePackCurioRenderer implements ICurioRenderer {
 			final PoseStack poseStack, final RenderLayerParent<T, M> renderLayerParent, final MultiBufferSource bufferSource, final int packedLight,
 			final float limbSwing, final float limbSwingAmount, final float partialTicks, final float ageInTicks, final float netHeadYaw,
 			final float headPitch) {
+		if (itemStack.isEmpty()) return;
 
-		if (!itemStack.isEmpty()) {
-			final LivingEntity entity = slotContext.entity();
-			poseStack.pushPose();
+		final LivingEntity entity = slotContext.entity();
+		poseStack.pushPose();
 
-			ICurioRenderer.translateIfSneaking(poseStack, entity);
-			ICurioRenderer.rotateIfSneaking(poseStack, entity);
+		ICurioRenderer.translateIfSneaking(poseStack, entity);
+		ICurioRenderer.rotateIfSneaking(poseStack, entity);
 
-			poseStack.translate(0, -0.9, 0.6);
+		poseStack.translate(0, -0.9, 0.6);
 
-			model.renderToBuffer(poseStack, bufferSource.getBuffer(model.renderType(PACK_FRAME_TEXTURE)), packedLight, OverlayTexture.NO_OVERLAY, 1,
-					1, 1, 1);
+		model.renderToBuffer(poseStack, bufferSource.getBuffer(model.renderType(PACK_FRAME_TEXTURE)), packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1,
+				1);
 
-			poseStack.popPose();
-		}
+		poseStack.popPose();
 	}
 }

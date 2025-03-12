@@ -1,16 +1,18 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-	"has_leather": {
-	  "conditions": {
-		"items": [
-		  {
-			"tag": "forge:leather"
-		  }
-		]
-	  },
-	  "trigger": "minecraft:inventory_changed"
-	},
+    "has_bound_leather_strip": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sns:bound_leather_strip"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_pack_frame": {
       "conditions": {
         "items": [
@@ -56,7 +58,7 @@
     [
       "has_pack_frame",
       "has_reinforced_fabric",
-	  "has_leather",
+      "has_bound_leather_strip",
       "has_sewing_needle",
       "has_the_recipe"
     ]

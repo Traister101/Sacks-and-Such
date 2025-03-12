@@ -6,13 +6,13 @@
   "loader": "forge:separate_transforms",
   "perspectives": {
     "fixed": {
-      "parent": "sns:icon/leather_sack"
+      "parent": "sns:item/icon/leather_sack"
     },
     "ground": {
-      "parent": "sns:icon/leather_sack"
+      "parent": "sns:item/icon/leather_sack"
     },
     "gui": {
-      "parent": "sns:icon/leather_sack"
+      "parent": "sns:item/icon/leather_sack"
     }
   }
 }

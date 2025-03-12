@@ -1,0 +1,16 @@
+{
+  "type": "tfc:anvil",
+  "apply_forging_bonus": false,
+  "input": {
+    "tag": "forge:rods/steel"
+  },
+  "result": {
+    "item": "sns:metal/horseshoe/steel"
+  },
+  "rules": [
+    "bend_third_last",
+    "bend_second_last",
+    "upset_last"
+  ],
+  "tier": 4
+}

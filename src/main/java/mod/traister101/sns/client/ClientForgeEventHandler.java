@@ -1,7 +1,8 @@
 package mod.traister101.sns.client;
 
 import mod.traister101.sns.common.capability.ILunchboxHandler.CycleDirection;
-import mod.traister101.sns.common.capability.LunchboxCapability;
+import mod.traister101.sns.common.capability.SNSCapabilities;
+import mod.traister101.sns.common.items.SNSItems;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.mixins.client.invoker.AddCustomNbtDataInvoker;
 import mod.traister101.sns.network.*;
@@ -36,19 +37,15 @@ public final class ClientForgeEventHandler {
 
 		eventBus.addListener(ClientForgeEventHandler::onKeyPress);
 		eventBus.addListener(ClientForgeEventHandler::onClickInput);
-		// TODO add back when content done
-//		eventBus.addListener(ClientForgeEventHandler::onMouseScroll);
+		eventBus.addListener(ClientForgeEventHandler::onMouseScroll);
 	}
 
 	public static void onKeyPress(final Key event) {
 		// Sanity check
 		if (MC.player == null) return;
 
-		if (SNSKeybinds.TOGGLE_VOID.isDown()) {
-			final ItemStack heldStack = MC.player.getMainHandItem();
-			final boolean flag = !NBTHelper.isAutoVoid(heldStack);
-			SNSUtils.sendTogglePacket(ToggleType.VOID, flag);
-			MC.player.displayClientMessage(ToggleType.VOID.getTooltip(flag), true);
+		if (SNSKeybinds.OPEN_ITEM_CONTAINER.consumeClick()) {
+			SNSPacketHandler.sendToServer(new ServerboundOpenContainerPacket());
 		}
 
 		if (SNSKeybinds.TOGGLE_PICKUP.isDown()) {
@@ -80,9 +77,8 @@ public final class ClientForgeEventHandler {
 		if (MC.player == null) return;
 
 		final ItemStack mainHandStack = MC.player.getMainHandItem();
-// TODO add this back when the content is finished
 
-//		if (!mainHandStack.is(SNSItems.LUNCHBOX.get())) return;
+		if (!mainHandStack.is(SNSItems.LUNCHBOX.get())) return;
 
 		if (!MC.player.isShiftKeyDown()) return;
 
@@ -91,7 +87,7 @@ public final class ClientForgeEventHandler {
 		final boolean scrollForwards = scrollDelta < 0;
 		final boolean scrollBackwards = scrollDelta > 0;
 
-		final var capability = mainHandStack.getCapability(LunchboxCapability.LUNCHBOX);
+		final var capability = mainHandStack.getCapability(SNSCapabilities.LUNCHBOX);
 
 		if (scrollForwards) {
 			capability.ifPresent(lunchboxHandler -> lunchboxHandler.cycleSelected(CycleDirection.FORWARD));

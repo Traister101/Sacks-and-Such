@@ -1,18 +1,18 @@
 {
   "parent": "forge:item/default",
   "base": {
-	"parent": "sns:item/held/seed_pouch"
+    "parent": "sns:item/held/seed_pouch"
   },
   "loader": "forge:separate_transforms",
   "perspectives": {
-	"fixed": {
-	  "parent": "sns:icon/seed_pouch"
-	},
-	"ground": {
-	  "parent": "sns:icon/seed_pouch"
-	},
-	"gui": {
-	  "parent": "sns:icon/seed_pouch"
-	}
+    "fixed": {
+      "parent": "sns:item/icon/seed_pouch"
+    },
+    "ground": {
+      "parent": "sns:item/icon/seed_pouch"
+    },
+    "gui": {
+      "parent": "sns:item/icon/seed_pouch"
+    }
   }
 }
