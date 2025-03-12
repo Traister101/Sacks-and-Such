@@ -5,7 +5,7 @@ import mod.traister101.sns.common.capability.*;
 import mod.traister101.sns.common.capability.LazyCapabilityProvider.LazySerializedCapabilityProvider;
 import mod.traister101.sns.common.items.LunchBoxItem.LunchboxHandler;
 import mod.traister101.sns.config.SNSConfig;
-import mod.traister101.sns.config.ServerConfig.ContainerConfig;
+import mod.traister101.sns.config.entries.ContainerConfig;
 import mod.traister101.sns.util.ContainerType;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.capabilities.size.Size;

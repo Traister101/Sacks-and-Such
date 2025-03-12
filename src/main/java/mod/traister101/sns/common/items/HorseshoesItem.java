@@ -4,7 +4,7 @@ import com.google.common.collect.*;
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.config.SNSConfig;
-import mod.traister101.sns.config.ServerConfig.HorseshoesConfig;
+import mod.traister101.sns.config.entries.HorseshoesConfig;
 
 import net.minecraft.*;
 import net.minecraft.nbt.CompoundTag;

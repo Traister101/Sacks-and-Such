@@ -3,7 +3,7 @@ package mod.traister101.sns.common.items;
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.BootsArmorMaterial;
 import mod.traister101.sns.config.SNSConfig;
-import mod.traister101.sns.config.ServerConfig.HorseshoesConfig;
+import mod.traister101.sns.config.entries.HorseshoesConfig;
 import mod.traister101.sns.util.ContainerType;
 import net.dries007.tfc.util.Metal.Default;
 import net.dries007.tfc.util.registry.RegistryMetal;

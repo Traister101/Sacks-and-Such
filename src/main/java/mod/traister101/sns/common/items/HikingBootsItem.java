@@ -5,7 +5,7 @@ import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.client.models.*;
 import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.config.SNSConfig;
-import mod.traister101.sns.config.ServerConfig.BootsConfig;
+import mod.traister101.sns.config.entries.BootsConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;

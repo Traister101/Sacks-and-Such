@@ -2,17 +2,20 @@ package mod.traister101.sns.config;
 
 import mod.traister101.sns.common.items.HikingBootsItem.BootModelType;
 
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.*;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(makeFinal = true, level = AccessLevel.PUBLIC)
 public final class ClientConfig {
 
-	public final BooleanValue voidGlint;
-	public final BooleanValue displayItemContentsAsImages;
-	public final EnumValue<BootModelType> bootModelType;
+	BooleanValue voidGlint;
+	BooleanValue displayItemContentsAsImages;
+	EnumValue<BootModelType> bootModelType;
 
-	ClientConfig(final ForgeConfigSpec.Builder builder) {
-		voidGlint = builder.comment("Swaps the enchant glint from when auto pickup is enabled to when it's dissabled").define("voidGlint", true);
+	ClientConfig(final Builder builder) {
+		voidGlint = builder.comment("Swaps the enchant glint from when auto pickup is enabled to when it's disabled").define("voidGlint", true);
 		displayItemContentsAsImages = builder.comment("When enabled sacks will display their contents like how TFC vessels do")
 				.define("displayItemContentsAsImages", true);
 		bootModelType = builder.comment(
