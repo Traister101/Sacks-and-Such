@@ -6,7 +6,7 @@
 	{
 	  "type": "patchouli:spotlight",
 	  "item": "sns:lunchbox",
-	  "text": "The $(item)Lunchbox$() is one of the more intresting containers this mod adds. As you might expect from the name these hold food items and even allow you to consume food out of them."
+	  "text": "The $(item)Lunchbox$() is one of the more interesting containers. As you might expect from the name these hold food items and even allow you to consume food out of them. $(k:sneak) and $(k:use) to open the lunchbox"
 	},
 	{
 	  "type": "patchouli:text",

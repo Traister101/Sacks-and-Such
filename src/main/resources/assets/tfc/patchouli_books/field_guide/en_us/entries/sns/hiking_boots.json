@@ -5,7 +5,7 @@
   "pages": [
 	{
 	  "type": "patchouli:text",
-	  "text": "Every explorer needs a good pair of boots. These enable you to quickly push through shrubbery and give a minor speed boost (by default 5%)"
+	  "text": "Every explorer needs a good pair of boots. These enable you to quickly push through shrubbery and give a minor speed boost in addition to a minor increase in safe fall height"
 	},
 	{
 	  "type": "patchouli:crafting",

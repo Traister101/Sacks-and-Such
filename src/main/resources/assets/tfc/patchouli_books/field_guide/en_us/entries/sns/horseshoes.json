@@ -5,7 +5,7 @@
   "pages": [
 	{
 	  "type": "patchouli:text",
-	  "text": "$(item)Horseshoes$() are smithed individually and then combined together in the crafting grid. What you didn't know Horses had 4 feet?"
+	  "text": "$(item)Horseshoes$() are smithed individually and then combined together in the crafting grid. What you didn't know Horses had 4 feet? $(br)$(br)By the way it's a really good idea to tie up your horse with the higher tier horseshoes, the typical safety pit won't work!"
 	},
 	{
 	  "type": "tfc:sns/better_anvil_recipe",

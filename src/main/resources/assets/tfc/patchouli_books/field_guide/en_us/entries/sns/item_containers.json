@@ -5,7 +5,7 @@
   "pages": [
 	{
 	  "type": "patchouli:text",
-	  "text": "$(thing)Item Containers$() are the primary items this mod adds. They have 6 main stats which can be seen by hoilding $(3)Shift$(clear) while hovering over the stack with your mouse. $(li)$(thing)Slot count$(): the amount of slots it has. $(li)$(thing)Slot Capacity$(): how many items a slot can hold $(li)$(thing)Allowed Size$(): what's the largest $(l:getting_started/size_and_weight)TFC Size$() allowed in the slots."
+	  "text": "$(thing)Item Containers$() are the primary items this mod adds. They have 6 main stats which can be seen by holding $(3)Shift$(clear) while hovering over the stack with your mouse. $(li)$(thing)Slot count$(): the amount of slots it has. $(li)$(thing)Slot Capacity$(): how many items a slot can hold $(li)$(thing)Allowed Size$(): what's the largest $(l:getting_started/size_and_weight)TFC Size$() allowed in the slots."
 	},
 	{
 	  "type": "patchouli:text",
