@@ -15,3 +15,9 @@
   for that slot. Doing so voids picked up items of that exact type only once items try to go into that slot. For example
   having the second slot enabled for voiding but the first slot empty will mean you have 2 slots before anything gets
   voided. It should feel much better than before
+
+### Fixes
+
+- A couple of related issues with extended slot capacity. Namely, allowing normally un-stackable items to stack
+  causing bad interactions with code that fairly thought the items would never stack. For example TFC's Small Vessels
+  which could be easily used to dupe items via their inventory interation.
