@@ -64,11 +64,11 @@ public final class ServerConfig {
 		bootsStepPerDamage = builder.comment("The amount of steps taken before one point of durability is lost")
 				.defineInRange("bootsStepPerDamage", 500, 0, Integer.MAX_VALUE);
 
-		hikingBoots = BootsConfig.buildBootsConfig(builder, "Hiking Boots", 0.05, 0);
-		steelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Steel Toe Boots", 0.1, 0.5);
-		blackSteelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Black Steel Toe Boots", 0.15, 0.5);
-		blueSteelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Blue Steel Toe Boots", 0.2, 0.5);
-		redSteelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Red Steel Toe Boots", 0.2, 0.5);
+		hikingBoots = BootsConfig.buildBootsConfig(builder, "Hiking Boots", 0.05, 0, 0.5);
+		steelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Steel Toe Boots", 0.1, 0.5, 1);
+		blackSteelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Black Steel Toe Boots", 0.15, 0.5, 2);
+		blueSteelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Blue Steel Toe Boots", 0.2, 0.5, 5);
+		redSteelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Red Steel Toe Boots", 0.2, 0.5, 5);
 
 		builder.pop();
 
@@ -145,18 +145,20 @@ public final class ServerConfig {
 
 		public final DoubleValue movementSpeed;
 		public final DoubleValue stepHeight;
+		public final DoubleValue fallPadding;
 
-		private BootsConfig(final ForgeConfigSpec.Builder builder, final double movementSpeed, final double stepHeight) {
+		private BootsConfig(final ForgeConfigSpec.Builder builder, final double movementSpeed, final double stepHeight, final double fallPadding) {
 			this.movementSpeed = builder.comment("The movement speed bonus these boots provide")
-					.defineInRange("movementSpeed", movementSpeed, 0, Double.MAX_VALUE);
-			this.stepHeight = builder.comment("The step height bonus these boots provide")
-					.defineInRange("stepHeight", stepHeight, 0, Double.MAX_VALUE);
+					.defineInRange("movementSpeed", movementSpeed, 0, 1024);
+			this.stepHeight = builder.comment("The step height bonus these boots provide").defineInRange("stepHeight", stepHeight, 0, 512);
+			this.fallPadding = builder.comment("The extra fall distance in blocks before you begin taking fall damage")
+					.defineInRange("fallPadding", fallPadding, 0, 64);
 		}
 
-		private static BootsConfig buildBootsConfig(final Builder builder, final String bootsName, final double movementSpeed,
-				final double stepHeight) {
+		public static BootsConfig buildBootsConfig(final Builder builder, final String bootsName, final double movementSpeed, final double stepHeight,
+				final double fallPadding) {
 			builder.push(bootsName);
-			final BootsConfig bootsConfig = new BootsConfig(builder, movementSpeed, stepHeight);
+			final BootsConfig bootsConfig = new BootsConfig(builder, movementSpeed, stepHeight, fallPadding);
 			builder.pop();
 			return bootsConfig;
 		}

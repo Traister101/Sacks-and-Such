@@ -3,7 +3,9 @@ package mod.traister101.sns.common.items;
 import com.google.common.collect.*;
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.client.models.*;
+import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.config.SNSConfig;
+import mod.traister101.sns.config.ServerConfig.BootsConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -38,6 +40,7 @@ public class HikingBootsItem extends ArmorItem {
 
 	private final Supplier<Double> movementSpeed;
 	private final Supplier<Double> stepHeight;
+	private final Supplier<Double> fallPadding;
 	private Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	/**
@@ -46,12 +49,19 @@ public class HikingBootsItem extends ArmorItem {
 	 * You are expected to pass in a {@link DoubleValue} to facilitate configurability
 	 * @param stepHeight A supplier for the step height modifier the boots provide.
 	 * You are expected to pass in a {@link DoubleValue} to facilitate configurability
+	 * @param fallPadding A supplier for the fall padding modifier the boots provide.
+	 * You are expected to pass in a {@link DoubleValue} to facilitate configurability
 	 */
 	public HikingBootsItem(final Properties properties, final ArmorMaterial armorMaterial, final Supplier<Double> movementSpeed,
-			final Supplier<Double> stepHeight) {
+			final Supplier<Double> stepHeight, final Supplier<Double> fallPadding) {
 		super(armorMaterial, Type.BOOTS, properties);
 		this.movementSpeed = movementSpeed;
 		this.stepHeight = stepHeight;
+		this.fallPadding = fallPadding;
+	}
+
+	public HikingBootsItem(final Properties properties, final ArmorMaterial armorMaterial, final BootsConfig bootsConfig) {
+		this(properties, armorMaterial, bootsConfig.movementSpeed, bootsConfig.stepHeight, bootsConfig.fallPadding);
 	}
 
 	public static int getSteps(final ItemStack itemStack) {
@@ -64,6 +74,7 @@ public class HikingBootsItem extends ArmorItem {
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(final EquipmentSlot slot, final ItemStack itemStack) {
+		if (slot != EquipmentSlot.FEET) return super.getAttributeModifiers(slot, itemStack);
 		// Delay attrabute init until server config is loaded :/
 		if (attributeModifiers == null) {
 			final var builder = ImmutableMultimap.<Attribute, AttributeModifier>builder();
@@ -77,11 +88,15 @@ public class HikingBootsItem extends ArmorItem {
 				builder.put(ForgeMod.STEP_HEIGHT_ADDITION.get(),
 						new AttributeModifier(HIKING_BOOTS_UUID, "Step Height", stepHeight.get(), Operation.ADDITION));
 			}
+			if (0 < fallPadding.get()) {
+				builder.put(SNSAttributes.EXTRA_FALL_DISTANCE.get(),
+						new AttributeModifier(HIKING_BOOTS_UUID, "Fall Padding", fallPadding.get(), Operation.ADDITION));
+			}
 
 			this.attributeModifiers = builder.build();
 		}
 
-		return slot == EquipmentSlot.FEET ? attributeModifiers : super.getAttributeModifiers(slot, itemStack);
+		return this.attributeModifiers;
 	}
 
 	@Override

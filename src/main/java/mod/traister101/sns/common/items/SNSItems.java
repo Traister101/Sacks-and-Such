@@ -47,24 +47,23 @@ public final class SNSItems {
 	public static final RegistryObject<MobNetItem> MOB_NET_ITEM = register("mob_net", () -> new MobNetItem(new Properties()));
 
 	public static final RegistryObject<HikingBootsItem> HIKING_BOOTS = register("hiking_boots",
-			() -> new HikingBootsItem(new Properties().stacksTo(1), BootsArmorMaterial.HIKING_BOOTS, SNSConfig.SERVER.hikingBoots.movementSpeed,
-					SNSConfig.SERVER.hikingBoots.stepHeight));
+			() -> new HikingBootsItem(new Properties().stacksTo(1), BootsArmorMaterial.HIKING_BOOTS, SNSConfig.SERVER.hikingBoots));
 
 	public static final RegistryObject<HikingBootsItem> STEEL_TOE_HIKING_BOOTS = register("steel_toe_hiking_boots",
 			() -> new HikingBootsItem(new Properties().stacksTo(1).rarity(Rarity.UNCOMMON), BootsArmorMaterial.STEEL_TOE_HIKING_BOOTS,
-					SNSConfig.SERVER.steelToeHikingBoots.movementSpeed, SNSConfig.SERVER.steelToeHikingBoots.stepHeight));
+					SNSConfig.SERVER.steelToeHikingBoots));
 
 	public static final RegistryObject<HikingBootsItem> BLACK_STEEL_TOE_HIKING_BOOTS = register("black_steel_toe_hiking_boots",
 			() -> new HikingBootsItem(new Properties().stacksTo(1).rarity(Rarity.RARE), BootsArmorMaterial.BLACK_STEEL_TOE_HIKING_BOOTS,
-					SNSConfig.SERVER.blackSteelToeHikingBoots.movementSpeed, SNSConfig.SERVER.blackSteelToeHikingBoots.stepHeight));
+					SNSConfig.SERVER.blackSteelToeHikingBoots));
 
 	public static final RegistryObject<HikingBootsItem> BLUE_STEEL_TOE_HIKING_BOOTS = register("blue_steel_toe_hiking_boots",
 			() -> new HikingBootsItem(new Properties().stacksTo(1).rarity(Rarity.EPIC), BootsArmorMaterial.BLUE_STEEL_TOE_HIKING_BOOTS,
-					SNSConfig.SERVER.blueSteelToeHikingBoots.movementSpeed, SNSConfig.SERVER.blueSteelToeHikingBoots.stepHeight));
+					SNSConfig.SERVER.blueSteelToeHikingBoots));
 
 	public static final RegistryObject<HikingBootsItem> RED_STEEL_TOE_HIKING_BOOTS = register("red_steel_toe_hiking_boots",
 			() -> new HikingBootsItem(new Properties().stacksTo(1).rarity(Rarity.EPIC), BootsArmorMaterial.RED_STEEL_TOE_HIKING_BOOTS,
-					SNSConfig.SERVER.redSteelToeHikingBoots.movementSpeed, SNSConfig.SERVER.redSteelToeHikingBoots.stepHeight));
+					SNSConfig.SERVER.redSteelToeHikingBoots));
 
 	public static final RegistryObject<HorseshoesItem> STEEL_HORSESHOES = registerHorseShoes(Default.STEEL,
 			SNSConfig.SERVER.steelHorseshoeSpeedModifier);
