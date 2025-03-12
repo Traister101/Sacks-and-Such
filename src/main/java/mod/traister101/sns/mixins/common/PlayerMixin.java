@@ -1,16 +1,14 @@
 package mod.traister101.sns.mixins.common;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import mod.traister101.sns.common.items.HikingBootsItem;
 import net.dries007.tfc.common.TFCTags;
-import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity {
@@ -19,21 +17,16 @@ public abstract class PlayerMixin extends LivingEntity {
 		super(pEntityType, pLevel);
 	}
 
-	@Shadow
-	public abstract ItemStack getItemBySlot(final EquipmentSlot pSlot);
-
 	/**
 	 * @reason When worn boots should prevent TFC plants from slowing down players
 	 * @author Traister101
 	 */
-	@Inject(method = "getBlockSpeedFactor", at = @At(value = "RETURN"), cancellable = true)
-	private void sns$preventPlantSlowdownWhenWearingBoots(CallbackInfoReturnable<Float> callbackInfo) {
-		if (1 > callbackInfo.getReturnValueF()) return;
+	@ModifyReturnValue(method = "getBlockSpeedFactor", at = @At(value = "RETURN"))
+	private float preventPlantSlowdown(final float original) {
+		if (1 > original) return original;
 
-		final ItemStack boots = getItemBySlot(EquipmentSlot.FEET);
-		if (!(boots.getItem() instanceof HikingBootsItem)) return;
+		if (!(getItemBySlot(EquipmentSlot.FEET).getItem() instanceof HikingBootsItem)) return original;
 
-		final BlockState blockState = this.level().getBlockState(this.blockPosition());
-		if (blockState.is(TFCTags.Blocks.PLANTS)) callbackInfo.setReturnValue(1F);
+		return this.level().getBlockState(this.blockPosition()).is(TFCTags.Blocks.PLANTS) ? 1 : original;
 	}
 }
