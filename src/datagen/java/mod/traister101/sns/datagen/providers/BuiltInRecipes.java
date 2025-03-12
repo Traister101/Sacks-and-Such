@@ -189,6 +189,8 @@ public class BuiltInRecipes extends RecipeProvider {
 					.unlockedBy("has_reinforced_fabric", has(SNSItems.REINFORCED_FABRIC.get()))
 					.save(writer);
 		}
+
+		writer.accept(new LeatherKnapping(SNSItems.QUIVER.get(), " XXXX", "X XXX", "X XXX", "X XXX", " XXXX"));
 	}
 
 	private static void horseshoesRecipes(final Consumer<FinishedRecipe> writer, final HorseshoesItem horseshoes, final Item horseshoe,

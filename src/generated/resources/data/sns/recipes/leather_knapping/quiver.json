@@ -1,0 +1,14 @@
+{
+  "type": "tfc:knapping",
+  "knapping_type": "tfc:leather",
+  "pattern": [
+    " XXXX",
+    "X XXX",
+    "X XXX",
+    "X XXX",
+    " XXXX"
+  ],
+  "result": {
+    "item": "sns:quiver"
+  }
+}
