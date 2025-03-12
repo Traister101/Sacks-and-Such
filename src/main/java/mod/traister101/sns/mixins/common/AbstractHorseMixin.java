@@ -3,6 +3,7 @@ package mod.traister101.sns.mixins.common;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.common.items.HorseshoesItem;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
@@ -91,6 +92,17 @@ public abstract class AbstractHorseMixin extends Animal {
 	@ModifyReturnValue(method = "getInventorySize", at = @At(value = "RETURN"))
 	private int addHorseshoeSlot(final int original) {
 		return original + 1;
+	}
+
+	/**
+	 * @reason The {@link net.minecraftforge.event.entity.living.LivingFallEvent} doesn't fire for horses...
+	 * @author Traister101
+	 */
+	@ModifyArg(method = "causeFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/horse/AbstractHorse;calculateFallDamage(FF)I"), index = 0)
+	private float modifyFallDistance(final float fallDistance) {
+		final var attribute = getAttribute(SNSAttributes.EXTRA_FALL_DISTANCE.get());
+		if (attribute == null) return fallDistance;
+		return (float) Math.max(0, fallDistance - attribute.getValue());
 	}
 
 	/**
