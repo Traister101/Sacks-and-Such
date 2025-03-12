@@ -79,10 +79,10 @@ public final class ServerConfig {
 
 		horseshoesStepsPerDamage = builder.comment("The amount of steps taken before one point of durability is lost")
 				.defineInRange("horseshoesStepsPerDamage", 500, 0, Integer.MAX_VALUE);
-		steelHorseshoes = HorseshoesConfig.buildConfig(builder, "Steel Horseshoes", 0.05, 0);
-		blackSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Black Steel Horseshoes", 0.1, 5);
-		blueSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Blue Steel Horseshoes", 0.2, 10);
-		redSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Red Steel Horseshoes", 0.2, 10);
+		steelHorseshoes = HorseshoesConfig.buildConfig(builder, "Steel Horseshoes", 0.05, 2, 0);
+		blackSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Black Steel Horseshoes", 0.1, 2, 0);
+		blueSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Blue Steel Horseshoes", 0.2, 5, 1);
+		redSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Red Steel Horseshoes", 0.2, 5, 1);
 
 		builder.pop();
 
@@ -168,13 +168,15 @@ public final class ServerConfig {
 
 		public final DoubleValue movementSpeed;
 		public final DoubleValue bonusFallDistance;
+		public final DoubleValue bonusStepDistance;
 
 		public static HorseshoesConfig buildConfig(final Builder builder, final String bootsName, final double movementSpeed,
-				final double bonusFallDistance) {
+				final double bonusFallDistance, final double bonusStepDistance) {
 			builder.push(bootsName);
 			final HorseshoesConfig bootsConfig = new HorseshoesConfig(
 					builder.comment("The movement speed bonus horseshoes provide").defineInRange("movementSpeed", movementSpeed, 0, 1024),
-					builder.comment("The fall distance bonus horseshoes provide").defineInRange("bonusFallDistance", bonusFallDistance, 0, 64));
+					builder.comment("The fall distance bonus horseshoes provide").defineInRange("bonusFallDistance", bonusFallDistance, 0, 64),
+					builder.comment("The step height bonus these horseshoes provide").defineInRange("stepHeightBonus", bonusStepDistance, 0, 512));
 			builder.pop();
 			return bootsConfig;
 		}

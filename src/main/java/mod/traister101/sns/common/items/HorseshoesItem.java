@@ -16,6 +16,8 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
+import net.minecraftforge.common.ForgeMod;
+
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
@@ -35,6 +37,7 @@ public class HorseshoesItem extends Item {
 
 	private final Supplier<Double> movementSpeed;
 	private final Supplier<Double> bonusFallDistance;
+	private final Supplier<Double> bonusStepDistance;
 	@Getter(lazy = true)
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers = Util.make(() -> {
 		final var builder = ImmutableMultimap.<Attribute, AttributeModifier>builder();
@@ -43,17 +46,21 @@ public class HorseshoesItem extends Item {
 						Operation.MULTIPLY_TOTAL));
 		builder.put(SNSAttributes.EXTRA_FALL_DISTANCE.get(),
 				new AttributeModifier(HORSE_SHOE_UUID, "Horseshoe fall distance bonus", bonusFallDistance.get(), Operation.ADDITION));
+		builder.put(ForgeMod.STEP_HEIGHT_ADDITION.get(),
+				new AttributeModifier(HORSE_SHOE_UUID, "Horseshoe step bonus", bonusStepDistance.get(), Operation.ADDITION));
 		return builder.build();
 	});
 
-	public HorseshoesItem(final Properties properties, final Supplier<Double> movementSpeed, final Supplier<Double> bonusFallDistance) {
+	public HorseshoesItem(final Properties properties, final Supplier<Double> movementSpeed, final Supplier<Double> bonusFallDistance,
+			final Supplier<Double> bonusStepDistance) {
 		super(properties);
 		this.movementSpeed = movementSpeed;
 		this.bonusFallDistance = bonusFallDistance;
+		this.bonusStepDistance = bonusStepDistance;
 	}
 
 	public HorseshoesItem(final Properties properties, final HorseshoesConfig horseshoesConfig) {
-		this(properties, horseshoesConfig.movementSpeed, horseshoesConfig.bonusFallDistance);
+		this(properties, horseshoesConfig.movementSpeed, horseshoesConfig.bonusFallDistance, horseshoesConfig.bonusStepDistance);
 	}
 
 	public static int getSteps(final ItemStack itemStack) {
