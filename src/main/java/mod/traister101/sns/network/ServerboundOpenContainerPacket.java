@@ -34,21 +34,25 @@ public class ServerboundOpenContainerPacket {
 		if (player == null) return;
 
 		if (SNSUtils.isCuriosPresent()) {
-			CuriosApi.getCuriosInventory(player)
+			final var maybeSlotResult = CuriosApi.getCuriosInventory(player)
 					.resolve()
-					.flatMap(curiosItemHandler -> curiosItemHandler.findFirstCurio(itemStack -> itemStack.getItem() instanceof ContainerItem))
-					.ifPresent(slotResult -> {
-						final ItemStack itemStack = slotResult.stack();
+					.flatMap(curiosItemHandler -> curiosItemHandler.findFirstCurio(itemStack -> itemStack.getItem() instanceof ContainerItem));
+			if (maybeSlotResult.isPresent()) {
+				final var slotResult = maybeSlotResult.get();
+				final ItemStack itemStack = slotResult.stack();
 
-						itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().ifPresent(itemHandler -> {
-							final SlotContext slotContext = slotResult.slotContext();
+				final var maybeItemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
 
-							NetworkHooks.openScreen(player, new SimpleMenuProvider(
-											(pContainerId, pPlayerInventory, pPlayer) -> ContainerItemMenu.forUnIndexableStack(pContainerId, pPlayerInventory,
-													itemHandler, slotResult::stack), itemStack.getHoverName()),
-									ContainerItemMenu.writeCurios(slotContext.identifier(), slotContext.index()));
-						});
-					});
+				if (maybeItemHandler.isPresent()) {
+					final SlotContext slotContext = slotResult.slotContext();
+
+					NetworkHooks.openScreen(player, new SimpleMenuProvider(
+									(pContainerId, pPlayerInventory, pPlayer) -> ContainerItemMenu.forUnIndexableStack(pContainerId, pPlayerInventory,
+											maybeItemHandler.get(), slotResult::stack), itemStack.getHoverName()),
+							ContainerItemMenu.writeCurios(slotContext.identifier(), slotContext.index()));
+					return;
+				}
+			}
 		}
 
 		final Inventory inventory = player.getInventory();
@@ -62,21 +66,24 @@ public class ServerboundOpenContainerPacket {
 			if (Inventory.isHotbarSlot(slotIndex)) {
 				inventory.selected = slotIndex;
 				player.connection.send(new ClientboundSetCarriedItemPacket(inventory.selected));
-				itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-						.resolve()
-						.ifPresent(itemHandler -> NetworkHooks.openScreen(player, new SimpleMenuProvider(
-										(pContainerId, pPlayerInventory, pPlayer) -> ContainerItemMenu.forHeld(pContainerId, pPlayerInventory, itemHandler,
-												InteractionHand.MAIN_HAND), itemStack.getHoverName()),
-								ContainerItemMenu.writeHeld(InteractionHand.MAIN_HAND)));
+				final var maybeItemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+				if (maybeItemHandler.isPresent()) {
+					NetworkHooks.openScreen(player, new SimpleMenuProvider(
+									(pContainerId, pPlayerInventory, pPlayer) -> ContainerItemMenu.forHeld(pContainerId, pPlayerInventory,
+											maybeItemHandler.get(), InteractionHand.MAIN_HAND), itemStack.getHoverName()),
+							ContainerItemMenu.writeHeld(InteractionHand.MAIN_HAND));
+					return;
+				}
 			} else {
-				itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-						.resolve()
-						.ifPresent(itemHandler -> NetworkHooks.openScreen(player, new SimpleMenuProvider(
-								(pContainerId, pPlayerInventory, pPlayer) -> ContainerItemMenu.forInventory(pContainerId, pPlayerInventory,
-										itemHandler, finalSlotIndex), itemStack.getHoverName()), ContainerItemMenu.writeInventory(finalSlotIndex)));
+				final var maybeItemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+				if (maybeItemHandler.isPresent()) {
+					NetworkHooks.openScreen(player, new SimpleMenuProvider(
+									(pContainerId, pPlayerInventory, pPlayer) -> ContainerItemMenu.forInventory(pContainerId, pPlayerInventory,
+											maybeItemHandler.get(), finalSlotIndex), itemStack.getHoverName()),
+							ContainerItemMenu.writeInventory(finalSlotIndex));
+					return;
+				}
 			}
-
-			return;
 		}
 	}
 }

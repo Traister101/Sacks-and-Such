@@ -3,7 +3,7 @@ package mod.traister101.sns.common.menu;
 import com.google.common.base.Supplier;
 import mod.traister101.esc.common.menu.ExtendedSlotCapacityMenu;
 import mod.traister101.esc.common.slot.ExtendedSlotItemHandler;
-import mod.traister101.sns.common.items.SNSItems;
+import mod.traister101.sns.common.items.ContainerItem;
 import top.theillusivec4.curios.api.*;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -46,8 +46,7 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 			this.containerItemIndex = Integer.MIN_VALUE;
 		}
 
-		this.containerStackSupplier = () -> hand == InteractionHand.MAIN_HAND ?
-				slots.get(containerItemIndex).getItem() :
+		this.containerStackSupplier = () -> hand == InteractionHand.MAIN_HAND ? slots.get(containerItemIndex).getItem() :
 				inventory.player.getOffhandItem();
 
 		this.addContainerSlots(handler);
@@ -118,7 +117,8 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 			case WORN -> {
 				final var curiosItemHandler = CuriosApi.getCuriosInventory(inventory.player).resolve().orElseThrow();
 
-				final SlotResult slotResult = curiosItemHandler.findFirstCurio(SNSItems.FRAME_PACK.get()).orElseThrow();
+				final SlotResult slotResult = curiosItemHandler.findFirstCurio(itemStack -> itemStack.getItem() instanceof ContainerItem)
+						.orElseThrow();
 				final ItemStack stack = slotResult.stack();
 
 				final var itemHandler = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
