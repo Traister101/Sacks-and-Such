@@ -2,6 +2,7 @@ package mod.traister101.sns.datagen.providers;
 
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.client.SNSKeybinds;
+import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.common.capability.LunchboxFoodTrait;
 import mod.traister101.sns.common.items.*;
 import mod.traister101.sns.datagen.SmartLanguageProvider;
@@ -73,6 +74,8 @@ public class BuiltInLanguage extends SmartLanguageProvider {
 		add(SNSUtils.DISABLED, "Disabled");
 
 		add(LunchboxFoodTrait.LUNCHBOX_LANG, "Lunchbox Preserved");
+
+		add(SNSAttributes.EXTRA_FALL_DISTANCE.get().getDescriptionId(), "Fall Distance");
 	}
 
 	@Override

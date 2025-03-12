@@ -3,6 +3,7 @@ package mod.traister101.sns;
 import com.mojang.logging.LogUtils;
 import mod.traister101.sns.client.*;
 import mod.traister101.sns.common.SNSCreativeTab;
+import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.common.capability.LunchboxFoodTrait;
 import mod.traister101.sns.common.items.SNSItems;
 import mod.traister101.sns.common.menu.SNSMenus;
@@ -11,6 +12,7 @@ import mod.traister101.sns.network.SNSPacketHandler;
 import org.slf4j.Logger;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -28,10 +30,12 @@ public final class SacksNSuch {
 	public SacksNSuch() {
 		final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		eventBus.addListener(SacksNSuch::commonSetup);
+		eventBus.addListener(SacksNSuch::addEntityAttributes);
 
 		SNSItems.ITEMS.register(eventBus);
 		SNSMenus.MENUS.register(eventBus);
 		SNSCreativeTab.CREATIVE_TABS.register(eventBus);
+		SNSAttributes.ATTRIBUTES.register(eventBus);
 
 		SNSConfig.init();
 		SNSPacketHandler.init();
@@ -45,5 +49,9 @@ public final class SacksNSuch {
 
 	private static void commonSetup(final FMLCommonSetupEvent event) {
 		event.enqueueWork(LunchboxFoodTrait::init);
+	}
+
+	private static void addEntityAttributes(final EntityAttributeModificationEvent event) {
+		event.getTypes().forEach(entityType -> event.add(entityType, SNSAttributes.EXTRA_FALL_DISTANCE.get()));
 	}
 }
