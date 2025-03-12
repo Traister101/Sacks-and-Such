@@ -4,6 +4,9 @@ import net.dries007.tfc.common.capabilities.size.Size;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.*;
+import net.minecraftforge.common.ForgeConfigSpec.Builder;
+
+import lombok.*;
 
 public final class ServerConfig {
 
@@ -26,11 +29,11 @@ public final class ServerConfig {
 	public final BootsConfig redSteelToeHikingBoots;
 
 	// Horseshoes
-	public final IntValue horseshoeStepsPerDamage;
-	public final DoubleValue steelHorseshoeSpeedModifier;
-	public final DoubleValue blackSteelHorseshoeSpeedModifier;
-	public final DoubleValue blueSteelHorseshoeSpeedModifier;
-	public final DoubleValue redSteelHorseshoeSpeedModifier;
+	public final IntValue horseshoesStepsPerDamage;
+	public final HorseshoesConfig steelHorseshoes;
+	public final HorseshoesConfig blackSteelHorseshoes;
+	public final HorseshoesConfig blueSteelHorseshoes;
+	public final HorseshoesConfig redSteelHorseshoes;
 
 	// Globals
 	public final BooleanValue doPickup;
@@ -72,18 +75,14 @@ public final class ServerConfig {
 
 		builder.pop();
 
-		builder.push("Horseshoe config");
+		builder.push("Horseshoes config");
 
-		horseshoeStepsPerDamage = builder.comment("The amount of steps taken before one point of durability is lost")
-				.defineInRange("horseshoeStepsPerDamage", 500, 0, Integer.MAX_VALUE);
-		steelHorseshoeSpeedModifier = builder.comment("The movement speed bonus the Steel Horseshoes provide")
-				.defineInRange("steelHorseshoeSpeedModifier", 0.05, 0, 2);
-		blackSteelHorseshoeSpeedModifier = builder.comment("The movement speed bonus the Black Steel Horseshoes provide")
-				.defineInRange("blackSteelHorseshoeSpeedModifier", 0.1, 0, 2);
-		blueSteelHorseshoeSpeedModifier = builder.comment("The movement speed bonus the Blue Steel Horseshoes provide")
-				.defineInRange("blueSteelHorseshoeSpeedModifier", 0.2, 0, 2);
-		redSteelHorseshoeSpeedModifier = builder.comment("The movement speed bonus the Red Steel Horseshoes provide")
-				.defineInRange("redSteelHorseshoeSpeedModifier", 0.2, 0, 2);
+		horseshoesStepsPerDamage = builder.comment("The amount of steps taken before one point of durability is lost")
+				.defineInRange("horseshoesStepsPerDamage", 500, 0, Integer.MAX_VALUE);
+		steelHorseshoes = HorseshoesConfig.buildConfig(builder, "Steel Horseshoes", 0.05, 0);
+		blackSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Black Steel Horseshoes", 0.1, 5);
+		blueSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Blue Steel Horseshoes", 0.2, 10);
+		redSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Red Steel Horseshoes", 0.2, 10);
 
 		builder.pop();
 
@@ -159,6 +158,23 @@ public final class ServerConfig {
 				final double fallPadding) {
 			builder.push(bootsName);
 			final BootsConfig bootsConfig = new BootsConfig(builder, movementSpeed, stepHeight, fallPadding);
+			builder.pop();
+			return bootsConfig;
+		}
+	}
+
+	@AllArgsConstructor(access = AccessLevel.PRIVATE)
+	public static final class HorseshoesConfig {
+
+		public final DoubleValue movementSpeed;
+		public final DoubleValue bonusFallDistance;
+
+		public static HorseshoesConfig buildConfig(final Builder builder, final String bootsName, final double movementSpeed,
+				final double bonusFallDistance) {
+			builder.push(bootsName);
+			final HorseshoesConfig bootsConfig = new HorseshoesConfig(
+					builder.comment("The movement speed bonus horseshoes provide").defineInRange("movementSpeed", movementSpeed, 0, 1024),
+					builder.comment("The fall distance bonus horseshoes provide").defineInRange("bonusFallDistance", bonusFallDistance, 0, 64));
 			builder.pop();
 			return bootsConfig;
 		}

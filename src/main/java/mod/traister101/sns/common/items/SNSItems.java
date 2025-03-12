@@ -3,6 +3,7 @@ package mod.traister101.sns.common.items;
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.BootsArmorMaterial;
 import mod.traister101.sns.config.SNSConfig;
+import mod.traister101.sns.config.ServerConfig.HorseshoesConfig;
 import mod.traister101.sns.util.ContainerType;
 import net.dries007.tfc.util.Metal.Default;
 import net.dries007.tfc.util.registry.RegistryMetal;
@@ -65,25 +66,24 @@ public final class SNSItems {
 			() -> new HikingBootsItem(new Properties().stacksTo(1).rarity(Rarity.EPIC), BootsArmorMaterial.RED_STEEL_TOE_HIKING_BOOTS,
 					SNSConfig.SERVER.redSteelToeHikingBoots));
 
-	public static final RegistryObject<HorseshoesItem> STEEL_HORSESHOES = registerHorseShoes(Default.STEEL,
-			SNSConfig.SERVER.steelHorseshoeSpeedModifier);
+	public static final RegistryObject<HorseshoesItem> STEEL_HORSESHOES = registerHorseShoes(Default.STEEL, SNSConfig.SERVER.steelHorseshoes);
 
 	public static final RegistryObject<HorseshoesItem> BLACK_STEEL_HORSESHOES = registerHorseShoes(Default.BLACK_STEEL,
-			SNSConfig.SERVER.blackSteelHorseshoeSpeedModifier);
+			SNSConfig.SERVER.blackSteelHorseshoes);
 
 	public static final RegistryObject<HorseshoesItem> BLUE_STEEL_HORSESHOES = registerHorseShoes(Default.BLUE_STEEL,
-			SNSConfig.SERVER.blueSteelHorseshoeSpeedModifier);
+			SNSConfig.SERVER.blueSteelHorseshoes);
 
 	public static final RegistryObject<HorseshoesItem> RED_STEEL_HORSESHOES = registerHorseShoes(Default.RED_STEEL,
-			SNSConfig.SERVER.blueSteelHorseshoeSpeedModifier);
+			SNSConfig.SERVER.redSteelHorseshoes);
 
 	private static RegistryObject<Item> registerHorseshoe(final RegistryMetal metal) {
 		return registerSimple("metal/horseshoe/" + metal.getSerializedName(), new Properties().rarity(metal.getRarity()));
 	}
 
-	private static RegistryObject<HorseshoesItem> registerHorseShoes(final RegistryMetal metal, final Supplier<Double> horseshoeSpeedModifier) {
+	private static RegistryObject<HorseshoesItem> registerHorseShoes(final RegistryMetal metal, final HorseshoesConfig horseshoesConfig) {
 		return register("metal/horseshoes/" + metal.getSerializedName(),
-				() -> new HorseshoesItem(new Properties().durability(metal.toolTier().getUses()).rarity(metal.getRarity()), horseshoeSpeedModifier));
+				() -> new HorseshoesItem(new Properties().durability(metal.toolTier().getUses()).rarity(metal.getRarity()), horseshoesConfig));
 	}
 
 	private static RegistryObject<ContainerItem> registerContainerItem(final ContainerType containerType) {
