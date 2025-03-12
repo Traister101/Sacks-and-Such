@@ -42,11 +42,9 @@ public final class SNSPacketHandler {
 				ServerboundToggleSlotVoidingPacket::handle);
 		register(ServerboundOpenContainerPacket.class, ServerboundOpenContainerPacket::encode, ServerboundOpenContainerPacket::new,
 				ServerboundOpenContainerPacket::handle);
-
-		register(ClientboundBreakHorseshoePacket.class, ClientboundBreakHorseshoePacket::encode, ClientboundBreakHorseshoePacket::new,
-				ClientboundBreakHorseshoePacket::handle);
 	}
 
+	@SuppressWarnings("unused")
 	private static <T> void register(@SuppressWarnings("SameParameterValue") final Class<T> clazz, final BiConsumer<T, FriendlyByteBuf> encoder,
 			final Function<FriendlyByteBuf, T> decoder, final Consumer<T> handler) {
 		register(clazz, encoder, decoder, (packet, player) -> handler.accept(packet));

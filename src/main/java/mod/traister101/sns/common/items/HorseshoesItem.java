@@ -5,18 +5,16 @@ import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.config.ServerConfig.HorseshoesConfig;
-import mod.traister101.sns.network.*;
 
 import net.minecraft.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-
-import net.minecraftforge.network.PacketDistributor;
 
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
@@ -70,8 +68,7 @@ public class HorseshoesItem extends Item {
 		if (level.isClientSide) return;
 
 		if (getSteps(itemStack) > SNSConfig.SERVER.horseshoesStepsPerDamage.get()) {
-			itemStack.hurtAndBreak(1, horse,
-					e -> SNSPacketHandler.send(PacketDistributor.TRACKING_ENTITY.with(() -> e), new ClientboundBreakHorseshoePacket(e)));
+			itemStack.hurtAndBreak(1, horse, e -> e.broadcastBreakEvent(EquipmentSlot.FEET));
 			setSteps(itemStack, 0);
 		}
 
