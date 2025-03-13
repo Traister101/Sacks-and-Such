@@ -31,6 +31,10 @@
 	  "recipe": "sns:crafting/lunchbox"
 	},
 	{
+	  "type": "tfc:knapping_recipe",
+	  "recipe": "sns:leather_knapping/quiver"
+	},
+	{
 	  "type": "patchouli:text",
 	  "text": "For modpack authors or simply people wanting to configure things. All$(thing) Item Containers$() respect the item tag $(bold)sns:prevented_in_item_containers$() it's name should be self explanatory. If you wanted you could even remove the item containers from this tag to let you nest them. If you do that beware your player NBT getting too large, it will brick your player among other bad things"
 	}
