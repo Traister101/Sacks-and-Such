@@ -1,12 +1,11 @@
 package mod.traister101.sns.mixins.common;
 
-import mod.traister101.sns.common.SNSItemTags;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import mod.traister101.sns.common.items.SNSItems;
 import mod.traister101.sns.util.SNSUtils;
 import mod.traister101.sns.util.handlers.PickupHandler;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.At;
 import top.theillusivec4.curios.api.CuriosApi;
 
 import net.minecraft.world.entity.EntityType;
@@ -35,9 +34,9 @@ public abstract class AbstractArrowMixin extends Projectile {
 	 * handles the item entity case automatically
 	 * @author Traister101
 	 */
-	@Inject(method = "tryPickup", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getInventory()Lnet/minecraft/world/entity/player/Inventory;"), cancellable = true)
-	private void sns$tryInsertIntoQuiver(final Player player, final CallbackInfoReturnable<Boolean> cir) {
-		if (!player.getInventory().hasAnyMatching(itemStack -> itemStack.is(SNSItemTags.TFC_JAVELINS))) return;
+	@ModifyReturnValue(method = "tryPickup", at = @At(value = "RETURN", ordinal = 0))
+	private boolean tryInsertIntoQuiver(final boolean fitInsideInventory, final Player player) {
+		if (fitInsideInventory) return true;
 
 		if (SNSUtils.isCuriosPresent()) {
 			final var maybeCuriosHandler = CuriosApi.getCuriosInventory(player).resolve();
@@ -52,7 +51,7 @@ public abstract class AbstractArrowMixin extends Projectile {
 
 					final var itemHandler = maybeItemHandler.get();
 					final ItemStack remainder = ItemHandlerHelper.insertItemStacked(itemHandler, this.getPickupItem(), false);
-					if (remainder.isEmpty()) cir.setReturnValue(true);
+					if (remainder.isEmpty()) return true;
 				}
 			}
 		}
@@ -60,8 +59,9 @@ public abstract class AbstractArrowMixin extends Projectile {
 		final var maybeEntityInventory = player.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
 		if (maybeEntityInventory.isPresent()) {
 			final var entityInventory = maybeEntityInventory.get();
-			for (int entitySlot = 0; entitySlot < entityInventory.getSlots(); entitySlot++) {
-				final ItemStack quiverStack = entityInventory.getStackInSlot(entitySlot);
+
+			for (final var quiverSlot : SNSUtils.itemHandlerSlotIterator(entityInventory)) {
+				final var quiverStack = quiverSlot.getStack();
 				if (!quiverStack.is(SNSItems.QUIVER.get())) continue;
 
 				final var maybeItemHandler = quiverStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
@@ -69,8 +69,10 @@ public abstract class AbstractArrowMixin extends Projectile {
 
 				final var itemHandler = maybeItemHandler.get();
 				final ItemStack remainder = ItemHandlerHelper.insertItemStacked(itemHandler, this.getPickupItem(), false);
-				if (remainder.isEmpty()) cir.setReturnValue(true);
+				if (remainder.isEmpty()) return true;
 			}
 		}
+
+		return false;
 	}
 }

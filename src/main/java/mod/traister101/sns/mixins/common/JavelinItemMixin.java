@@ -1,12 +1,17 @@
 package mod.traister101.sns.mixins.common;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import mod.traister101.sns.common.SNSItemTags;
 import mod.traister101.sns.common.items.SNSItems;
+import mod.traister101.sns.util.SNSUtils;
+import mod.traister101.sns.util.items.ItemHandlerSlot;
 import net.dries007.tfc.common.items.JavelinItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
-import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.item.*;
@@ -27,32 +32,49 @@ public abstract class JavelinItemMixin extends SwordItem {
 	 * @reason TFCs {@link JavelinItem} doesn't fire an event or anything helpful so to replace the thrown Javelin we must use mixin.
 	 * @author Traister101
 	 */
-	@Inject(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getInventory()Lnet/minecraft/world/entity/player/Inventory;"), cancellable = true)
-	private void sns$replaceThrownJavelin(final ItemStack stack, final Level level, final LivingEntity entity, final int ticksLeft,
-			final CallbackInfo ci) {
-		entity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().flatMap(entityInventory -> {
-			for (int entitySlot = 0; entitySlot < entityInventory.getSlots(); entitySlot++) {
-				final ItemStack stackInSlot = entityInventory.getStackInSlot(entitySlot);
-				if (!stackInSlot.is(SNSItems.QUIVER.get())) continue;
+	@Inject(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getInventory()Lnet/minecraft/world/entity/player/Inventory;"))
+	private void replaceThrownJavelin(final ItemStack stack, final Level level, final LivingEntity entity, final int ticksLeft, final CallbackInfo ci,
+			@Local final Player player) {
+		if (SNSUtils.isCuriosPresent()) {
+			final var replaceJavalinSlot = CuriosApi.getCuriosInventory(entity)
+					.map(ICuriosItemHandler::getEquippedCurios)
+					.flatMap(curios -> SNSUtils.itemHandlerSlotStream(curios)
+							.filter(ItemHandlerSlot.contains(SNSItems.QUIVER.get()))
+							.map(slot -> slot.getStack().getCapability(ForgeCapabilities.ITEM_HANDLER).resolve())
+							.flatMap(Optional::stream)
+							.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, itemStack -> itemStack.is(SNSItemTags.TFC_JAVELINS)))
+							.flatMap(Optional::stream)
+							.findFirst());
 
-				return stackInSlot.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().map(itemHandler -> {
-					for (int slotIndex = 0; slotIndex < itemHandler.getSlots(); slotIndex++) {
-						final ItemStack ammoStack = itemHandler.getStackInSlot(slotIndex);
-						if (ammoStack.getItem() instanceof JavelinItem) return itemHandler.extractItem(slotIndex, 1, false);
-					}
-					return ItemStack.EMPTY;
-				});
+			if (replaceJavalinSlot.isPresent()) {
+				final var slot = replaceJavalinSlot.get();
+				final Inventory inventory = player.getInventory();
+				final var replacementJavalin = slot.extractItem(slot.getStack().getMaxStackSize(), false);
+				switch (entity.getUsedItemHand()) {
+					case MAIN_HAND -> inventory.setItem(inventory.selected, replacementJavalin);
+					case OFF_HAND -> inventory.setItem(Inventory.SLOT_OFFHAND, replacementJavalin);
+				}
 			}
-			return Optional.empty();
-		}).ifPresent(itemStack -> {
-			final Player player = (Player) entity;
+		}
+
+		final var replaceJavalinSlot = entity.getCapability(ForgeCapabilities.ITEM_HANDLER)
+				.resolve()
+				.flatMap(itemHandler -> SNSUtils.itemHandlerSlotStream(itemHandler)
+						.filter(ItemHandlerSlot.contains(SNSItems.QUIVER.get()))
+						.map(slot -> slot.getStack().getCapability(ForgeCapabilities.ITEM_HANDLER).resolve())
+						.flatMap(Optional::stream)
+						.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, itemStack -> itemStack.is(SNSItemTags.TFC_JAVELINS)))
+						.flatMap(Optional::stream)
+						.findFirst());
+
+		if (replaceJavalinSlot.isPresent()) {
+			final var slot = replaceJavalinSlot.get();
 			final Inventory inventory = player.getInventory();
+			final var replacementJavalin = slot.extractItem(slot.getStack().getMaxStackSize(), false);
 			switch (entity.getUsedItemHand()) {
-				case MAIN_HAND -> inventory.setItem(inventory.selected, itemStack);
-				case OFF_HAND -> inventory.setItem(Inventory.SLOT_OFFHAND, itemStack);
+				case MAIN_HAND -> inventory.setItem(inventory.selected, replacementJavalin);
+				case OFF_HAND -> inventory.setItem(Inventory.SLOT_OFFHAND, replacementJavalin);
 			}
-			player.awardStat(Stats.ITEM_USED.get(this));
-			ci.cancel();
-		});
+		}
 	}
 }

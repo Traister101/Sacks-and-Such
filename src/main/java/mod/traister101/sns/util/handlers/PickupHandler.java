@@ -6,6 +6,7 @@ import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.dries007.tfc.common.blocks.wood.FallenLeavesBlock;
 import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -13,7 +14,7 @@ import net.minecraft.sounds.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -118,31 +119,25 @@ public final class PickupHandler {
 	 * @param player Player to handle
 	 * @param itemPickup The item being picked up
 	 *
-	 * @return The remainer
+	 * @return The remainder
 	 */
 	private static ItemStack pickupItemStack(final Player player, final ItemStack itemPickup) {
-		ItemStack remainder = itemPickup;
-
-		final Inventory inventory = player.getInventory();
-		remainder = topOffPlayerInventory(inventory, remainder);
+		final var playerInventoryHandler = new PlayerMainInvWrapper(player.getInventory());
+		var remainder = SNSUtils.insertItemOnlyStacked(playerInventoryHandler, itemPickup);
 
 		if (remainder.isEmpty()) return ItemStack.EMPTY;
 
 		if (SNSUtils.isCuriosPresent()) {
-			final var maybeCuriosItemHandler = CuriosApi.getCuriosInventory(player).resolve();
+			final ItemStack finalRemainder = remainder;
+			remainder = CuriosApi.getCuriosInventory(player)
+					.map(ICuriosItemHandler::getEquippedCurios)
+					.map(equippedCurios -> insertItemPickup(equippedCurios, finalRemainder))
+					.orElse(remainder);
 
-			if (maybeCuriosItemHandler.isPresent()) {
-				final var curiosItemHandler = maybeCuriosItemHandler.get();
-				final var equippedCurios = curiosItemHandler.getEquippedCurios();
-
-				remainder = insertItemPickup(equippedCurios, remainder, equippedCurios.getSlots());
-				if (remainder.isEmpty()) return ItemStack.EMPTY;
-			}
+			if (remainder.isEmpty()) return ItemStack.EMPTY;
 		}
 
-		remainder = insertItemPickup(new PlayerMainInvWrapper(inventory), remainder, Inventory.INVENTORY_SIZE);
-
-		return remainder;
+		return insertItemPickup(playerInventoryHandler, remainder);
 	}
 
 	/**
@@ -150,64 +145,21 @@ public final class PickupHandler {
 	 *
 	 * @param itemHandler The {@link IItemHandler} to insert into
 	 * @param itemPickup The {@link ItemStack} to pickup
-	 * @param slotCount The slot count
 	 *
-	 * @return The remaining items
+	 * @return The remainder
 	 */
-	private static ItemStack insertItemPickup(final IItemHandler itemHandler, final ItemStack itemPickup, final int slotCount) {
+	private static ItemStack insertItemPickup(final IItemHandler itemHandler, final ItemStack itemPickup) {
 		ItemStack remainder = itemPickup;
-		for (int slotIndex = 0; slotIndex < slotCount; slotIndex++) {
-			final ItemStack itemContainer = itemHandler.getStackInSlot(slotIndex);
+		for (final var handlerSlot : SNSUtils.itemHandlerSlotIterator(itemHandler)) {
+			if (!ContainerType.canDoItemPickup(handlerSlot.getStack())) continue;
 
-			if (!ContainerType.canDoItemPickup(itemContainer)) continue;
-
-			final var maybeContainerInv = itemContainer.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+			final var maybeContainerInv = handlerSlot.getStack().getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
 
 			if (maybeContainerInv.isEmpty()) continue;
 
 			remainder = ItemHandlerHelper.insertItem(maybeContainerInv.get(), remainder, false);
 
-			if (!remainder.isEmpty()) continue;
-
-			return ItemStack.EMPTY;
-		}
-		return remainder;
-	}
-
-	/**
-	 * Tops off the player inventory consuming the itemstack until all stacks in the inventory are filled
-	 *
-	 * @param inventoryPlayer Player inventory handler
-	 * @param insertStack The {@link ItemStack} we insert into the inventory
-	 *
-	 * @return If the item stack was fully consumed
-	 */
-	private static ItemStack topOffPlayerInventory(final Inventory inventoryPlayer, final ItemStack insertStack) {
-		ItemStack remainder = insertStack;
-		// Add to player inventory first, if there is an incomplete stack in there.
-		for (int slotIndex = 0; slotIndex < inventoryPlayer.getContainerSize(); slotIndex++) {
-			final ItemStack inventoryStack = inventoryPlayer.getItem(slotIndex);
-
-			// We only add to existing stacks.
-			if (inventoryStack.isEmpty()) continue;
-
-			// Already full
-			if (inventoryStack.getCount() >= inventoryStack.getMaxStackSize()) continue;
-
-			// Can merge stacks
-			if (ItemStack.isSameItemSameTags(inventoryStack, remainder)) {
-				final int remainingSpace = inventoryStack.getMaxStackSize() - inventoryStack.getCount();
-
-				if (remainingSpace >= remainder.getCount()) {
-					// Enough space to add all
-					inventoryStack.grow(remainder.getCount());
-					return ItemStack.EMPTY;
-				} else {
-					// Only part can be added
-					inventoryStack.setCount(inventoryStack.getMaxStackSize());
-					remainder = ItemHandlerHelper.copyStackWithSize(remainder, remainder.getCount() - remainingSpace);
-				}
-			}
+			if (remainder.isEmpty()) return ItemStack.EMPTY;
 		}
 		return remainder;
 	}
