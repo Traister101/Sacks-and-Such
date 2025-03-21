@@ -17,8 +17,7 @@ import net.minecraft.world.inventory.HorseInventoryMenu;
 public abstract class HorseInventoryScreenMixin extends AbstractContainerScreen<HorseInventoryMenu> {
 
 	@Unique
-	@SuppressWarnings("AddedMixinMembersNamePattern")
-	private static final ResourceLocation TEXTURE = new ResourceLocation(SacksNSuch.MODID, "textures/gui/horshoeslot.png");
+	private static final ResourceLocation SNS$_HORSESHOE_SLOT_TEXTURE = new ResourceLocation(SacksNSuch.MODID, "textures/gui/horshoeslot.png");
 	@Shadow
 	@Final
 	private AbstractHorse horse;
@@ -32,11 +31,11 @@ public abstract class HorseInventoryScreenMixin extends AbstractContainerScreen<
 	 * @author Traister101
 	 */
 	@Inject(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/InventoryScreen;renderEntityInInventoryFollowsMouse(Lnet/minecraft/client/gui/GuiGraphics;IIIFFLnet/minecraft/world/entity/LivingEntity;)V"))
-	public void sns$drawHorseshoesSlot(final GuiGraphics guiGraphics, final float partialTick, final int mouseX, final int mouseY,
+	public void drawHorseshoesSlot(final GuiGraphics guiGraphics, final float partialTick, final int mouseX, final int mouseY,
 			final CallbackInfo ci) {
 		final int slotX = (this.width - this.imageWidth) / 2;
 		final int slotY = (this.height - this.imageHeight) / 2;
 
-		guiGraphics.blit(TEXTURE, slotX + 7, slotY + (horse.canWearArmor() ? 53 : 35), 0, 0, 18, 18, 18, 18);
+		guiGraphics.blit(SNS$_HORSESHOE_SLOT_TEXTURE, slotX + 7, slotY + (horse.canWearArmor() ? 53 : 35), 0, 0, 18, 18, 18, 18);
 	}
 }

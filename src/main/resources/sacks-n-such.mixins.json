@@ -8,8 +8,7 @@
 	"common.AbstractHorseMixin",
 	"common.HorseInventoryMenuMixin",
 	"common.JavelinItemMixin",
-	"common.PlayerMixin",
-	"common.accessor.AbstractHorseInventoryAccessor"
+	"common.PlayerMixin"
   ],
   "client": [
 	"client.HorseInventoryScreenMixin",
