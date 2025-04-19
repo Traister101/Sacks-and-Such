@@ -40,8 +40,6 @@ public final class ServerConfig {
 	BooleanValue doPickup;
 	BooleanValue doVoiding;
 	BooleanValue allPickBlock;
-	BooleanValue allAllowOre;
-	BooleanValue allAllowFood;
 	BooleanValue enableContainerInventoryInteraction;
 
 	// Misc
@@ -92,9 +90,6 @@ public final class ServerConfig {
 				.define("doPickup", true);
 		doVoiding = builder.comment("A global toggle for item voiding, this will not force enable for every type").define("doVoiding", true);
 		allPickBlock = builder.comment("This allows other containers such as vessels to support the pick block search").define("allPickBlock", false);
-		allAllowOre = builder.comment("This makes all container types capable of holding ore").define("allAllowOre", false);
-		allAllowFood = builder.comment("This makes all container types capable of holding food although they won't preserve it!")
-				.define("allAllowFood", false);
 		enableContainerInventoryInteraction = builder.comment(
 						"This allows containers to have items inserted and extracted from them via the inventory like vanilla Bundles")
 				.define("enableContainerInventoryInteraction", true);

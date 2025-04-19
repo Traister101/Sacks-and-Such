@@ -1,7 +1,6 @@
 package mod.traister101.sns.common.capability;
 
 import mod.traister101.esc.common.capability.ExtendedSlotCapacityHandler;
-import mod.traister101.sns.common.SNSItemTags;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.util.ContainerType;
 import net.dries007.tfc.common.capabilities.size.*;
@@ -18,15 +17,13 @@ import java.util.function.IntConsumer;
 public class ContainerItemHandler extends ExtendedSlotCapacityHandler implements IVoidingItemHandler {
 
 	public final ContainerType type;
-	protected final ItemStack handlerStack;
 	private final Set<Integer> voidSlots = new HashSet<>();
 	@Nullable
 	private Weight cachedWeight;
 
-	public ContainerItemHandler(final ContainerType type, final ItemStack handlerStack) {
+	public ContainerItemHandler(final ContainerType type) {
 		super(type.getSlotCount(), type.getSlotCapacity());
 		this.type = type;
-		this.handlerStack = handlerStack;
 	}
 
 	@Override
@@ -63,9 +60,9 @@ public class ContainerItemHandler extends ExtendedSlotCapacityHandler implements
 
 	@Override
 	public boolean isItemValid(final int slotIndex, final ItemStack itemStack) {
-		if (itemStack.is(SNSItemTags.PREVENTED_IN_ITEM_CONTAINERS)) return false;
+		if (itemStack.is(type.preventedItems())) return false;
 
-		return fitsInSlot(itemStack);
+		return type.allowedItems().map(itemStack::is).orElse(true) && fitsInSlot(itemStack);
 	}
 
 	@Override

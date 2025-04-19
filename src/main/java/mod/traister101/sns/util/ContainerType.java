@@ -1,17 +1,18 @@
 package mod.traister101.sns.util;
 
-import mod.traister101.sns.common.capability.ContainerItemHandler;
-import mod.traister101.sns.common.capability.LazyCapabilityProvider.LazySerializedCapabilityProvider;
+import mod.traister101.sns.common.capability.*;
 import mod.traister101.sns.common.items.ContainerItem;
 import net.dries007.tfc.common.capabilities.size.Size;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 
 import net.minecraftforge.common.capabilities.*;
 
 import org.jetbrains.annotations.Nullable;
+import java.util.Optional;
 
 public interface ContainerType extends StringRepresentable {
 
@@ -78,12 +79,30 @@ public interface ContainerType extends StringRepresentable {
 	Size getSize(final ItemStack itemStack);
 
 	/**
+	 * An items absence in this tag doesn't mean it can always be inserted, for example it's size could be too large
+	 *
+	 * @return The tag for which items are blacklisted from being inserted.
+	 *
+	 * @apiNote If an item is present in both this and {@link #allowedItems()} this tag takes priority
+	 */
+	TagKey<Item> preventedItems();
+
+	/**
+	 * An optional tag which when present acts as a whitelist
+	 *
+	 * @return The tag for which items are allowed in the container.
+	 *
+	 * @apiNote If an item is present in both {@link #preventedItems()} and this the {@link #preventedItems()} tag takes priority
+	 */
+	Optional<TagKey<Item>> allowedItems();
+
+	/**
 	 * @param itemStack The {@link ItemStack}
 	 * @param nbt The {@link CompoundTag}
 	 *
 	 * @return The {@link ICapabilityProvider} for the {@link ContainerItem}s of this {@link ContainerType}
 	 */
 	default ICapabilityProvider getCapabilityProvider(final ItemStack itemStack, final @Nullable CompoundTag nbt) {
-		return new LazySerializedCapabilityProvider<>(() -> new ContainerItemHandler(this, itemStack), ForgeCapabilities.ITEM_HANDLER);
+		return LazyCapabilityProvider.of(() -> new ContainerItemHandler(this), ForgeCapabilities.ITEM_HANDLER);
 	}
 }

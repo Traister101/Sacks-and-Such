@@ -7,72 +7,72 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.*;
 import net.minecraftforge.items.IItemHandler;
 
+import lombok.*;
 import org.jetbrains.annotations.Nullable;
-import javax.annotation.Nonnull;
 
 /**
- * A class to lazily initalize a handler like {@link IItemHandler} on first request.
+ * A class to lazily initialize a handler like {@link IItemHandler} on first request.
  *
  * @see LazySerializedCapabilityProvider if your handler needs serializing
  */
+@RequiredArgsConstructor
 public sealed class LazyCapabilityProvider<Handler> implements ICapabilityProvider {
 
 	private final HandlerFactory<Handler> handlerFactory;
 	private final Capability<? super Handler>[] capabilities;
-	@Nullable
-	protected Handler handler;
-	@Nullable
-	private LazyOptional<Handler> holder;
+	@Getter(value = AccessLevel.PROTECTED, lazy = true)
+	private final Handler handler = handlerFactory.create();
+	private final LazyOptional<Handler> holder = LazyOptional.of(this::getHandler);
 
 	/**
-	 * @param handlerFactory A factory for the handler
-	 * @param capabilities The capability to lazily evaluate
+	 * @param handlerFactory The handler factory
+	 * @param capabilities The capabilities this handler possesses
+	 *
+	 * @see #ofSerialized(HandlerFactory, Capability[])
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
-	public LazyCapabilityProvider(final HandlerFactory<Handler> handlerFactory, final Capability<? super Handler>... capabilities) {
-		this.capabilities = capabilities;
-		this.handlerFactory = handlerFactory;
+	public static <H> LazyCapabilityProvider<H> of(final HandlerFactory<H> handlerFactory, final Capability<? super H>... capabilities) {
+		if (capabilities.length < 1) throw new IllegalArgumentException("Handler must support at least one capability");
+		return new LazyCapabilityProvider<>(handlerFactory, capabilities);
+	}
+
+	/**
+	 * @param handlerFactory The handler factory
+	 * @param capabilities The capabilities this handler possesses
+	 */
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static <H extends INBTSerializable<CompoundTag>> LazySerializedCapabilityProvider<H> ofSerialized(final HandlerFactory<H> handlerFactory,
+			final Capability<? super H>... capabilities) {
+		if (capabilities.length < 1) throw new IllegalArgumentException("Handler must support at least one capability");
+		return new LazySerializedCapabilityProvider<>(handlerFactory, capabilities);
 	}
 
 	@Override
 	public <T> LazyOptional<T> getCapability(final Capability<T> cap, @Nullable final Direction side) {
 		for (final var capability : capabilities) {
 			if (capability == cap) {
-				return getHolder().cast();
+				return holder.cast();
 			}
 		}
 
 		return LazyOptional.empty();
 	}
 
-	protected final LazyOptional<Handler> getHolder() {
-		if (holder == null) {
-			holder = LazyOptional.of(this::getHandler);
-		}
-		return holder;
-	}
-
-	protected final Handler getHandler() {
-		if (handler == null) {
-			handler = handlerFactory.create();
-		}
-		return handler;
-	}
-
 	@FunctionalInterface
 	public interface HandlerFactory<Handler> {
 
-		@Nonnull
+		/**
+		 * Create the handler object
+		 */
 		Handler create();
 	}
 
 	public static final class LazySerializedCapabilityProvider<Handler extends INBTSerializable<CompoundTag>> extends
 			LazyCapabilityProvider<Handler> implements INBTSerializable<CompoundTag> {
 
-		@SafeVarargs
-		@SuppressWarnings("varargs")
-		public LazySerializedCapabilityProvider(final HandlerFactory<Handler> handlerFactory, final Capability<? super Handler>... capabilities) {
+		public LazySerializedCapabilityProvider(final HandlerFactory<Handler> handlerFactory, final Capability<? super Handler>[] capabilities) {
 			super(handlerFactory, capabilities);
 		}
 

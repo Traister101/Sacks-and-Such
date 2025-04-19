@@ -73,9 +73,41 @@ public final class SNSItemTags {
 	public static final TagKey<Item> TFC_HIGH_QUALITY_CLOTH = fromTFC("high_quality_cloth");
 
 	/**
-	 * Tag for items that shouldn't go inside sacks. We only put our sacks in this
+	 * Tag for items that shouldn't go inside Item Containers. We put common items in here like our other item containers
 	 */
 	public static final TagKey<Item> PREVENTED_IN_ITEM_CONTAINERS = create("prevented_in_item_containers");
+	/**
+	 * Tag for items that shouldn't go inside Straw Baskets
+	 */
+	public static final TagKey<Item> PREVENTED_IN_STRAW_BASKET = create("prevented_in_straw_basket");
+	/**
+	 * Tag for items that shouldn't go inside Leather Sacks
+	 */
+	public static final TagKey<Item> PREVENTED_IN_LEATHER_SACK = create("prevented_in_leather_sack");
+	/**
+	 * Tag for items that shouldn't go inside Burlap Sacks
+	 */
+	public static final TagKey<Item> PREVENTED_IN_BURLAP_SACK = create("prevented_in_burlap_sack");
+	/**
+	 * Tag for items that shouldn't go inside Ore Sacks
+	 */
+	public static final TagKey<Item> PREVENTED_IN_ORE_SACK = create("prevented_in_ore_sack");
+	/**
+	 * Tag for items that shouldn't go inside Seed Pouches
+	 */
+	public static final TagKey<Item> PREVENTED_IN_SEED_POUCH = create("prevented_in_seed_pouch");
+	/**
+	 * Tag for items that shouldn't go inside Frame Packs
+	 */
+	public static final TagKey<Item> PREVENTED_IN_FRAME_PACK = create("prevented_in_frame_pack");
+	/**
+	 * Tag for items that shouldn't go inside Lunchboxes
+	 */
+	public static final TagKey<Item> PREVENTED_IN_LUNCHBOX = create("prevented_in_lunchbox");
+	/**
+	 * Tag for items that shouldn't go inside Quivers
+	 */
+	public static final TagKey<Item> PREVENTED_IN_QUIVER = create("prevented_in_quiver");
 
 	public static final TagKey<Item> ALLOWED_IN_SEED_POUCH = create("allowed_in_seed_pouch");
 
