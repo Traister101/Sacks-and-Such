@@ -12,11 +12,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
@@ -177,8 +181,24 @@ public class LunchBoxItem extends ContainerItem {
 
 		@Override
 		public ItemStack consumeSelected(final ItemStack itemStack, final Level level, final LivingEntity livingEntity) {
-			final ItemStack food = extractItem(getSelectedSlot(), 1, false);
-			livingEntity.eat(level, food);
+			// This appears to be the best way to handle TFCs way of handling Dynamic food like bowls
+			final var foodRemainder = ForgeEventFactory.onItemUseFinish(livingEntity, getSelectedStack().copy(),
+					livingEntity.getUseItemRemainingTicks(), livingEntity.eat(level, getSelectedStack()));
+
+			if (foodRemainder != getSelectedStack()) {
+				if (livingEntity instanceof final Player player) {
+					ItemHandlerHelper.giveItemToPlayer(player, foodRemainder);
+				} else {
+					if (!foodRemainder.isEmpty() && !level.isClientSide) {
+						final ItemEntity itemEntity = new ItemEntity(level, livingEntity.getX(), livingEntity.getY() + 0.5, livingEntity.getZ(),
+								foodRemainder);
+						itemEntity.setPickUpDelay(40);
+						itemEntity.setDeltaMovement(itemEntity.getDeltaMovement().multiply(0, 1, 0));
+
+						level.addFreshEntity(itemEntity);
+					}
+				}
+			}
 
 			while (getSelectedStack().isEmpty() && getSelectedSlot() != 0) {
 				cycleSelected(CycleDirection.BACKWARD);
