@@ -24,7 +24,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
 import net.minecraftforge.common.capabilities.*;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.*;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -92,47 +92,38 @@ public class ContainerItem extends Item implements IItemSize {
 		if (clickAction != ClickAction.SECONDARY) return false;
 		if (!SNSConfig.SERVER.enableContainerInventoryInteraction.get()) return false;
 
-		return itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).map(handler -> {
-			if (!slot.hasItem()) {
-				for (int slotIndex = handler.getSlots() - 1; slotIndex >= 0; slotIndex--) {
-					final ItemStack simulate = handler.extractItem(slotIndex, Container.LARGE_MAX_STACK_SIZE, true);
-					if (simulate.isEmpty()) continue;
+		final var maybeHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+		if (maybeHandler.isEmpty()) return false;
 
-					final ItemStack extracted = handler.extractItem(slotIndex, Container.LARGE_MAX_STACK_SIZE, false);
-					final ItemStack leftover = slot.safeInsert(extracted);
+		// Extract items into the slot
+		if (!slot.hasItem()) {
+			for (final var handlerSlot : SNSUtils.itemHandlerSlotReverseIterator(maybeHandler.get())) {
+				final var simulate = handlerSlot.extractItem(Container.LARGE_MAX_STACK_SIZE, true);
+				if (simulate.isEmpty()) continue;
 
-					if (!leftover.isEmpty()) continue;
+				final ItemStack extracted = handlerSlot.extractItem(Container.LARGE_MAX_STACK_SIZE, false);
+				final ItemStack remainder = slot.safeInsert(extracted);
 
-					handler.insertItem(slotIndex, leftover, false);
+				if (!remainder.isEmpty()) {
+					handlerSlot.insertItem(remainder, false);
 					player.containerMenu.slotsChanged(slot.container);
 					playRemoveOneSound(player);
 					return true;
 				}
-				return false;
 			}
-
-			boolean slotsChanged = false;
-			final int initalCount = slot.getItem().getCount();
-
-			for (int slotIndex = 0; slotIndex < handler.getSlots(); slotIndex++) {
-				final ItemStack remainder = handler.insertItem(slotIndex, slot.getItem(), false);
-
-				if (remainder.getCount() != initalCount || slotsChanged) {
-					slotsChanged = true;
-					slot.set(remainder);
-				}
-
-				if (remainder.isEmpty()) break;
-			}
-
-			if (slotsChanged) {
-				player.containerMenu.slotsChanged(slot.container);
-				playInsertSound(player);
-				return true;
-			}
-
 			return false;
-		}).orElse(false);
+		}
+
+		final var slotStack = slot.getItem();
+		// We have to simulate the insertion to account for crafting result slots
+		final var simulate = ItemHandlerHelper.insertItemStacked(maybeHandler.get(), slotStack, true);
+		final var extracted = slot.safeTake(slotStack.getCount(), slotStack.getCount() - simulate.getCount(), player);
+		if (extracted.isEmpty()) return false;
+
+		ItemHandlerHelper.insertItemStacked(maybeHandler.get(), extracted, false);
+		player.containerMenu.slotsChanged(slot.container);
+		playInsertSound(player);
+		return true;
 	}
 
 	@Override
@@ -143,53 +134,29 @@ public class ContainerItem extends Item implements IItemSize {
 		if (clickAction != ClickAction.SECONDARY) return false;
 		if (!SNSConfig.SERVER.enableContainerInventoryInteraction.get()) return false;
 
-		return itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).map(handler -> {
+		final var maybeHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+		if (maybeHandler.isEmpty()) return false;
 
-			if (carriedStack.isEmpty()) {
-				for (int slotIndex = handler.getSlots() - 1; slotIndex >= 0; slotIndex--) {
-					final ItemStack current = handler.getStackInSlot(slotIndex);
-					if (current.isEmpty()) continue;
+		if (carriedStack.isEmpty()) {
+			for (final var handlerSlot : SNSUtils.itemHandlerSlotReverseIterator(maybeHandler.get())) {
+				final var current = handlerSlot.getStack();
+				if (current.isEmpty()) continue;
 
-					carriedSlot.set(handler.extractItem(slotIndex, Container.LARGE_MAX_STACK_SIZE, false));
-
-					player.containerMenu.slotsChanged(slot.container);
-					playRemoveOneSound(player);
-					return true;
-				}
-				return false;
+				carriedSlot.set(handlerSlot.extractItem(Container.LARGE_MAX_STACK_SIZE, false));
+				player.containerMenu.slotsChanged(slot.container);
+				playRemoveOneSound(player);
+				return true;
 			}
+			return false;
+		}
 
-			boolean slotsChanged = false;
-			final int initalCount = carriedStack.getCount();
+		final var remainder = ItemHandlerHelper.insertItemStacked(maybeHandler.get(), carriedStack, false);
+		if (remainder.getCount() == carriedStack.getCount()) return false;
 
-			{
-				ItemStack remainder = handler.insertItem(0, carriedStack, false);
-
-				if (remainder.getCount() != initalCount) {
-					slotsChanged = true;
-					carriedSlot.set(remainder);
-				}
-
-				for (int slotIndex = 1; slotIndex < handler.getSlots(); slotIndex++) {
-
-					remainder = handler.insertItem(slotIndex, remainder, false);
-
-					if (remainder.getCount() != initalCount || slotsChanged) {
-						slotsChanged = true;
-						carriedSlot.set(remainder);
-					}
-
-					if (remainder.isEmpty()) break;
-				}
-			}
-
-			if (!slotsChanged) return false;
-
-			player.containerMenu.slotsChanged(slot.container);
-			playInsertSound(player);
-			return true;
-
-		}).orElse(false);
+		carriedSlot.set(remainder);
+		player.containerMenu.slotsChanged(slot.container);
+		playInsertSound(player);
+		return true;
 	}
 
 	@Override
@@ -308,8 +275,7 @@ public class ContainerItem extends Item implements IItemSize {
 	@Override
 	public Weight getWeight(final ItemStack itemStack) {
 		return itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-				.map(handler -> handler instanceof final ContainerItemHandler containerItemHandler ?
-						containerItemHandler.getWeight() :
+				.map(handler -> handler instanceof final ContainerItemHandler containerItemHandler ? containerItemHandler.getWeight() :
 						Weight.VERY_HEAVY)
 				.orElse(Weight.VERY_HEAVY);
 	}
