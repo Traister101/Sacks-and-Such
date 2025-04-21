@@ -6,10 +6,11 @@
 	{
 	  "type": "patchouli:spotlight",
 	  "item": "sns:frame_pack",
-	  "text": "The $(item)Frame Pack$() is essentially a TFC chest on your back. Like the TFC chest it respects TFC's $(l:getting_started/size_and_weight)Size system$()."
+	  "text": "The $(item)Frame Pack$() is a type of $(l:sns/item_containers)Item Container$(), essentially a TFC chest on your back. Like the TFC chest it respects TFC's $(l:getting_started/size_and_weight)Size system$()."
 	},
 	{
-	  "type": "patchouli:text",
+	  "type": "patchouli:crafting",
+	  "recipe": "sns:crafting/frame_pack",
 	  "text": "By default these can hold up to $(thing)Large$() Items"
 	}
   ],
