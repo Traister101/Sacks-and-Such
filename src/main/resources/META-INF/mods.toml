@@ -49,6 +49,6 @@ side = "BOTH"
 
 [mc-publish]
 dependencies = [
-	"tfc@3.2.11{modrinth:JaCEZUhg}",
-	"curios@5.4.5{modrinth:vvuO3ImH}"
+	"tfc@3.2.11{modrinth:JaCEZUhg}{curseforge:302973}",
+	"curios@5.4.5{modrinth:vvuO3ImH}{curseforge:309927}"
 ]
