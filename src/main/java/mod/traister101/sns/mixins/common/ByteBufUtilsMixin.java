@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -16,16 +15,22 @@ import net.minecraft.world.item.ItemStack;
  * @see ItemStackCapabilitySync
  */
 @Mixin(value = ByteBufUtils.class, remap = false)
-public class ByteBufUtilsMixin {
+public abstract class ByteBufUtilsMixin {
 
-	@Redirect(method = "writeExtendedItemStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/FriendlyByteBuf;writeNbt(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/network/FriendlyByteBuf;"))
-	private static FriendlyByteBuf writeSyncableCapabilityData(final FriendlyByteBuf instance, final CompoundTag compoundTag,
-			@Local(argsOnly = true) ItemStack itemStack) {
-		return instance.writeNbt(ItemStackCapabilitySync.writeToNetwork(itemStack, compoundTag));
+	/**
+	 * @reason TFC injects into {@link net.minecraft.network.FriendlyByteBuf#writeItemStack(ItemStack, boolean)} and redirects the NBT tag write
+	 * to {@link ItemStackCapabilitySync#writeToNetwork(ItemStack, CompoundTag)}. Extended Slot Capacity has custom networking logic to support
+	 * extended slot capacity, and we need to copy over the mixin.
+	 * This <i>should</i> be a {@link Redirect} but it doesn't work in prod for some reason and I can't figure it out. This however does. :|
+	 * @author Traister101
+	 */
+	@ModifyVariable(method = "writeExtendedItemStack", at = @At(value = "LOAD"), ordinal = 0)
+	private static CompoundTag writeTFCSyncableCapabilityData(final CompoundTag value, @Local(argsOnly = true) final ItemStack itemStack) {
+		return ItemStackCapabilitySync.writeToNetwork(itemStack, value);
 	}
 
 	@Redirect(method = "readExtendedItemStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;readShareTag(Lnet/minecraft/nbt/CompoundTag;)V"))
-	private static void readSyncableCapabilityData(final ItemStack itemStack, final CompoundTag compoundTag) {
+	private static void readTFCSyncableCapabilityData(final ItemStack itemStack, final CompoundTag compoundTag) {
 		ItemStackCapabilitySync.readFromNetwork(itemStack, compoundTag);
 	}
 }
