@@ -1,23 +1,24 @@
 package mod.traister101.sns.util;
 
-import com.google.common.collect.AbstractIterator;
 import mod.traister101.sns.SacksNSuch;
+import mod.traister101.sns.compat.curios.CuriosUtils;
 import mod.traister101.sns.network.*;
-import mod.traister101.sns.util.items.ItemHandlerSlot;
+import mod.traister101.sns.util.items.*;
 import top.theillusivec4.curios.api.CuriosApi;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ByIdMap;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.*;
@@ -51,47 +52,16 @@ public final class SNSUtils {
 		return CURIOS_LOADED;
 	}
 
-	/**
-	 * @param itemHandler Some sort of ItemHandler to iterate through
-	 */
-	public static Iterable<ItemHandlerSlot> itemHandlerSlotIterator(final IItemHandler itemHandler) {
-		return () -> new AbstractIterator<>() {
-			private int index = 0;
-
-			@Override
-			protected @Nullable ItemHandlerSlot computeNext() {
-				if (index >= itemHandler.getSlots()) return endOfData();
-				assert index >= 0 && index < itemHandler.getSlots() : "Index: " + index + " not within bounds [0," + itemHandler.getSlots() + ")";
-				return new ItemHandlerSlot(index++, itemHandler);
-			}
-		};
+	public static Stream<IItemHandler> curiosAndInventoryStream(final LivingEntity entity) {
+		return StreamSupport.stream(curiosAndInventory(entity).spliterator(), false);
 	}
 
-	public static Iterable<ItemHandlerSlot> itemHandlerSlotReverseIterator(final IItemHandler itemHandler) {
-		return () -> new AbstractIterator<>() {
-			private int index = itemHandler.getSlots() - 1;
-
-			@Override
-			protected @Nullable ItemHandlerSlot computeNext() {
-				if (index < 0) return endOfData();
-				assert index < itemHandler.getSlots() : "Index: " + index + " not within bounds [0," + itemHandler.getSlots() + ")";
-				return new ItemHandlerSlot(index--, itemHandler);
-			}
-		};
-	}
-
-	/**
-	 * @param itemHandler An ItemHandler to stream through
-	 */
-	public static Stream<ItemHandlerSlot> itemHandlerSlotStream(final IItemHandler itemHandler) {
-		return StreamSupport.stream(itemHandlerSlotIterator(itemHandler).spliterator(), false);
-	}
-
-	/**
-	 * @param itemHandler An ItemHandler to stream through
-	 */
-	public static Stream<ItemHandlerSlot> itemHandlerSlotReverseStream(final IItemHandler itemHandler) {
-		return StreamSupport.stream(itemHandlerSlotReverseIterator(itemHandler).spliterator(), false);
+	public static Iterable<IItemHandler> curiosAndInventory(final LivingEntity entity) {
+		final var inventory = entity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+		if (isCuriosPresent()) {
+			return Stream.of(inventory, CuriosUtils.getEquippedCurios(entity)).flatMap(Optional::stream)::iterator;
+		}
+		return Stream.of(inventory).flatMap(Optional::stream)::iterator;
 	}
 
 	/**
@@ -103,7 +73,7 @@ public final class SNSUtils {
 	 * @return The remainder
 	 */
 	public static ItemStack insertItemOnlyStacked(final IItemHandler itemHandler, ItemStack insertStack) {
-		for (final var handlerSlot : itemHandlerSlotIterator(itemHandler)) {
+		for (final var handlerSlot : ItemSlot.iterable(itemHandler)) {
 			final var currentStack = handlerSlot.getStack();
 			// We only add to existing stacks.
 			if (currentStack.isEmpty()) continue;
@@ -119,8 +89,13 @@ public final class SNSUtils {
 	}
 
 	public static Optional<ItemHandlerSlot> findFirstInHandler(final IItemHandler itemHandler, final Predicate<ItemStack> handlerContentsPredicate) {
-		return itemHandlerSlotReverseStream(itemHandler).filter(
-				ItemHandlerSlot.contentsMatch(handlerContentsPredicate.and(Predicate.not(ItemStack::isEmpty)))).findFirst();
+		return ItemSlot.reverseStream(itemHandler)
+				.filter(ItemSlot.contentsMatch(handlerContentsPredicate.and(Predicate.not(ItemStack::isEmpty))))
+				.findFirst();
+	}
+
+	public static <T> Stream<T> streamOf(final Iterable<T> iterable) {
+		return StreamSupport.stream(iterable.spliterator(), false);
 	}
 
 	/**

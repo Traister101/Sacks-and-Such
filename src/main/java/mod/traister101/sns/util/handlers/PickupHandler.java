@@ -2,6 +2,7 @@ package mod.traister101.sns.util.handlers;
 
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.util.*;
+import mod.traister101.sns.util.items.*;
 import net.dries007.tfc.common.blocks.GroundcoverBlock;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.dries007.tfc.common.blocks.wood.FallenLeavesBlock;
@@ -150,7 +151,7 @@ public final class PickupHandler {
 	 */
 	private static ItemStack insertItemPickup(final IItemHandler itemHandler, final ItemStack itemPickup) {
 		ItemStack remainder = itemPickup;
-		for (final var handlerSlot : SNSUtils.itemHandlerSlotIterator(itemHandler)) {
+		for (final var handlerSlot : ItemSlot.iterable(itemHandler)) {
 			if (!ContainerType.canDoItemPickup(handlerSlot.getStack())) continue;
 
 			final var maybeContainerInv = handlerSlot.getStack().getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();

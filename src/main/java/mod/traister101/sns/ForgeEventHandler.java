@@ -4,14 +4,13 @@ import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.common.items.SNSItems;
 import mod.traister101.sns.util.SNSUtils;
 import mod.traister101.sns.util.handlers.PickupHandler;
-import mod.traister101.sns.util.items.ItemHandlerSlot;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
+import mod.traister101.sns.util.items.*;
 
 import net.minecraft.world.item.*;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.eventbus.api.*;
@@ -39,33 +38,15 @@ public final class ForgeEventHandler {
 		final ItemStack projectileItemStack = event.getProjectileItemStack();
 		if (!projectileItemStack.isEmpty()) return;
 
-		if (SNSUtils.isCuriosPresent()) {
-			final var maybeProjectileSlot = CuriosApi.getCuriosInventory(event.getEntity())
-					.map(ICuriosItemHandler::getEquippedCurios)
-					.flatMap(itemHandler -> SNSUtils.itemHandlerSlotStream(itemHandler)
-							.filter(ItemHandlerSlot.contains(SNSItems.QUIVER.get()))
-							.map(slot -> slot.getStack().getCapability(ForgeCapabilities.ITEM_HANDLER).resolve())
-							.flatMap(Optional::stream)
-							.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, supportedProjectile))
-							.flatMap(Optional::stream)
-							.findFirst());
-
-			if (maybeProjectileSlot.isPresent()) {
-				event.setProjectileItemStack(maybeProjectileSlot.get().getStack().copy());
-				return;
-			}
-		}
-
-		final var maybeProjectileSlot = event.getEntity()
-				.getCapability(ForgeCapabilities.ITEM_HANDLER)
-				.resolve()
-				.flatMap(itemHandler -> SNSUtils.itemHandlerSlotStream(itemHandler)
-						.filter(ItemHandlerSlot.contains(SNSItems.QUIVER.get()))
-						.map(slot -> slot.getStack().getCapability(ForgeCapabilities.ITEM_HANDLER).resolve())
-						.flatMap(Optional::stream)
-						.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, supportedProjectile))
-						.flatMap(Optional::stream)
-						.findFirst());
+		final var maybeProjectileSlot = SNSUtils.curiosAndInventoryStream(event.getEntity())
+				.flatMap(ItemSlot::stream)
+				.filter(ItemSlot.contains(SNSItems.QUIVER.get()))
+				.map(ItemSlot.extractCapability(ForgeCapabilities.ITEM_HANDLER))
+				.map(LazyOptional::resolve)
+				.flatMap(Optional::stream)
+				.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, supportedProjectile))
+				.flatMap(Optional::stream)
+				.findFirst();
 
 		maybeProjectileSlot.ifPresent(slot -> event.setProjectileItemStack(slot.getStack().copy()));
 	}
@@ -79,30 +60,15 @@ public final class ForgeEventHandler {
 		if (!(event.getBow().getItem() instanceof final ProjectileWeaponItem projectileWeaponItem)) return;
 		supportedProjectile = projectileWeaponItem.getAllSupportedProjectiles();
 
-		if (SNSUtils.isCuriosPresent()) {
-			final var maybeProjectileSlot = CuriosApi.getCuriosInventory(event.getEntity())
-					.map(ICuriosItemHandler::getEquippedCurios)
-					.flatMap(itemHandler -> SNSUtils.itemHandlerSlotStream(itemHandler)
-							.filter(ItemHandlerSlot.contains(SNSItems.QUIVER.get()))
-							.map(slot -> slot.getStack().getCapability(ForgeCapabilities.ITEM_HANDLER).resolve())
-							.flatMap(Optional::stream)
-							.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, supportedProjectile))
-							.flatMap(Optional::stream)
-							.findFirst());
-
-			maybeProjectileSlot.ifPresent(slot -> slot.extractItem(1, false));
-		}
-
-		final var maybeProjectileSlot = event.getEntity()
-				.getCapability(ForgeCapabilities.ITEM_HANDLER)
-				.resolve()
-				.flatMap(itemHandler -> SNSUtils.itemHandlerSlotStream(itemHandler)
-						.filter(ItemHandlerSlot.contains(SNSItems.QUIVER.get()))
-						.map(slot1 -> slot1.getStack().getCapability(ForgeCapabilities.ITEM_HANDLER).resolve())
-						.flatMap(Optional::stream)
-						.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, supportedProjectile))
-						.flatMap(Optional::stream)
-						.findFirst());
+		final var maybeProjectileSlot = SNSUtils.curiosAndInventoryStream(event.getEntity())
+				.flatMap(ItemSlot::stream)
+				.filter(ItemSlot.contains(SNSItems.QUIVER.get()))
+				.map(ItemSlot.extractCapability(ForgeCapabilities.ITEM_HANDLER))
+				.map(LazyOptional::resolve)
+				.flatMap(Optional::stream)
+				.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, supportedProjectile))
+				.flatMap(Optional::stream)
+				.findFirst();
 
 		maybeProjectileSlot.ifPresent(slot -> slot.extractItem(1, false));
 	}

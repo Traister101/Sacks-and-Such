@@ -4,6 +4,7 @@ import mod.traister101.sns.common.items.ContainerItem;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.network.*;
 import mod.traister101.sns.util.SNSUtils;
+import mod.traister101.sns.util.items.*;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
@@ -108,7 +109,7 @@ public final class PickBlockHandler {
 	}
 
 	private static ItemStack findStack(final IItemHandler itemHandler, final ItemStack stackToMatch) {
-		for (final var handlerSlot : SNSUtils.itemHandlerSlotIterator(itemHandler)) {
+		for (final var handlerSlot : ItemSlot.iterable(itemHandler)) {
 			final var maybeItemHandler = handlerSlot.getStack().getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
 			if (maybeItemHandler.isEmpty()) continue;
 
@@ -118,7 +119,7 @@ public final class PickBlockHandler {
 				if (!(handlerSlot.getStack().getItem() instanceof ContainerItem)) continue;
 			}
 
-			final var foundStack = SNSUtils.itemHandlerSlotStream(maybeItemHandler.get())
+			final var foundStack = ItemSlot.stream(maybeItemHandler.get())
 					.filter(slot -> ItemStack.isSameItem(slot.getStack(), stackToMatch))
 					.map(slot -> slot.extractItem(Integer.MAX_VALUE, false))
 					.findFirst();

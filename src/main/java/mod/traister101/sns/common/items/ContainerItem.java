@@ -6,6 +6,7 @@ import mod.traister101.sns.common.menu.ContainerItemMenu;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.util.*;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
+import mod.traister101.sns.util.items.*;
 import net.dries007.tfc.common.capabilities.size.*;
 import net.dries007.tfc.util.Helpers;
 
@@ -97,7 +98,7 @@ public class ContainerItem extends Item implements IItemSize {
 
 		// Extract items into the slot
 		if (!slot.hasItem()) {
-			for (final var handlerSlot : SNSUtils.itemHandlerSlotReverseIterator(maybeHandler.get())) {
+			for (final var handlerSlot : ItemSlot.reverseIterable(maybeHandler.get())) {
 				final var simulate = handlerSlot.extractItem(Container.LARGE_MAX_STACK_SIZE, true);
 				if (simulate.isEmpty()) continue;
 
@@ -138,7 +139,7 @@ public class ContainerItem extends Item implements IItemSize {
 		if (maybeHandler.isEmpty()) return false;
 
 		if (carriedStack.isEmpty()) {
-			for (final var handlerSlot : SNSUtils.itemHandlerSlotReverseIterator(maybeHandler.get())) {
+			for (final var handlerSlot : ItemSlot.reverseIterable(maybeHandler.get())) {
 				final var current = handlerSlot.getStack();
 				if (current.isEmpty()) continue;
 

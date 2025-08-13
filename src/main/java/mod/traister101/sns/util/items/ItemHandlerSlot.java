@@ -1,72 +1,43 @@
 package mod.traister101.sns.util.items;
 
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ItemStack;
 
 import net.minecraftforge.items.IItemHandler;
 
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import lombok.*;
 import org.jetbrains.annotations.*;
-import java.util.function.Predicate;
 
-/**
- * @param slotIndex The slot index
- * @param itemHandler
- */
-@Slf4j
-public record ItemHandlerSlot(@Range(from = 0, to = Integer.MAX_VALUE) int slotIndex, @NonNull IItemHandler itemHandler) {
+@ToString
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+public final class ItemHandlerSlot implements ItemSlot {
 
-	/**
-	 * @param item The item to test the contents against
-	 */
-	public static Predicate<ItemHandlerSlot> contains(final Item item) {
-		return slot -> slot.getStack().is(item);
+	@Range(from = 0, to = Integer.MAX_VALUE)
+	final int slotIndex;
+	final IItemHandler itemHandler;
+
+	public static ItemHandlerSlot of(@Range(from = 0, to = Integer.MAX_VALUE) final int slotIndex, final @NonNull IItemHandler itemHandler) {
+		//noinspection ConstantValue
+		if (slotIndex < 0 || slotIndex >= itemHandler.getSlots())
+			throw new RuntimeException("Slot " + slotIndex + " not in valid range - [0," + itemHandler.getSlots() + ")");
+		return new ItemHandlerSlot(slotIndex, itemHandler);
 	}
 
-	/**
-	 * @param itemStackPredicate An ItemStack predicate to test the contents against
-	 */
-	public static Predicate<ItemHandlerSlot> contentsMatch(final Predicate<ItemStack> itemStackPredicate) {
-		return slot -> itemStackPredicate.test(slot.getStack());
-	}
-
-	/**
-	 * Same contract as {@link IItemHandler#getStackInSlot(int)}
-	 **/
-	@NotNull
-	public ItemStack getStack() {
+	@Override
+	public @NotNull ItemStack getStack() {
 		return itemHandler.getStackInSlot(slotIndex);
 	}
 
-	/**
-	 * Same contract as {@link IItemHandler#insertItem(int, ItemStack, boolean)}
-	 **/
-	@SuppressWarnings("unused")
+	@Override
 	public ItemStack insertItem(final ItemStack insertStack, final boolean simulate) {
 		return itemHandler.insertItem(slotIndex, insertStack, simulate);
 	}
 
-	/**
-	 * Same contract as {@link IItemHandler#extractItem(int, int, boolean)}
-	 **/
+	@Override
 	public ItemStack extractItem(final int amount, final boolean simulate) {
 		return itemHandler.extractItem(slotIndex, amount, simulate);
 	}
 
-	/**
-	 * Retrieves the maximum stack size allowed to exist in this slot.
-	 *
-	 * @return The maximum stack size allowed.
-	 */
-	@SuppressWarnings("unused")
-	public int getSlotLimit() {
-		return itemHandler.getSlotLimit(slotIndex);
-	}
-
-	/**
-	 * Same contract as {@link IItemHandler#isItemValid(int, ItemStack)}
-	 */
-	@SuppressWarnings("unused")
+	@Override
 	public boolean isItemValid(final ItemStack stack) {
 		return itemHandler.isItemValid(slotIndex, stack);
 	}
