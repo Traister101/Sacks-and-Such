@@ -218,9 +218,9 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 
     // Mixin Extras
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1") as Dependency)
-    jarJar(implementation("io.github.llamalad7:mixinextras-forge:0.4.1") as Dependency) {
-        jarJar.ranged(this, "[0.4.1,)")
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0") as Dependency)
+    jarJar(implementation("io.github.llamalad7:mixinextras-forge:0.5.0") as Dependency) {
+        jarJar.ranged(this, "[0.5.0,)")
     }
 
     jarJar(implementation(fg.deobf("mod.traister101:Extended-Slot-Capacity-1.20.1:$extendedSlotCapacityVersion")) {
