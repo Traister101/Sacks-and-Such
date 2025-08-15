@@ -6,6 +6,7 @@
   "mixins": [
 	"common.AbstractArrowMixin",
 	"common.AbstractHorseMixin",
+	"common.BowItemMixin",
 	"common.ByteBufUtilsMixin",
 	"common.HorseInventoryMenuMixin",
 	"common.JavelinItemMixin",

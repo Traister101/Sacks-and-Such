@@ -4,19 +4,19 @@ import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.common.items.SNSItems;
 import mod.traister101.sns.util.SNSUtils;
 import mod.traister101.sns.util.handlers.PickupHandler;
-import mod.traister101.sns.util.items.*;
+import mod.traister101.sns.util.items.ItemSlot;
 
-import net.minecraft.world.item.*;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.item.ProjectileWeaponItem;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.ArrowLooseEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.player.ArrowNockEvent;
 import net.minecraftforge.eventbus.api.*;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public final class ForgeEventHandler {
 
@@ -30,14 +30,11 @@ public final class ForgeEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onProjectilePrepare(final LivingGetProjectileEvent event) {
-		if (!(event.getProjectileWeaponItemStack().getItem() instanceof final ProjectileWeaponItem projectileWeaponItem)) return;
+	public static void onProjectilePrepare(final ArrowNockEvent event) {
+		if (!(event.getBow().getItem() instanceof final ProjectileWeaponItem projectileWeaponItem)) return;
 
 		final var supportedProjectile = projectileWeaponItem.getAllSupportedProjectiles();
 
-		final ItemStack projectileItemStack = event.getProjectileItemStack();
-		if (!projectileItemStack.isEmpty()) return;
-
 		final var maybeProjectileSlot = SNSUtils.curiosAndInventoryStream(event.getEntity())
 				.flatMap(ItemSlot::stream)
 				.filter(ItemSlot.contains(SNSItems.QUIVER.get()))
@@ -48,29 +45,10 @@ public final class ForgeEventHandler {
 				.flatMap(Optional::stream)
 				.findFirst();
 
-		maybeProjectileSlot.ifPresent(slot -> event.setProjectileItemStack(slot.getStack().copy()));
-	}
-
-	@SubscribeEvent
-	public static void onProjectileLose(final ArrowLooseEvent event) {
-		if (!event.hasAmmo()) return;
-		if (event.getCharge() < 1) return;
-
-		final Predicate<ItemStack> supportedProjectile;
-		if (!(event.getBow().getItem() instanceof final ProjectileWeaponItem projectileWeaponItem)) return;
-		supportedProjectile = projectileWeaponItem.getAllSupportedProjectiles();
-
-		final var maybeProjectileSlot = SNSUtils.curiosAndInventoryStream(event.getEntity())
-				.flatMap(ItemSlot::stream)
-				.filter(ItemSlot.contains(SNSItems.QUIVER.get()))
-				.map(ItemSlot.extractCapability(ForgeCapabilities.ITEM_HANDLER))
-				.map(LazyOptional::resolve)
-				.flatMap(Optional::stream)
-				.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, supportedProjectile))
-				.flatMap(Optional::stream)
-				.findFirst();
-
-		maybeProjectileSlot.ifPresent(slot -> slot.extractItem(1, false));
+		maybeProjectileSlot.ifPresent(slot -> {
+			event.setAction(InteractionResultHolder.consume(event.getBow()));
+			event.getEntity().startUsingItem(event.getHand());
+		});
 	}
 
 	@SubscribeEvent
