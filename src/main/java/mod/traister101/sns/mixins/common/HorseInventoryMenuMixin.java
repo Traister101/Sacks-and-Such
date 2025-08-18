@@ -1,7 +1,9 @@
 package mod.traister101.sns.mixins.common;
 
+import com.llamalad7.mixinextras.expression.*;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import mod.traister101.sns.common.items.HorseshoesItem;
-import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
 
@@ -53,7 +55,10 @@ public abstract class HorseInventoryMenuMixin extends AbstractContainerMenu {
 	 * @reason Our extra slot messes with some of the quick move constants
 	 * @author Traister101
 	 */
-	@ModifyConstant(method = "quickMoveStack", constant = {@Constant(intValue = 2, ordinal = 1), @Constant(intValue = 2, ordinal = 2)})
+	@Definition(id = "moveItemStackTo", method = "Lnet/minecraft/world/inventory/HorseInventoryMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z")
+	@Expression(value = "? <= @(2)", id = "test")
+	@Expression(value = "this.moveItemStackTo(?, @(2), ?, false)", id = "moveStack")
+	@ModifyExpressionValue(method = "quickMoveStack", at = {@At(value = "MIXINEXTRAS:EXPRESSION", id = "test"), @At(value = "MIXINEXTRAS:EXPRESSION", id = "moveStack")})
 	private int accountForHorseshoesSlot(final int value) {
 		return value + 1;
 	}
@@ -62,9 +67,12 @@ public abstract class HorseInventoryMenuMixin extends AbstractContainerMenu {
 	 * @reason Our horseshoes slot isn't properly prioritised like armor or saddles by vanilla
 	 * @author Traister101
 	 */
-	@Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/HorseInventoryMenu;getSlot(I)Lnet/minecraft/world/inventory/Slot;"), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
-	private void quickMoveHorseshoes(final Player player, final int slotIndex, final CallbackInfoReturnable<ItemStack> cir, final ItemStack is,
-			final Slot slot, final ItemStack slotStack) {
+	@Definition(id = "getSlot", method = "Lnet/minecraft/world/inventory/HorseInventoryMenu;getSlot(I)Lnet/minecraft/world/inventory/Slot;")
+	@Definition(id = "mayPlace", method = "Lnet/minecraft/world/inventory/Slot;mayPlace(Lnet/minecraft/world/item/ItemStack;)Z")
+	@Expression("@(this.getSlot(1)).mayPlace(?)")
+	@Inject(method = "quickMoveStack", at = @At(value = "MIXINEXTRAS:EXPRESSION"), cancellable = true)
+	private void quickMoveHorseshoes(final Player player, final int slotIndex, final CallbackInfoReturnable<ItemStack> cir) {
+		final var slotStack = this.getSlot(slotIndex).getItem();
 		if (getSlot(2).mayPlace(slotStack) && !getSlot(2).hasItem()) {
 			if (!moveItemStackTo(slotStack, 2, 3, false)) {
 				cir.setReturnValue(ItemStack.EMPTY);
