@@ -6,7 +6,7 @@ import mod.traister101.sns.common.menu.ContainerItemMenu;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.util.*;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
-import mod.traister101.sns.util.items.*;
+import mod.traister101.sns.util.items.ItemSlot;
 import net.dries007.tfc.common.capabilities.size.*;
 import net.dries007.tfc.util.Helpers;
 
@@ -195,26 +195,26 @@ public class ContainerItem extends Item implements IItemSize {
 		if (!SNSConfig.CLIENT.displayItemContentsAsImages.get()) return super.getTooltipImage(itemStack);
 
 		return itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).map(handler -> {
-			final int width, hight;
+			final int width, height;
 			final int slotCount = handler.getSlots();
 			switch (slotCount) {
-				case 1 -> width = hight = 1;
-				case 4 -> width = hight = 2;
+				case 1 -> width = height = 1;
+				case 4 -> width = height = 2;
 				case 8 -> {
 					width = 4;
-					hight = 2;
+					height = 2;
 				}
 				case 18 -> {
 					width = 9;
-					hight = 2;
+					height = 2;
 				}
 				default -> {
 					// We want to round up, integer math rounds down
 					width = (int) Math.ceil((double) slotCount / 9);
-					hight = slotCount / width;
+					height = slotCount / width;
 				}
 			}
-			return Helpers.getTooltipImage(handler, width, hight, 0, slotCount - 1);
+			return Helpers.getTooltipImage(handler, width, height, 0, slotCount - 1);
 		}).orElse(super.getTooltipImage(itemStack));
 	}
 
@@ -247,7 +247,7 @@ public class ContainerItem extends Item implements IItemSize {
 
 		if (compoundTag == null) return;
 
-		// Deserlialize our contents
+		// Deserialize our contents
 		itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
 			if (handler instanceof final ContainerItemHandler containerItemHandler) {
 				containerItemHandler.deserializeNBT(compoundTag.getCompound(CONTENTS_TAG));

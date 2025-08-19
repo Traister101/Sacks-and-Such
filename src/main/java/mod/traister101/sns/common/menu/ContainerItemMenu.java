@@ -164,16 +164,16 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 	}
 
 	@Override
-	public void clicked(final int slotIndex, final int mouseButtom, final ClickType clickType, final Player player) {
+	public void clicked(final int slotIndex, final int mouseButton, final ClickType clickType, final Player player) {
 		// We can't move if:
 		// the slot is the item index, and it's an illegal action (like, swapping the items)
 		// the hotbar item is being swapped out
 		// the action is "pickup all" (this ignores every slot, so we cannot allow it)
 		if (slotIndex == containerItemIndex && ILLEGAL_ITEM_CLICKS.contains(clickType)) return;
-		if (mouseButtom == hotbarIndex && clickType == ClickType.SWAP) return;
-		if (mouseButtom == Inventory.SLOT_OFFHAND && clickType == ClickType.SWAP && hotbarIndex == OFFHAND_MAGIC_INDEX) return;
+		if (mouseButton == hotbarIndex && clickType == ClickType.SWAP) return;
+		if (mouseButton == Inventory.SLOT_OFFHAND && clickType == ClickType.SWAP && hotbarIndex == OFFHAND_MAGIC_INDEX) return;
 
-		super.clicked(slotIndex, mouseButtom, clickType, player);
+		super.clicked(slotIndex, mouseButton, clickType, player);
 	}
 
 	@Override

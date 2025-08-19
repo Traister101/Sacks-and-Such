@@ -100,7 +100,7 @@ public class ContainerItemHandler extends ExtendedSlotCapacityHandler implements
 
 		final float amountFilled = (float) totalItems / (float) maxCapacity;
 
-		// TODO Simple percentage based approuch, maybe not the best?
+		// TODO Simple percentage based approach, maybe not the best?
 		if (0.80 <= amountFilled) {
 			return cachedWeight = Weight.VERY_HEAVY;
 		}

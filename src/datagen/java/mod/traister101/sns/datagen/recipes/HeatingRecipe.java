@@ -39,11 +39,11 @@ public final class HeatingRecipe implements FinishedRecipe {
 		this.fluidAmount = fluidAmount;
 	}
 
-	public static HeatingRecipe destory(final Item input, final float temperature) {
-		return destory(RecipeBuilder.getDefaultRecipeId(input), Ingredient.of(input), temperature);
+	public static HeatingRecipe destroy(final Item input, final float temperature) {
+		return destroy(RecipeBuilder.getDefaultRecipeId(input), Ingredient.of(input), temperature);
 	}
 
-	public static HeatingRecipe destory(final ResourceLocation recipeId, final Ingredient input, final float temperature) {
+	public static HeatingRecipe destroy(final ResourceLocation recipeId, final Ingredient input, final float temperature) {
 		return new HeatingRecipe(recipeId, input, temperature, null, 0, null, 0);
 	}
 

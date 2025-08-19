@@ -59,7 +59,7 @@ public final class ClientForgeEventHandler {
 	private static void onClickInput(final InteractionKeyMappingTriggered event) {
 		if (!event.isPickBlock()) return;
 
-		// If we should handle pickblock (Client)
+		// If we should handle pick block (Client)
 		if (SNSConfig.COMMON.doPickBlock.get()) {
 			// Sanity checks
 			if (MC.player == null) return;

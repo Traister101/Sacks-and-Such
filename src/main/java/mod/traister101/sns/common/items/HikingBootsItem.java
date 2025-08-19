@@ -75,7 +75,7 @@ public class HikingBootsItem extends ArmorItem {
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(final EquipmentSlot slot, final ItemStack itemStack) {
 		if (slot != EquipmentSlot.FEET) return super.getAttributeModifiers(slot, itemStack);
-		// Delay attrabute init until server config is loaded :/
+		// Delay attribute init until server config is loaded :/
 		if (attributeModifiers == null) {
 			final var builder = ImmutableMultimap.<Attribute, AttributeModifier>builder();
 			builder.putAll(super.getAttributeModifiers(slot, itemStack));

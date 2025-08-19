@@ -136,7 +136,7 @@ public abstract class SmartLanguageProvider implements DataProvider {
 		void addTranslations(TranslationWriter writer);
 
 		/**
-		 * Used for advancment translations and other such things
+		 * Used for advancement translations and other such things
 		 */
 		interface TranslationWriter {
 

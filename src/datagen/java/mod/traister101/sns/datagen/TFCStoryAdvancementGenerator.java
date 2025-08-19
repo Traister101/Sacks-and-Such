@@ -16,7 +16,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.function.Consumer;
 
-public class TFCStoryAdvacementGenerator implements SmarterAdvancementGenerator {
+public class TFCStoryAdvancementGenerator implements SmarterAdvancementGenerator {
 
 	private static final ResourceLocation IRON_AGE = new ResourceLocation(TerraFirmaCraft.MOD_ID, "story/iron_age");
 	private static final ResourceLocation STEEL_AGE = new ResourceLocation(TerraFirmaCraft.MOD_ID, "story/steel_age");
@@ -48,7 +48,7 @@ public class TFCStoryAdvacementGenerator implements SmarterAdvancementGenerator 
 						Component.translatable(STRAW_BAASKET.description()), null, FrameType.TASK, true, true, false)
 				.addCriterion("has_straw_basket", InventoryChangeTrigger.TriggerInstance.hasItems(SNSItems.STRAW_BASKET.get()))
 				.requirements(new String[][] {{"has_straw_basket"}})
-				.save(saver, SNSUtils.modLocation("tfc/story/straw_backet"), existingFileHelper);
+				.save(saver, SNSUtils.modLocation("tfc/story/straw_basket"), existingFileHelper);
 
 		Advancement.Builder.advancement()
 				.parent(new ResourceLocation(TerraFirmaCraft.MOD_ID, "story/leather"))

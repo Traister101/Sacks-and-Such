@@ -14,6 +14,6 @@ public final class BuiltInAvdancements {
 
 	public static SmarterAdvancementProvider create(final PackOutput packOutput, final CompletableFuture<Provider> registries,
 			final ExistingFileHelper existingFileHelper) {
-		return new SmarterAdvancementProvider(packOutput, registries, existingFileHelper, List.of(new TFCStoryAdvacementGenerator()));
+		return new SmarterAdvancementProvider(packOutput, registries, existingFileHelper, List.of(new TFCStoryAdvancementGenerator()));
 	}
 }

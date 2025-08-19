@@ -20,7 +20,7 @@ public interface ILunchboxHandler {
 	/**
 	 * @param entity The entity
 	 *
-	 * @return The selected stacks food properties. Potentally null
+	 * @return The selected stacks food properties. Potentially null
 	 */
 	@Nullable
 	default FoodProperties getSelectedFoodProperties(@Nullable LivingEntity entity) {

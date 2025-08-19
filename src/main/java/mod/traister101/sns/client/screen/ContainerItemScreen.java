@@ -51,7 +51,7 @@ public class ContainerItemScreen extends AbstractContainerScreen<ContainerItemMe
 	}
 
 	@Override
-	protected void renderBg(final GuiGraphics graphics, final float partialtick, final int mouseX, final int mouseY) {
+	protected void renderBg(final GuiGraphics graphics, final float partialTick, final int mouseX, final int mouseY) {
 		graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 		drawSlots(graphics);
 	}
@@ -87,9 +87,9 @@ public class ContainerItemScreen extends AbstractContainerScreen<ContainerItemMe
 	 * Dynamically draws the slot texture to the screen where slots are located.
 	 */
 	private void drawSlots(final GuiGraphics graphics) {
-		// TODO come up with good idea to restrict drawn slots? Don't want to require our own slot extention
+		// TODO come up with good idea to restrict drawn slots? Don't want to require our own slot extension
 		// Yes we draw every slot, even the player inventory ones we have baked into the texture
-		// Despite this performace is not a concern. Drawing of the ItemStacks the slots contain is much more expensive
+		// Despite this performance is not a concern. Drawing of the ItemStacks the slots contain is much more expensive
 		for (final Slot slot : menu.slots) {
 			final int x = leftPos + slot.x - 1;
 			final int y = topPos + slot.y - 1;

@@ -59,7 +59,7 @@ public interface ContainerType extends StringRepresentable {
 	boolean doesVoiding();
 
 	/**
-	 * @return If this {@link ContainerType} allows you to tranasfer items via the inventory
+	 * @return If this {@link ContainerType} allows you to transfer items via the inventory
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	boolean doesInventoryInteraction();
