@@ -39,8 +39,8 @@ public class LunchBoxItem extends ContainerItem {
 		final ItemStack heldStack = player.getItemInHand(hand);
 
 		if (!player.isShiftKeyDown()) {
-			return heldStack.getCapability(SNSCapabilities.LUNCHBOX).map(lunchboxHandler -> {
-				final ItemStack targetFood = lunchboxHandler.getSelectedStack();
+			return heldStack.getCapability(SNSCapabilities.FOOD_HOLDER).map(foodHolder -> {
+				final ItemStack targetFood = foodHolder.getSelectedStack();
 				if (targetFood.isEmpty()) return InteractionResultHolder.pass(heldStack);
 				final FoodProperties targetFoodProperties = targetFood.getFoodProperties(player);
 				if (!targetFood.isEmpty() && !player.getCooldowns().isOnCooldown(targetFood.getItem()) && player.canEat(
@@ -66,7 +66,8 @@ public class LunchBoxItem extends ContainerItem {
 	public void appendHoverText(final ItemStack itemStack, @Nullable final Level level, final List<Component> tooltip, final TooltipFlag flagIn) {
 		if (Screen.hasShiftDown()) {
 			tooltip.add(Component.translatable(SELECTED_SLOT_TOOLTIP,
-					SNSUtils.intComponent(itemStack.getCapability(SNSCapabilities.LUNCHBOX).map(ILunchboxHandler::getSelectedSlot).orElse(0) + 1)
+					SNSUtils.intComponent(itemStack.getCapability(SNSCapabilities.FOOD_HOLDER).map(
+									FoodHolder::getSelectedSlot).orElse(0) + 1)
 							.withStyle(ChatFormatting.WHITE)).withStyle(ChatFormatting.GRAY));
 			super.appendHoverText(itemStack, level, tooltip, flagIn);
 			return;
@@ -83,7 +84,7 @@ public class LunchBoxItem extends ContainerItem {
 
 	@Override
 	public ItemStack finishUsingItem(final ItemStack itemStack, final Level level, final LivingEntity livingEntity) {
-		return itemStack.getCapability(SNSCapabilities.LUNCHBOX)
+		return itemStack.getCapability(SNSCapabilities.FOOD_HOLDER)
 				.map(itemHandler -> itemHandler.consumeSelected(itemStack, level, livingEntity))
 				.orElse(itemStack);
 	}
@@ -95,26 +96,26 @@ public class LunchBoxItem extends ContainerItem {
 
 	@Override
 	public int getUseDuration(final ItemStack itemStack) {
-		return itemStack.getCapability(SNSCapabilities.LUNCHBOX)
-				.map(lunchboxHandler -> lunchboxHandler.getSelectedStack().getUseDuration())
+		return itemStack.getCapability(SNSCapabilities.FOOD_HOLDER)
+				.map(foodHolder -> foodHolder.getSelectedStack().getUseDuration())
 				.orElse(32);
 	}
 
 	@Nullable
 	@Override
 	public FoodProperties getFoodProperties(final ItemStack itemStack, final @Nullable LivingEntity entity) {
-		final var capability = itemStack.getCapability(SNSCapabilities.LUNCHBOX).resolve();
-		return capability.map(lunchboxHandler -> lunchboxHandler.getSelectedFoodProperties(entity)).orElse(null);
+		final var capability = itemStack.getCapability(SNSCapabilities.FOOD_HOLDER).resolve();
+		return capability.map(foodHolder -> foodHolder.getSelectedFoodProperties(entity)).orElse(null);
 	}
 
 	@Getter
-	public static class LunchboxHandler extends ContainerItemHandler implements ILunchboxHandler {
+	public static class LunchboxHandler extends ContainerItemHandler implements FoodHolder {
 
 		public static final String SELECTED_SLOT_KEY = "selectedSlot";
 		private int selectedSlot = 0;
 
-		public LunchboxHandler(final ContainerType type) {
-			super(type);
+		public LunchboxHandler(final ContainerType type, final ItemStack owner) {
+			super(type, owner);
 		}
 
 		@Override

@@ -103,6 +103,11 @@ public final class ItemContainerSlot implements ItemSlot {
 	}
 
 	@Override
+	public int slotLimit() {
+		return container.getMaxStackSize();
+	}
+
+	@Override
 	public boolean isItemValid(final ItemStack stack) {
 		return container.canPlaceItem(slotIndex, stack);
 	}

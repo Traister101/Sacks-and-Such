@@ -12,7 +12,7 @@ import net.dries007.tfc.util.Helpers;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -25,6 +25,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.*;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -167,11 +168,12 @@ public class ContainerItem extends Item implements IItemSize {
 			return;
 		}
 
-		tooltip.add(Component.translatable(SLOT_COUNT_TOOLTIP, Component.literal(String.valueOf(type.getSlotCount())).withStyle(ChatFormatting.WHITE))
+		tooltip.add(Component.translatable(SLOT_COUNT_TOOLTIP, Component.literal(String.valueOf(type.slotCount())).withStyle(ChatFormatting.WHITE))
 				.withStyle(ChatFormatting.GRAY));
-		tooltip.add(Component.translatable(SLOT_CAPACITY_TOOLTIP,
-				Component.literal(String.valueOf(type.getSlotCapacity())).withStyle(ChatFormatting.WHITE)).withStyle(ChatFormatting.GRAY));
-		tooltip.add(Component.translatable(ALLOWED_SIZE_TOOLTIP, Helpers.translateEnum(type.getAllowedSize()).withStyle(ChatFormatting.WHITE))
+		tooltip.add(
+				Component.translatable(SLOT_CAPACITY_TOOLTIP, Component.literal(String.valueOf(type.slotCapacity())).withStyle(ChatFormatting.WHITE))
+						.withStyle(ChatFormatting.GRAY));
+		tooltip.add(Component.translatable(ALLOWED_SIZE_TOOLTIP, Helpers.translateEnum(type.allowedSize()).withStyle(ChatFormatting.WHITE))
 				.withStyle(ChatFormatting.GRAY));
 
 		if (type.doesAutoPickup()) {
@@ -180,8 +182,8 @@ public class ContainerItem extends Item implements IItemSize {
 		}
 
 		if (type.doesVoiding()) {
-			tooltip.add(Component.translatable(VOID_TOOLTIP, SNSUtils.toggleTooltip(
-							itemStack.getCapability(SNSCapabilities.ITEM_VOIDING_ITEM_HANDLER).map(IVoidingItemHandler::isVoidingEnabled).orElse(false)))
+			tooltip.add(Component.translatable(VOID_TOOLTIP,
+							SNSUtils.toggleTooltip(itemStack.getCapability(SNSCapabilities.ITEM_VOIDER).map(ItemVoider::isVoidingEnabled).orElse(false)))
 					.withStyle(ChatFormatting.GRAY));
 		}
 
@@ -221,7 +223,7 @@ public class ContainerItem extends Item implements IItemSize {
 	@Override
 	public boolean isFoil(final ItemStack itemStack) {
 		return SNSConfig.CLIENT.voidGlint.get() ?
-				itemStack.getCapability(SNSCapabilities.ITEM_VOIDING_ITEM_HANDLER).map(IVoidingItemHandler::isVoidingEnabled).orElse(false) :
+				itemStack.getCapability(SNSCapabilities.ITEM_VOIDER).map(ItemVoider::isVoidingEnabled).orElse(false) :
 				NBTHelper.isAutoPickup(itemStack);
 	}
 
@@ -233,7 +235,7 @@ public class ContainerItem extends Item implements IItemSize {
 
 		// Serialize our contents
 		itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-			if (handler instanceof final ContainerItemHandler containerItemHandler) {
+			if (handler instanceof final INBTSerializable<?> containerItemHandler) {
 				compoundTag.put(CONTENTS_TAG, containerItemHandler.serializeNBT());
 			}
 		});
@@ -249,15 +251,19 @@ public class ContainerItem extends Item implements IItemSize {
 
 		// Deserialize our contents
 		itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-			if (handler instanceof final ContainerItemHandler containerItemHandler) {
-				containerItemHandler.deserializeNBT(compoundTag.getCompound(CONTENTS_TAG));
+			if (handler instanceof INBTSerializable<?>) {
+				@SuppressWarnings("unchecked") final INBTSerializable<Tag> containerItemHandler = (INBTSerializable<Tag>) handler;
+				final var tag = compoundTag.get(CONTENTS_TAG);
+				if (tag != null) {
+					containerItemHandler.deserializeNBT(tag);
+				}
 			}
 		});
 	}
 
 	@Override
 	public final ICapabilityProvider initCapabilities(final ItemStack itemStack, @Nullable final CompoundTag nbt) {
-		return type.getCapabilityProvider(itemStack, nbt);
+		return type.initCapabilities(itemStack, nbt);
 	}
 
 	private void playRemoveOneSound(final Entity entity) {
@@ -270,15 +276,12 @@ public class ContainerItem extends Item implements IItemSize {
 
 	@Override
 	public Size getSize(final ItemStack itemStack) {
-		return type.getSize(itemStack);
+		return type.size(itemStack);
 	}
 
 	@Override
 	public Weight getWeight(final ItemStack itemStack) {
-		return itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-				.map(handler -> handler instanceof final ContainerItemHandler containerItemHandler ? containerItemHandler.getWeight() :
-						Weight.VERY_HEAVY)
-				.orElse(Weight.VERY_HEAVY);
+		return type.weight(itemStack);
 	}
 
 	@Override

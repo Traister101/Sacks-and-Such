@@ -5,7 +5,6 @@ import mod.traister101.sns.common.menu.ContainerItemMenu;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -30,9 +29,9 @@ public class ServerboundToggleSlotVoidingPacket {
 
 		if (!(player.containerMenu instanceof final ContainerItemMenu containerItemMenu)) return;
 
-		final ItemStack containerStack = containerItemMenu.getContainerStack();
-		containerStack.getCapability(SNSCapabilities.ITEM_VOIDING_ITEM_HANDLER)
+		containerItemMenu.getContainerStack()
+				.getCapability(SNSCapabilities.ITEM_VOIDER)
 				.resolve()
-				.ifPresent(voidingItemHandler -> voidingItemHandler.toggleVoidSlot(slotIndex));
+				.ifPresent(itemVoider -> itemVoider.toggleVoidSlot(slotIndex));
 	}
 }

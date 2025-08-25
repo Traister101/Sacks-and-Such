@@ -38,6 +38,11 @@ public final class ItemHandlerSlot implements ItemSlot {
 	}
 
 	@Override
+	public int slotLimit() {
+		return itemHandler.getSlotLimit(slotIndex);
+	}
+
+	@Override
 	public boolean isItemValid(final ItemStack stack) {
 		return itemHandler.isItemValid(slotIndex, stack);
 	}

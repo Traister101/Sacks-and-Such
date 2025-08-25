@@ -13,7 +13,7 @@ import net.minecraft.world.item.Item.Properties;
 
 import net.minecraftforge.registries.*;
 
-import java.util.function.Supplier;
+import java.util.function.*;
 
 @SuppressWarnings("unused")
 public final class SNSItems {
@@ -34,16 +34,16 @@ public final class SNSItems {
 	public static final RegistryObject<Item> RED_STEEL_HORSESHOE = registerHorseshoe(Default.RED_STEEL);
 
 	// Container Items
-	public static final RegistryObject<ContainerItem> STRAW_BASKET = registerContainerItem(DefaultContainers.STRAW_BASKET);
-	public static final RegistryObject<ContainerItem> LEATHER_SACK = registerContainerItem(DefaultContainers.LEATHER_SACK);
-	public static final RegistryObject<ContainerItem> BURLAP_SACK = registerContainerItem(DefaultContainers.BURLAP_SACK);
-	public static final RegistryObject<ContainerItem> ORE_SACK = registerContainerItem(DefaultContainers.ORE_SACK);
-	public static final RegistryObject<ContainerItem> SEED_POUCH = registerContainerItem(DefaultContainers.SEED_POUCH);
-	public static final RegistryObject<ContainerItem> FRAME_PACK = registerContainerItem(DefaultContainers.FRAME_PACK,
+	public static final RegistryObject<ContainerItem> STRAW_BASKET = registerContainerItem("straw_basket", DefaultContainers.STRAW_BASKET);
+	public static final RegistryObject<ContainerItem> LEATHER_SACK = registerContainerItem("leather_sack", DefaultContainers.LEATHER_SACK);
+	public static final RegistryObject<ContainerItem> BURLAP_SACK = registerContainerItem("burlap_sack", DefaultContainers.BURLAP_SACK);
+	public static final RegistryObject<ContainerItem> ORE_SACK = registerContainerItem("ore_sack", DefaultContainers.ORE_SACK);
+	public static final RegistryObject<ContainerItem> SEED_POUCH = registerContainerItem("seed_pouch", DefaultContainers.SEED_POUCH);
+	public static final RegistryObject<ContainerItem> FRAME_PACK = registerContainerItem("frame_pack", DefaultContainers.FRAME_PACK,
 			new Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 	public static final RegistryObject<LunchBoxItem> LUNCHBOX = register("lunchbox",
 			() -> new LunchBoxItem(new Properties(), DefaultContainers.LUNCHBOX));
-	public static final RegistryObject<ContainerItem> QUIVER = registerContainerItem(DefaultContainers.QUIVER);
+	public static final RegistryObject<ContainerItem> QUIVER = registerContainerItem("quiver", DefaultContainers.QUIVER);
 
 	public static final RegistryObject<MobNetItem> MOB_NET_ITEM = register("mob_net", () -> new MobNetItem(new Properties()));
 
@@ -86,12 +86,13 @@ public final class SNSItems {
 				() -> new HorseshoesItem(new Properties().durability(metal.toolTier().getUses()).rarity(metal.getRarity()), horseshoesConfig));
 	}
 
-	private static RegistryObject<ContainerItem> registerContainerItem(final ContainerType containerType) {
-		return registerContainerItem(containerType, new Properties().stacksTo(1));
+	private static RegistryObject<ContainerItem> registerContainerItem(final String name, final ContainerType containerType) {
+		return registerContainerItem(name, containerType, new Properties().stacksTo(1));
 	}
 
-	private static RegistryObject<ContainerItem> registerContainerItem(final ContainerType containerType, final Properties properties) {
-		return register(containerType.getSerializedName(), () -> new ContainerItem(properties, containerType));
+	private static RegistryObject<ContainerItem> registerContainerItem(final String name, final ContainerType containerType,
+			final Properties properties) {
+		return register(name, () -> new ContainerItem(properties, containerType));
 	}
 
 	private static RegistryObject<Item> registerSimple(final String name) {
@@ -104,5 +105,9 @@ public final class SNSItems {
 
 	private static <I extends Item> RegistryObject<I> register(final String name, final Supplier<I> itemSupplier) {
 		return ITEMS.register(name, itemSupplier);
+	}
+
+	private static <I extends Item> RegistryObject<I> register(final String name, final Function<Properties, I> itemSupplier) {
+		return ITEMS.register(name, () -> itemSupplier.apply(new Properties()));
 	}
 }

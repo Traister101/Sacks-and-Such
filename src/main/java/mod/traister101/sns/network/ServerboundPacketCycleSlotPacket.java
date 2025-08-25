@@ -1,12 +1,10 @@
 package mod.traister101.sns.network;
 
-import mod.traister101.sns.common.capability.ILunchboxHandler.CycleDirection;
-import mod.traister101.sns.common.items.LunchBoxItem.LunchboxHandler;
+import mod.traister101.sns.common.capability.FoodHolder.CycleDirection;
+import mod.traister101.sns.common.capability.SNSCapabilities;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -29,10 +27,6 @@ public class ServerboundPacketCycleSlotPacket {
 	void handle(final @Nullable ServerPlayer player) {
 		if (player == null) return;
 
-		player.getMainHandItem().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(itemHandler -> {
-			if (itemHandler instanceof final LunchboxHandler lunchboxHandler) {
-				lunchboxHandler.cycleSelected(cycleDirection);
-			}
-		});
+		player.getMainHandItem().getCapability(SNSCapabilities.FOOD_HOLDER).ifPresent(foodHolder -> foodHolder.cycleSelected(cycleDirection));
 	}
 }

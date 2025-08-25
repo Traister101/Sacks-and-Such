@@ -10,7 +10,7 @@ import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import org.jetbrains.annotations.Nullable;
 
 @AutoRegisterCapability
-public interface ILunchboxHandler {
+public interface FoodHolder {
 
 	/**
 	 * @return The currently selected stack. <strong>DO NOT MODIFY</strong>

@@ -1,6 +1,6 @@
 package mod.traister101.sns.client;
 
-import mod.traister101.sns.common.capability.ILunchboxHandler.CycleDirection;
+import mod.traister101.sns.common.capability.FoodHolder.CycleDirection;
 import mod.traister101.sns.common.capability.SNSCapabilities;
 import mod.traister101.sns.common.items.SNSItems;
 import mod.traister101.sns.config.SNSConfig;
@@ -87,13 +87,13 @@ public final class ClientForgeEventHandler {
 		final boolean scrollForwards = scrollDelta < 0;
 		final boolean scrollBackwards = scrollDelta > 0;
 
-		final var capability = mainHandStack.getCapability(SNSCapabilities.LUNCHBOX);
+		final var capability = mainHandStack.getCapability(SNSCapabilities.FOOD_HOLDER);
 
 		if (scrollForwards) {
-			capability.ifPresent(lunchboxHandler -> lunchboxHandler.cycleSelected(CycleDirection.FORWARD));
+			capability.ifPresent(foodHolder -> foodHolder.cycleSelected(CycleDirection.FORWARD));
 			SNSPacketHandler.sendToServer(new ServerboundPacketCycleSlotPacket(CycleDirection.FORWARD));
 		} else if (scrollBackwards) {
-			capability.ifPresent(lunchboxHandler -> lunchboxHandler.cycleSelected(CycleDirection.BACKWARD));
+			capability.ifPresent(foodHolder -> foodHolder.cycleSelected(CycleDirection.BACKWARD));
 			SNSPacketHandler.sendToServer(new ServerboundPacketCycleSlotPacket(CycleDirection.BACKWARD));
 		}
 		event.setCanceled(true);

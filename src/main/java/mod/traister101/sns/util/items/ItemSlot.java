@@ -169,6 +169,11 @@ public sealed interface ItemSlot permits ItemContainerSlot, ItemHandlerSlot {
 	ItemStack extractItem(int amount, boolean simulate);
 
 	/**
+	 * The maximum stack limit for this slot
+	 */
+	int slotLimit();
+
+	/**
 	 * Same contract as {@link IItemHandler#isItemValid(int, ItemStack)}
 	 */
 	@SuppressWarnings("unused")

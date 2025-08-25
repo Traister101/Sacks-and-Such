@@ -1,20 +1,18 @@
 package mod.traister101.sns.util;
 
-import mod.traister101.sns.common.capability.*;
 import mod.traister101.sns.common.items.ContainerItem;
-import net.dries007.tfc.common.capabilities.size.Size;
+import net.dries007.tfc.common.capabilities.size.*;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.*;
 
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
-public interface ContainerType extends StringRepresentable {
+public interface ContainerType {
 
 	/**
 	 * @return If the passed {@link ItemStack} supports auto pickup
@@ -41,12 +39,12 @@ public interface ContainerType extends StringRepresentable {
 	/**
 	 * @return The amount of slots this {@link ContainerType}
 	 */
-	int getSlotCount();
+	int slotCount();
 
 	/**
 	 * @return The slot capacity of this {@link ContainerType}
 	 */
-	int getSlotCapacity();
+	int slotCapacity();
 
 	/**
 	 * @return If this {@link ContainerType} supports item pickup
@@ -67,19 +65,29 @@ public interface ContainerType extends StringRepresentable {
 	/**
 	 * @return The largest allowed {@link Size} inside the sack
 	 */
-	Size getAllowedSize();
+	Size allowedSize();
 
 	/**
 	 * Abstracted out to allow custom overrides without the need of a new item class. Called by {@link ContainerItem#getSize(ItemStack)}
 	 *
-	 * @param itemStack The {@link ContainerItem} instance
+	 * @param itemStack The {@link ContainerItem} stack
 	 *
 	 * @return Size for the stack
 	 */
-	Size getSize(final ItemStack itemStack);
+	Size size(final ItemStack itemStack);
 
 	/**
-	 * An items absence in this tag doesn't mean it can always be inserted, for example it's size could be too large
+	 * Abstracted out to allow custom overrides without the need of a new item class. Called by {@link ContainerItem#getWeight(ItemStack)}
+	 *
+	 * @param itemStack The {@link ContainerItem} stack
+	 *
+	 * @return Weight for the stack
+	 */
+	Weight weight(final ItemStack itemStack);
+
+	/**
+	 * The tag containing all items prevented from being inserted. An items absence in this tag doesn't mean it can always be inserted, for example
+	 * it's size could be too large
 	 *
 	 * @return The tag for which items are blacklisted from being inserted.
 	 *
@@ -102,7 +110,5 @@ public interface ContainerType extends StringRepresentable {
 	 *
 	 * @return The {@link ICapabilityProvider} for the {@link ContainerItem}s of this {@link ContainerType}
 	 */
-	default ICapabilityProvider getCapabilityProvider(final ItemStack itemStack, final @Nullable CompoundTag nbt) {
-		return LazyCapabilityProvider.of(() -> new ContainerItemHandler(this), ForgeCapabilities.ITEM_HANDLER);
-	}
+	ICapabilityProvider initCapabilities(final ItemStack itemStack, final @Nullable CompoundTag nbt);
 }

@@ -38,7 +38,7 @@ public enum SacksNSuchGuiOverlay {
 			} else currentItem = mainHandItem;
 		}
 
-		currentItem.getCapability(SNSCapabilities.LUNCHBOX).ifPresent(lunchboxHandler -> {
+		currentItem.getCapability(SNSCapabilities.FOOD_HOLDER).ifPresent(lunchboxHandler -> {
 			int nextLineOfText = renderComponent(minecraft.font, guiGraphics,
 					Component.translatable(LunchBoxItem.SELECTED_SLOT_TOOLTIP, SNSUtils.intComponent(lunchboxHandler.getSelectedSlot() + 1)),
 					screenWidth, screenHeight);

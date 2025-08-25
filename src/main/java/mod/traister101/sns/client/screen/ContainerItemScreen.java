@@ -30,8 +30,8 @@ public class ContainerItemScreen extends AbstractContainerScreen<ContainerItemMe
 		this.renderBackground(graphics);
 		super.render(graphics, mouseX, mouseY, partialTick);
 
-		menu.getContainerStack().getCapability(SNSCapabilities.ITEM_VOIDING_ITEM_HANDLER).resolve().ifPresent(iVoidingItemHandler -> {
-			iVoidingItemHandler.forEachVoidSlot(slotIndex -> {
+		menu.getContainerStack().getCapability(SNSCapabilities.ITEM_VOIDER).resolve().ifPresent(itemVoider -> {
+			itemVoider.forEachVoidSlot(slotIndex -> {
 				final Slot slot = menu.getSlot(slotIndex);
 
 				final float minX = leftPos + slot.x - 1;

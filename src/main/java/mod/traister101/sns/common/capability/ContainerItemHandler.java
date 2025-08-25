@@ -5,42 +5,19 @@ import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.util.ContainerType;
 import net.dries007.tfc.common.capabilities.size.*;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import org.jetbrains.annotations.Nullable;
-import java.util.*;
-import java.util.function.IntConsumer;
-
-public class ContainerItemHandler extends ExtendedSlotCapacityHandler implements IVoidingItemHandler {
+public class ContainerItemHandler extends ExtendedSlotCapacityHandler {
 
 	public final ContainerType type;
-	private final Set<Integer> voidSlots = new HashSet<>();
-	@Nullable
-	private Weight cachedWeight;
+	private final ItemStack owner;
 
-	public ContainerItemHandler(final ContainerType type) {
-		super(type.getSlotCount(), type.getSlotCapacity());
+	public ContainerItemHandler(final ContainerType type, final ItemStack owner) {
+		super(type.slotCount(), type.slotCapacity());
 		this.type = type;
-	}
-
-	@Override
-	public CompoundTag serializeNBT() {
-		final CompoundTag compoundTag = super.serializeNBT();
-		compoundTag.putByte("weight", (byte) (cachedWeight != null ? cachedWeight.ordinal() : -1));
-		compoundTag.putIntArray("voidSlots", voidSlots.stream().mapToInt(Integer::intValue).toArray());
-		return compoundTag;
-	}
-
-	@Override
-	public void deserializeNBT(final CompoundTag compoundTag) {
-		super.deserializeNBT(compoundTag);
-		final byte weight = compoundTag.getByte("weight");
-		if (weight != -1) cachedWeight = Weight.valueOf(weight);
-		voidSlots.clear();
-		voidSlots.addAll(Arrays.stream(compoundTag.getIntArray("voidSlots")).boxed().toList());
+		this.owner = owner;
 	}
 
 	@Override
@@ -53,7 +30,9 @@ public class ContainerItemHandler extends ExtendedSlotCapacityHandler implements
 
 		if (!type.doesVoiding()) return remainder;
 
-		if (voidSlots.contains(slotIndex) && ItemHandlerHelper.canItemStacksStack(insertStack, getStackInSlot(slotIndex))) return ItemStack.EMPTY;
+		if (owner.getCapability(SNSCapabilities.ITEM_VOIDER).map(itemVoider -> itemVoider.shouldSlotVoid(slotIndex)).orElse(false)) {
+			if (ItemHandlerHelper.canItemStacksStack(insertStack, getStackInSlot(slotIndex))) return ItemStack.EMPTY;
+		}
 
 		return remainder;
 	}
@@ -68,7 +47,7 @@ public class ContainerItemHandler extends ExtendedSlotCapacityHandler implements
 	@Override
 	protected void onContentsChanged(final int slotIndex) {
 		// Invalidate our cached weight when any contents change
-		this.cachedWeight = null;
+		owner.getCapability(SNSCapabilities.DYNAMIC_WEIGHT).ifPresent(DynamicWeight::invalidate);
 		super.onContentsChanged(slotIndex);
 	}
 
@@ -80,64 +59,7 @@ public class ContainerItemHandler extends ExtendedSlotCapacityHandler implements
 	protected final boolean fitsInSlot(final ItemStack itemStack) {
 		final IItemSize stackSize = ItemSizeManager.get(itemStack);
 		final Size size = stackSize.getSize(itemStack);
-		// Larger than the sacks slot size
-		return size.isEqualOrSmallerThan(type.getAllowedSize());
-	}
-
-	/**
-	 * @return The weight of the sack
-	 */
-	public Weight getWeight() {
-		if (cachedWeight != null) return cachedWeight;
-
-		int totalItems = 0, maxCapacity = 0;
-
-		for (int slotIndex = 0; slotIndex < getSlots(); slotIndex++) {
-			final ItemStack itemStack = stacks.get(slotIndex);
-			totalItems += itemStack.getCount();
-			maxCapacity += getStackLimit(slotIndex, itemStack);
-		}
-
-		final float amountFilled = (float) totalItems / (float) maxCapacity;
-
-		// TODO Simple percentage based approach, maybe not the best?
-		if (0.80 <= amountFilled) {
-			return cachedWeight = Weight.VERY_HEAVY;
-		}
-
-		if (0.60 <= amountFilled) {
-			return cachedWeight = Weight.HEAVY;
-		}
-
-		if (0.40 <= amountFilled) {
-			return cachedWeight = Weight.MEDIUM;
-		}
-
-		if (0.20 <= amountFilled) {
-			return cachedWeight = Weight.LIGHT;
-		}
-
-		return cachedWeight = Weight.VERY_LIGHT;
-	}
-
-	@Override
-	public void forEachVoidSlot(final IntConsumer consumer) {
-		voidSlots.forEach(consumer::accept);
-	}
-
-	@Override
-	public boolean isVoidingEnabled() {
-		return !voidSlots.isEmpty();
-	}
-
-	@Override
-	public void toggleVoidSlot(final int slotIndex) {
-		if (!type.doesVoiding()) return;
-
-		if (voidSlots.contains(slotIndex)) {
-			voidSlots.remove(slotIndex);
-		} else {
-			voidSlots.add(slotIndex);
-		}
+		// Larger than the slot size
+		return size.isEqualOrSmallerThan(type.allowedSize());
 	}
 }
