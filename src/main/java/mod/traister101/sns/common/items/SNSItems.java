@@ -13,7 +13,7 @@ import net.minecraft.world.item.Item.Properties;
 
 import net.minecraftforge.registries.*;
 
-import java.util.function.*;
+import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public final class SNSItems {
@@ -42,29 +42,30 @@ public final class SNSItems {
 	public static final RegistryObject<ContainerItem> FRAME_PACK = registerContainerItem("frame_pack", DefaultContainers.FRAME_PACK,
 			new Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 	public static final RegistryObject<LunchBoxItem> LUNCHBOX = register("lunchbox",
-			() -> new LunchBoxItem(new Properties(), DefaultContainers.LUNCHBOX));
+			properties -> new LunchBoxItem(properties, DefaultContainers.LUNCHBOX));
 	public static final RegistryObject<ContainerItem> QUIVER = registerContainerItem("quiver", DefaultContainers.QUIVER);
 
-	public static final RegistryObject<MobNetItem> MOB_NET_ITEM = register("mob_net", () -> new MobNetItem(new Properties()));
+	public static final RegistryObject<MobNetItem> MOB_NET_ITEM = register("mob_net", MobNetItem::new);
 
 	public static final RegistryObject<HikingBootsItem> HIKING_BOOTS = register("hiking_boots",
-			() -> new HikingBootsItem(new Properties().stacksTo(1), BootsArmorMaterial.HIKING_BOOTS, SNSConfig.SERVER.hikingBoots));
+			properties -> new HikingBootsItem(properties, BootsArmorMaterial.HIKING_BOOTS, SNSConfig.SERVER.hikingBoots),
+			new Properties().stacksTo(1));
 
 	public static final RegistryObject<HikingBootsItem> STEEL_TOE_HIKING_BOOTS = register("steel_toe_hiking_boots",
-			() -> new HikingBootsItem(new Properties().stacksTo(1).rarity(Rarity.UNCOMMON), BootsArmorMaterial.STEEL_TOE_HIKING_BOOTS,
-					SNSConfig.SERVER.steelToeHikingBoots));
+			properties -> new HikingBootsItem(properties, BootsArmorMaterial.STEEL_TOE_HIKING_BOOTS, SNSConfig.SERVER.steelToeHikingBoots),
+			new Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 
 	public static final RegistryObject<HikingBootsItem> BLACK_STEEL_TOE_HIKING_BOOTS = register("black_steel_toe_hiking_boots",
-			() -> new HikingBootsItem(new Properties().stacksTo(1).rarity(Rarity.RARE), BootsArmorMaterial.BLACK_STEEL_TOE_HIKING_BOOTS,
-					SNSConfig.SERVER.blackSteelToeHikingBoots));
+			properties -> new HikingBootsItem(properties, BootsArmorMaterial.BLACK_STEEL_TOE_HIKING_BOOTS, SNSConfig.SERVER.blackSteelToeHikingBoots),
+			new Properties().stacksTo(1).rarity(Rarity.RARE));
 
 	public static final RegistryObject<HikingBootsItem> BLUE_STEEL_TOE_HIKING_BOOTS = register("blue_steel_toe_hiking_boots",
-			() -> new HikingBootsItem(new Properties().stacksTo(1).rarity(Rarity.EPIC), BootsArmorMaterial.BLUE_STEEL_TOE_HIKING_BOOTS,
-					SNSConfig.SERVER.blueSteelToeHikingBoots));
+			properties -> new HikingBootsItem(properties, BootsArmorMaterial.BLUE_STEEL_TOE_HIKING_BOOTS, SNSConfig.SERVER.blueSteelToeHikingBoots),
+			new Properties().stacksTo(1).rarity(Rarity.EPIC));
 
 	public static final RegistryObject<HikingBootsItem> RED_STEEL_TOE_HIKING_BOOTS = register("red_steel_toe_hiking_boots",
-			() -> new HikingBootsItem(new Properties().stacksTo(1).rarity(Rarity.EPIC), BootsArmorMaterial.RED_STEEL_TOE_HIKING_BOOTS,
-					SNSConfig.SERVER.redSteelToeHikingBoots));
+			properties -> new HikingBootsItem(properties, BootsArmorMaterial.RED_STEEL_TOE_HIKING_BOOTS, SNSConfig.SERVER.redSteelToeHikingBoots),
+			new Properties().stacksTo(1).rarity(Rarity.EPIC));
 
 	public static final RegistryObject<HorseshoesItem> STEEL_HORSESHOES = registerHorseShoes(Default.STEEL, SNSConfig.SERVER.steelHorseshoes);
 
@@ -82,8 +83,8 @@ public final class SNSItems {
 	}
 
 	private static RegistryObject<HorseshoesItem> registerHorseShoes(final RegistryMetal metal, final HorseshoesConfig horseshoesConfig) {
-		return register("metal/horseshoes/" + metal.getSerializedName(),
-				() -> new HorseshoesItem(new Properties().durability(metal.toolTier().getUses()).rarity(metal.getRarity()), horseshoesConfig));
+		return register("metal/horseshoes/" + metal.getSerializedName(), properties -> new HorseshoesItem(properties, horseshoesConfig),
+				new Properties().durability(metal.toolTier().getUses()).rarity(metal.getRarity()));
 	}
 
 	private static RegistryObject<ContainerItem> registerContainerItem(final String name, final ContainerType containerType) {
@@ -92,22 +93,23 @@ public final class SNSItems {
 
 	private static RegistryObject<ContainerItem> registerContainerItem(final String name, final ContainerType containerType,
 			final Properties properties) {
-		return register(name, () -> new ContainerItem(properties, containerType));
+		return register(name, prop -> new ContainerItem(prop, containerType), properties);
 	}
 
 	private static RegistryObject<Item> registerSimple(final String name) {
-		return registerSimple(name, new Properties());
+		return register(name, Item::new);
 	}
 
 	private static RegistryObject<Item> registerSimple(final String name, final Properties properties) {
-		return register(name, () -> new Item(properties));
+		return register(name, Item::new, properties);
 	}
 
-	private static <I extends Item> RegistryObject<I> register(final String name, final Supplier<I> itemSupplier) {
-		return ITEMS.register(name, itemSupplier);
+	private static <I extends Item> RegistryObject<I> register(final String name, final Function<Properties, ? extends I> itemFactory) {
+		return register(name, itemFactory, new Properties());
 	}
 
-	private static <I extends Item> RegistryObject<I> register(final String name, final Function<Properties, I> itemSupplier) {
-		return ITEMS.register(name, () -> itemSupplier.apply(new Properties()));
+	private static <I extends Item> RegistryObject<I> register(final String name, final Function<Properties, ? extends I> itemFactory,
+			final Properties properties) {
+		return ITEMS.register(name, () -> itemFactory.apply(properties));
 	}
 }
