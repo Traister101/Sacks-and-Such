@@ -55,13 +55,6 @@ public final class DefaultContainers {
 			.sizeFunction(ConstantSize.HUGE)
 			.weightFunction(DYNAMIC_WEIGHT)
 			.preventedItems(SNSItemTags.PREVENTED_IN_FRAME_PACK)
-			.capabilityProvider((type, owner, tag) -> SimpleContainerType.standardItemContainer(type, owner,
-					(type2, owner2) -> new ContainerItemHandler(type2, owner2) {
-						@Override
-						public int getStackLimit(final int slotIndex, final ItemStack itemStack) {
-							return itemStack.getMaxStackSize();
-						}
-					}))
 			.build();
 
 	public static final ContainerType LUNCHBOX = SimpleContainerType.builder(SNSConfig.SERVER.lunchBox)
