@@ -3,6 +3,7 @@
     "minecraft:player"
   ],
   "slots": [
+    "feet",
     "belt",
     "back"
   ]

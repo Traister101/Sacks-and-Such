@@ -28,6 +28,10 @@ public final class ServerConfig {
 	BootsConfig blueSteelToeHikingBoots;
 	BootsConfig redSteelToeHikingBoots;
 
+	// Snow Shoes
+	SnowShoesConfig snowShoes;
+	SnowShoesConfig reinforcedSnowShoes;
+
 	// Horseshoes
 	HorseshoesConfig steelHorseshoes;
 	HorseshoesConfig blackSteelHorseshoes;
@@ -66,6 +70,13 @@ public final class ServerConfig {
 		blackSteelToeHikingBoots = BootsConfig.build(builder, "Black Steel Toe Boots", 1_000, 0.15, 0.5, 2);
 		blueSteelToeHikingBoots = BootsConfig.build(builder, "Blue Steel Toe Boots", 1_500, 0.2, 0.5, 5);
 		redSteelToeHikingBoots = BootsConfig.build(builder, "Red Steel Toe Boots", 1_500, 0.2, 0.5, 5);
+
+		builder.pop();
+
+		builder.push("Snow Shoes config");
+
+		snowShoes = SnowShoesConfig.build(builder, "Snow Shoes", 0.05, -0.1);
+		reinforcedSnowShoes = SnowShoesConfig.build(builder, "Reinforced Snow Shoes", 0.1, -0.05);
 
 		builder.pop();
 

@@ -13,6 +13,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -25,6 +26,10 @@ public class BuiltInItemTags extends ItemTagsProvider {
 	public BuiltInItemTags(final PackOutput packOutput, final CompletableFuture<Provider> lookupProvider,
 			final CompletableFuture<TagLookup<Block>> blockTags, @Nullable final ExistingFileHelper existingFileHelper) {
 		super(packOutput, lookupProvider, blockTags, SacksNSuch.MODID, existingFileHelper);
+	}
+
+	private static TagKey<Item> getTag(final ResourceLocation location) {
+		return TagKey.create(Registries.ITEM, location);
 	}
 
 	@Override
@@ -72,8 +77,9 @@ public class BuiltInItemTags extends ItemTagsProvider {
 				SNSItems.ORE_SACK.get(), SNSItems.SEED_POUCH.get(), SNSItems.FRAME_PACK.get(), SNSItems.LUNCHBOX.get(), SNSItems.QUIVER.get());
 
 		// Curios
-		tag(TagKey.create(Registries.ITEM, new ResourceLocation(CuriosApi.MODID, "belt"))).add(SNSItems.LEATHER_SACK.get(),
-				SNSItems.BURLAP_SACK.get(), SNSItems.ORE_SACK.get(), SNSItems.SEED_POUCH.get());
-		tag(TagKey.create(Registries.ITEM, new ResourceLocation(CuriosApi.MODID, "back"))).add(SNSItems.FRAME_PACK.get(), SNSItems.QUIVER.get());
+		tag(getTag(new ResourceLocation(CuriosApi.MODID, "belt"))).add(SNSItems.LEATHER_SACK.get(), SNSItems.BURLAP_SACK.get(),
+				SNSItems.ORE_SACK.get(), SNSItems.SEED_POUCH.get());
+		tag(getTag(new ResourceLocation(CuriosApi.MODID, "back"))).add(SNSItems.FRAME_PACK.get(), SNSItems.QUIVER.get());
+		tag(getTag(new ResourceLocation(CuriosApi.MODID, "feet"))).add(SNSItems.SNOW_SHOES.get(), SNSItems.REINFORCED_SNOW_SHOES.get());
 	}
 }

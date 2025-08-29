@@ -4,6 +4,7 @@ import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.SNSArmorMaterials;
 import mod.traister101.sns.common.items.HikingBootsItem.HikingBootProperties;
 import mod.traister101.sns.common.items.HorseshoesItem.HorseshoesProperties;
+import mod.traister101.sns.common.items.SnowShoesItem.SnowShoesProperties;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.config.entries.HorseshoesConfig;
 import mod.traister101.sns.util.ContainerType;
@@ -26,6 +27,7 @@ public final class SNSItems {
 	public static final RegistryObject<Item> UNFINISHED_LEATHER_SACK = registerSimple("unfinished_leather_sack");
 	public static final RegistryObject<Item> REINFORCED_FIBER = registerSimple("reinforced_fiber");
 	public static final RegistryObject<Item> REINFORCED_FABRIC = registerSimple("reinforced_fabric");
+	public static final RegistryObject<Item> REINFORCED_NET = registerSimple("reinforced_net");
 	public static final RegistryObject<Item> PACK_FRAME = registerSimple("pack_frame", new Properties().rarity(Rarity.UNCOMMON));
 	public static final RegistryObject<Item> LEATHER_STRIP = registerSimple("leather_strip");
 	public static final RegistryObject<Item> BOUND_LEATHER_STRIP = registerSimple("bound_leather_strip");
@@ -68,6 +70,14 @@ public final class SNSItems {
 	public static final RegistryObject<HikingBootsItem> RED_STEEL_TOE_HIKING_BOOTS = register("red_steel_toe_hiking_boots",
 			properties -> new HikingBootsItem(properties, SNSArmorMaterials.RED_STEEL_TOE_HIKING_BOOTS,
 					HikingBootProperties.fromConfig(SNSConfig.SERVER.redSteelToeHikingBoots)), new Properties().stacksTo(1).rarity(Rarity.EPIC));
+
+	public static final RegistryObject<SnowShoesItem> SNOW_SHOES = register("snow_shoes",
+			properties -> new SnowShoesItem(properties, SnowShoesProperties.fromConfig(SNSConfig.SERVER.snowShoes)),
+			new Properties().stacksTo(1).defaultDurability(420));
+
+	public static final RegistryObject<SnowShoesItem> REINFORCED_SNOW_SHOES = register("reinforced_snow_shoes",
+			properties -> new SnowShoesItem(properties, SnowShoesProperties.fromConfig(SNSConfig.SERVER.reinforcedSnowShoes)),
+			new Properties().stacksTo(1).defaultDurability(2_000));
 
 	public static final RegistryObject<HorseshoesItem> STEEL_HORSESHOES = registerHorseShoes(Default.STEEL, SNSConfig.SERVER.steelHorseshoes);
 

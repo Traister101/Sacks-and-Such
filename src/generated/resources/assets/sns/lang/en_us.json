@@ -1,4 +1,5 @@
 {
+  "curios.identifier.feet": "Feet",
   "item.sns.black_steel_toe_hiking_boots": "Black Steel Toe Hiking Boots",
   "item.sns.blue_steel_toe_hiking_boots": "Blue Steel Toe Hiking Boots",
   "item.sns.bound_leather_strip": "Bound Leather Strip",
@@ -24,7 +25,10 @@
   "item.sns.red_steel_toe_hiking_boots": "Red Steel Toe Hiking Boots",
   "item.sns.reinforced_fabric": "Reinforced Fabric",
   "item.sns.reinforced_fiber": "Reinforced Fiber",
+  "item.sns.reinforced_net": "Reinforced Net",
+  "item.sns.reinforced_snow_shoes": "Reinforced Snow Shoes",
   "item.sns.seed_pouch": "Seed Pouch",
+  "item.sns.snow_shoes": "Snow Shoes",
   "item.sns.steel_toe_hiking_boots": "Steel Toe Hiking Boots",
   "item.sns.straw_basket": "Straw Basket",
   "item.sns.unfinished_leather_sack": "Unfinished Leather Sack",
@@ -66,5 +70,8 @@
   "sns.tooltip.item_container.tooltip.pickup": "Item Pickup %s",
   "sns.tooltip.item_container.tooltip.shift": "Hold (Shift) for container info",
   "sns.tooltip.item_container.tooltip.void": "Item Voiding %s",
-  "sns.tooltip.lunchbox.selected_slot": "Selected Slot: %s"
+  "sns.tooltip.lunchbox.selected_slot": "Selected Slot: %s",
+  "sns.tooltip.snowshoes.non_snow_modifier": "When out of snow:",
+  "sns.tooltip.snowshoes.prevents_slow": "Prevents snow slowdown",
+  "sns.tooltip.snowshoes.snow_modifier": "When in snow:"
 }
