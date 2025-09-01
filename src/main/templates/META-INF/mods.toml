@@ -4,43 +4,43 @@ license = "MIT"
 issueTrackerURL = "https://github.com/Traister101/Sacks-and-Such/issues"
 
 [[mods]]
-modId = "sns"
-version = "${file.jarVersion}"
-displayName = "Sacks 'N Such"
+modId = "${modId}"
+version = "${modVersion}"
+displayName = "${modName}"
 logoFile = "icon.png"
 authors = "Traister101"
 credits = "Majority of art assets and models by Alekiponi, Boots assets by coachthesexprime. Buckle, Mob Net and Lunchbox assets created by bloodstar962"
 description = '''An addon for TFC focusing on bringing vessel like handheld containers for all your adventuring needs'''
 
-[[dependencies.sns]]
+[[dependencies.${modId}]]
 modId = "tfc"
 mandatory = true
 versionRange = "[3.2.11,)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.sns]]
+[[dependencies.${modId}]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.sns]]
+[[dependencies.${modId}]]
 modId = "curios"
 mandatory = false
 versionRange = "[5.4.5,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.sns]]
+[[dependencies.${modId}]]
 modId = "esc"
 mandatory = true
 versionRange = "[1.2,)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.sns]]
+[[dependencies.${modId}]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,1.20.2)"
