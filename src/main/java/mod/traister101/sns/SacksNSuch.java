@@ -11,6 +11,8 @@ import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.network.SNSPacketHandler;
 import org.slf4j.Logger;
 
+import net.minecraft.resources.ResourceLocation;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -45,6 +47,10 @@ public final class SacksNSuch {
 			ClientEventHandler.init();
 			ClientForgeEventHandler.init();
 		}
+	}
+
+	public static ResourceLocation location(final String path) {
+		return new ResourceLocation(MODID, path);
 	}
 
 	private static void commonSetup(final FMLCommonSetupEvent event) {
