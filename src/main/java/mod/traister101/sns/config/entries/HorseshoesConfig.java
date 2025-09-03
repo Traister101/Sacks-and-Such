@@ -14,7 +14,7 @@ public final class HorseshoesConfig {
 	DoubleValue bonusFallDistance;
 	DoubleValue bonusStepDistance;
 
-	public static HorseshoesConfig buildConfig(final ForgeConfigSpec.Builder builder, final String bootsName, final double movementSpeed,
+	public static HorseshoesConfig build(final ForgeConfigSpec.Builder builder, final String bootsName, final double movementSpeed,
 			final double bonusFallDistance, final double bonusStepDistance) {
 		builder.push(bootsName);
 		final HorseshoesConfig bootsConfig = new HorseshoesConfig(

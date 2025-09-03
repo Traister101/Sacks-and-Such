@@ -14,9 +14,8 @@ public final class BootsConfig {
 	DoubleValue stepHeight;
 	DoubleValue fallPadding;
 
-	public static BootsConfig buildBootsConfig(final ForgeConfigSpec.Builder builder, final String bootsName, final double movementSpeed,
-			final double stepHeight,
-			final double fallPadding) {
+	public static BootsConfig build(final ForgeConfigSpec.Builder builder, final String bootsName, final double movementSpeed,
+			final double stepHeight, final double fallPadding) {
 		builder.push(bootsName);
 		final BootsConfig bootsConfig = new BootsConfig(
 				builder.comment("The movement speed bonus these boots provide").defineInRange("movementSpeed", movementSpeed, 0, 1024),

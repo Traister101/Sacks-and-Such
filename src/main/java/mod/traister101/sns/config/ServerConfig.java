@@ -50,14 +50,14 @@ public final class ServerConfig {
 
 		builder.push("Container Item Config");
 
-		strawBasket = ContainerConfig.buildContainerConfig(builder, "Straw Basket", true, true, true, 4, 32, Size.SMALL);
-		leatherSack = ContainerConfig.buildContainerConfig(builder, "Leather Sack", false, false, true, 4, 64, Size.NORMAL);
-		burlapSack = ContainerConfig.buildContainerConfig(builder, "Burlap Sack", true, true, false, 8, 48, Size.SMALL);
-		oreSack = ContainerConfig.buildContainerConfig(builder, "Ore Sack", true, false, true, 1, 512, Size.SMALL);
-		seedPouch = ContainerConfig.buildContainerConfig(builder, "Seed Pouch", true, false, true, 27, 64, Size.SMALL);
-		framePack = ContainerConfig.buildContainerConfig(builder, "Frame Pack", false, false, false, 18, 64, Size.LARGE);
-		lunchBox = ContainerConfig.buildContainerConfig(builder, "Lunch Box", false, false, true, 8, 4, Size.NORMAL);
-		quiver = ContainerConfig.buildContainerConfig(builder, "Quiver", true, false, false, 8, 32, Size.VERY_LARGE);
+		strawBasket = ContainerConfig.build(builder, "Straw Basket", true, true, true, 4, 32, Size.SMALL);
+		leatherSack = ContainerConfig.build(builder, "Leather Sack", false, false, true, 4, 64, Size.NORMAL);
+		burlapSack = ContainerConfig.build(builder, "Burlap Sack", true, true, false, 8, 48, Size.SMALL);
+		oreSack = ContainerConfig.build(builder, "Ore Sack", true, false, true, 1, 512, Size.SMALL);
+		seedPouch = ContainerConfig.build(builder, "Seed Pouch", true, false, true, 27, 64, Size.SMALL);
+		framePack = ContainerConfig.build(builder, "Frame Pack", false, false, false, 18, 64, Size.LARGE);
+		lunchBox = ContainerConfig.build(builder, "Lunch Box", false, false, true, 8, 4, Size.NORMAL);
+		quiver = ContainerConfig.build(builder, "Quiver", true, false, false, 8, 32, Size.VERY_LARGE);
 
 		builder.pop();
 
@@ -65,11 +65,11 @@ public final class ServerConfig {
 		bootsStepPerDamage = builder.comment("The amount of steps taken before one point of durability is lost")
 				.defineInRange("bootsStepPerDamage", 500, 0, Integer.MAX_VALUE);
 
-		hikingBoots = BootsConfig.buildBootsConfig(builder, "Hiking Boots", 0.05, 0, 0.5);
-		steelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Steel Toe Boots", 0.1, 0.5, 1);
-		blackSteelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Black Steel Toe Boots", 0.15, 0.5, 2);
-		blueSteelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Blue Steel Toe Boots", 0.2, 0.5, 5);
-		redSteelToeHikingBoots = BootsConfig.buildBootsConfig(builder, "Red Steel Toe Boots", 0.2, 0.5, 5);
+		hikingBoots = BootsConfig.build(builder, "Hiking Boots", 0.05, 0, 0.5);
+		steelToeHikingBoots = BootsConfig.build(builder, "Steel Toe Boots", 0.1, 0.5, 1);
+		blackSteelToeHikingBoots = BootsConfig.build(builder, "Black Steel Toe Boots", 0.15, 0.5, 2);
+		blueSteelToeHikingBoots = BootsConfig.build(builder, "Blue Steel Toe Boots", 0.2, 0.5, 5);
+		redSteelToeHikingBoots = BootsConfig.build(builder, "Red Steel Toe Boots", 0.2, 0.5, 5);
 
 		builder.pop();
 
@@ -77,10 +77,10 @@ public final class ServerConfig {
 
 		horseshoesStepsPerDamage = builder.comment("The amount of steps taken before one point of durability is lost")
 				.defineInRange("horseshoesStepsPerDamage", 500, 0, Integer.MAX_VALUE);
-		steelHorseshoes = HorseshoesConfig.buildConfig(builder, "Steel Horseshoes", 0.05, 2, 0);
-		blackSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Black Steel Horseshoes", 0.1, 2, 0);
-		blueSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Blue Steel Horseshoes", 0.2, 5, 1);
-		redSteelHorseshoes = HorseshoesConfig.buildConfig(builder, "Red Steel Horseshoes", 0.2, 5, 1);
+		steelHorseshoes = HorseshoesConfig.build(builder, "Steel Horseshoes", 0.05, 2, 0);
+		blackSteelHorseshoes = HorseshoesConfig.build(builder, "Black Steel Horseshoes", 0.1, 2, 0);
+		blueSteelHorseshoes = HorseshoesConfig.build(builder, "Blue Steel Horseshoes", 0.2, 5, 1);
+		redSteelHorseshoes = HorseshoesConfig.build(builder, "Red Steel Horseshoes", 0.2, 5, 1);
 
 		builder.pop();
 
