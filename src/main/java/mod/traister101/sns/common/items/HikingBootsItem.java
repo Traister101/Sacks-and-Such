@@ -5,7 +5,6 @@ import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.client.models.*;
 import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.config.SNSConfig;
-import mod.traister101.sns.config.entries.BootsConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -38,6 +37,7 @@ public class HikingBootsItem extends ArmorItem {
 
 	private static final UUID HIKING_BOOTS_UUID = UUID.fromString("1498ff98-5730-4216-a827-857c81e2e12c");
 
+	private final Supplier<Integer> stepsPerDamage;
 	private final Supplier<Double> movementSpeed;
 	private final Supplier<Double> stepHeight;
 	private final Supplier<Double> fallPadding;
@@ -45,6 +45,7 @@ public class HikingBootsItem extends ArmorItem {
 
 	/**
 	 * @param armorMaterial The armor material
+	 * @param stepsPerDamage A supplier for the amount of steps per point of durability.
 	 * @param movementSpeed A supplier for the movement speed modifier the boots provide.
 	 * You are expected to pass in a {@link DoubleValue} to facilitate configurability
 	 * @param stepHeight A supplier for the step height modifier the boots provide.
@@ -52,16 +53,18 @@ public class HikingBootsItem extends ArmorItem {
 	 * @param fallPadding A supplier for the fall padding modifier the boots provide.
 	 * You are expected to pass in a {@link DoubleValue} to facilitate configurability
 	 */
-	public HikingBootsItem(final Properties properties, final ArmorMaterial armorMaterial, final Supplier<Double> movementSpeed,
-			final Supplier<Double> stepHeight, final Supplier<Double> fallPadding) {
+	public HikingBootsItem(final Properties properties, final ArmorMaterial armorMaterial, final Supplier<Integer> stepsPerDamage,
+			final Supplier<Double> movementSpeed, final Supplier<Double> stepHeight, final Supplier<Double> fallPadding) {
 		super(armorMaterial, Type.BOOTS, properties);
+		this.stepsPerDamage = stepsPerDamage;
 		this.movementSpeed = movementSpeed;
 		this.stepHeight = stepHeight;
 		this.fallPadding = fallPadding;
 	}
 
-	public HikingBootsItem(final Properties properties, final ArmorMaterial armorMaterial, final BootsConfig bootsConfig) {
-		this(properties, armorMaterial, bootsConfig.movementSpeed, bootsConfig.stepHeight, bootsConfig.fallPadding);
+	public HikingBootsItem(final Properties properties, final ArmorMaterial armorMaterial, final HikingBootProperties bootProperties) {
+		this(properties, armorMaterial, bootProperties.stepsPerDamage(), bootProperties.movementSpeed(), bootProperties.stepHeight(),
+				bootProperties.fallPadding());
 	}
 
 	public static int getSteps(final ItemStack itemStack) {
@@ -103,7 +106,7 @@ public class HikingBootsItem extends ArmorItem {
 	public void onArmorTick(final ItemStack itemStack, final Level level, final Player player) {
 		if (level.isClientSide) return;
 
-		if (getSteps(itemStack) > SNSConfig.SERVER.bootsStepPerDamage.get()) {
+		if (getSteps(itemStack) > this.stepsPerDamage.get()) {
 			itemStack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(EquipmentSlot.FEET));
 			setSteps(itemStack, 0);
 		}
@@ -112,7 +115,7 @@ public class HikingBootsItem extends ArmorItem {
 		final double lastX = lastStep.getDouble(LAST_STEP_X_NBT_KEY);
 		final double lastZ = lastStep.getDouble(LAST_STEP_Z_NBT_KEY);
 		if (player.onGround() && !player.isPassenger() && !player.isCreative()) {
-			if (0 < SNSConfig.SERVER.bootsStepPerDamage.get() && (lastX != player.xOld || lastZ != player.zOld)) {
+			if (0 < this.stepsPerDamage.get() && (lastX != player.xOld || lastZ != player.zOld)) {
 				setSteps(itemStack, getSteps(itemStack) + 1);
 				lastStep.putDouble("x", player.xOld);
 				lastStep.putDouble("z", player.zOld);
@@ -160,5 +163,16 @@ public class HikingBootsItem extends ArmorItem {
 		FANCY,
 		NO_FLOOF,
 		VANILLA
+	}
+
+	public interface HikingBootProperties {
+
+		Supplier<Integer> stepsPerDamage();
+
+		Supplier<Double> movementSpeed();
+
+		Supplier<Double> stepHeight();
+
+		Supplier<Double> fallPadding();
 	}
 }

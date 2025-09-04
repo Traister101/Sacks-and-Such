@@ -22,7 +22,6 @@ public final class ServerConfig {
 	ContainerConfig quiver;
 
 	// Boots
-	IntValue bootsStepPerDamage;
 	BootsConfig hikingBoots;
 	BootsConfig steelToeHikingBoots;
 	BootsConfig blackSteelToeHikingBoots;
@@ -62,14 +61,12 @@ public final class ServerConfig {
 		builder.pop();
 
 		builder.push("Boot config");
-		bootsStepPerDamage = builder.comment("The amount of steps taken before one point of durability is lost")
-				.defineInRange("bootsStepPerDamage", 500, 0, Integer.MAX_VALUE);
 
-		hikingBoots = BootsConfig.build(builder, "Hiking Boots", 0.05, 0, 0.5);
-		steelToeHikingBoots = BootsConfig.build(builder, "Steel Toe Boots", 0.1, 0.5, 1);
-		blackSteelToeHikingBoots = BootsConfig.build(builder, "Black Steel Toe Boots", 0.15, 0.5, 2);
-		blueSteelToeHikingBoots = BootsConfig.build(builder, "Blue Steel Toe Boots", 0.2, 0.5, 5);
-		redSteelToeHikingBoots = BootsConfig.build(builder, "Red Steel Toe Boots", 0.2, 0.5, 5);
+		hikingBoots = BootsConfig.build(builder, "Hiking Boots", 500, 0.05, 0, 0.5);
+		steelToeHikingBoots = BootsConfig.build(builder, "Steel Toe Boots", 750, 0.1, 0.5, 1);
+		blackSteelToeHikingBoots = BootsConfig.build(builder, "Black Steel Toe Boots", 1_000, 0.15, 0.5, 2);
+		blueSteelToeHikingBoots = BootsConfig.build(builder, "Blue Steel Toe Boots", 1_500, 0.2, 0.5, 5);
+		redSteelToeHikingBoots = BootsConfig.build(builder, "Red Steel Toe Boots", 1_500, 0.2, 0.5, 5);
 
 		builder.pop();
 
