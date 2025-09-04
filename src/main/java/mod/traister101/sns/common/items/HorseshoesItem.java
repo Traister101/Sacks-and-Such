@@ -3,8 +3,6 @@ package mod.traister101.sns.common.items;
 import com.google.common.collect.*;
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.attribute.SNSAttributes;
-import mod.traister101.sns.config.SNSConfig;
-import mod.traister101.sns.config.entries.HorseshoesConfig;
 
 import net.minecraft.*;
 import net.minecraft.nbt.CompoundTag;
@@ -35,6 +33,7 @@ public class HorseshoesItem extends Item {
 	public static final UUID HORSE_SHOE_UUID = UUID.fromString("de872635-2298-412b-beac-667462412c28");
 	public static final String HORSESHOE_MODIFIER_TOOLTIP = SacksNSuch.MODID + ".tooltip.horseshoe.modifier";
 
+	private final Supplier<Integer> stepsPerDamage;
 	private final Supplier<Double> movementSpeed;
 	private final Supplier<Double> bonusFallDistance;
 	private final Supplier<Double> bonusStepDistance;
@@ -51,16 +50,18 @@ public class HorseshoesItem extends Item {
 		return builder.build();
 	});
 
-	public HorseshoesItem(final Properties properties, final Supplier<Double> movementSpeed, final Supplier<Double> bonusFallDistance,
-			final Supplier<Double> bonusStepDistance) {
+	public HorseshoesItem(final Properties properties, final Supplier<Integer> stepsPerDamage, final Supplier<Double> movementSpeed,
+			final Supplier<Double> bonusFallDistance, final Supplier<Double> bonusStepDistance) {
 		super(properties);
+		this.stepsPerDamage = stepsPerDamage;
 		this.movementSpeed = movementSpeed;
 		this.bonusFallDistance = bonusFallDistance;
 		this.bonusStepDistance = bonusStepDistance;
 	}
 
-	public HorseshoesItem(final Properties properties, final HorseshoesConfig horseshoesConfig) {
-		this(properties, horseshoesConfig.movementSpeed, horseshoesConfig.bonusFallDistance, horseshoesConfig.bonusStepDistance);
+	public HorseshoesItem(final Properties properties, final HorseshoesProperties horseshoesProperties) {
+		this(properties, horseshoesProperties.stepsPerDamage(), horseshoesProperties.movementSpeed(), horseshoesProperties.bonusFallDistance(),
+				horseshoesProperties.bonusStepDistance());
 	}
 
 	public static int getSteps(final ItemStack itemStack) {
@@ -71,10 +72,14 @@ public class HorseshoesItem extends Item {
 		itemStack.getOrCreateTag().putInt(STEPS_NBT_KEY, steps);
 	}
 
-	public static void horseshoeTick(final ItemStack itemStack, final Level level, final AbstractHorse horse) {
+	public static int getHorseshoesSlot(final AbstractHorse horse) {
+		return horse.canWearArmor() ? 2 : 1;
+	}
+
+	public void horseshoeTick(final ItemStack itemStack, final Level level, final AbstractHorse horse) {
 		if (level.isClientSide) return;
 
-		if (getSteps(itemStack) > SNSConfig.SERVER.horseshoesStepsPerDamage.get()) {
+		if (getSteps(itemStack) > stepsPerDamage.get()) {
 			itemStack.hurtAndBreak(1, horse, e -> e.broadcastBreakEvent(EquipmentSlot.FEET));
 			setSteps(itemStack, 0);
 		}
@@ -83,16 +88,12 @@ public class HorseshoesItem extends Item {
 		final double lastX = lastStep.getDouble(LAST_STEP_X_NBT_KEY);
 		final double lastZ = lastStep.getDouble(LAST_STEP_Z_NBT_KEY);
 		if (horse.onGround() && !horse.isPassenger()) {
-			if (SNSConfig.SERVER.horseshoesStepsPerDamage.get() > 0 && (lastX != horse.xOld || lastZ != horse.zOld)) {
+			if (stepsPerDamage.get() > 0 && (lastX != horse.xOld || lastZ != horse.zOld)) {
 				setSteps(itemStack, getSteps(itemStack) + 1);
 				lastStep.putDouble("x", horse.xOld);
 				lastStep.putDouble("z", horse.zOld);
 			}
 		}
-	}
-
-	public static int getHorseshoesSlot(final AbstractHorse horse) {
-		return horse.canWearArmor() ? 2 : 1;
 	}
 
 	@Override
@@ -128,5 +129,16 @@ public class HorseshoesItem extends Item {
 						.withStyle(ChatFormatting.RED));
 			}
 		}
+	}
+
+	public interface HorseshoesProperties {
+
+		Supplier<Integer> stepsPerDamage();
+
+		Supplier<Double> movementSpeed();
+
+		Supplier<Double> bonusFallDistance();
+
+		Supplier<Double> bonusStepDistance();
 	}
 }

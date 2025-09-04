@@ -38,7 +38,7 @@ public abstract class AbstractHorseMixin extends Animal {
 	@Inject(method = "tick", at = @At(value = "TAIL"))
 	private void tickHorseshoe(final CallbackInfo ci) {
 		final ItemStack itemStack = inventory.getItem(HorseshoesItem.getHorseshoesSlot(sns$self()));
-		if (itemStack.getItem() instanceof HorseshoesItem) HorseshoesItem.horseshoeTick(itemStack, level(), sns$self());
+		if (itemStack.getItem() instanceof HorseshoesItem horseshoes) horseshoes.horseshoeTick(itemStack, level(), sns$self());
 	}
 
 	/**

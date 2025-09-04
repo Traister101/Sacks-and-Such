@@ -29,7 +29,6 @@ public final class ServerConfig {
 	BootsConfig redSteelToeHikingBoots;
 
 	// Horseshoes
-	IntValue horseshoesStepsPerDamage;
 	HorseshoesConfig steelHorseshoes;
 	HorseshoesConfig blackSteelHorseshoes;
 	HorseshoesConfig blueSteelHorseshoes;
@@ -72,12 +71,10 @@ public final class ServerConfig {
 
 		builder.push("Horseshoes config");
 
-		horseshoesStepsPerDamage = builder.comment("The amount of steps taken before one point of durability is lost")
-				.defineInRange("horseshoesStepsPerDamage", 500, 0, Integer.MAX_VALUE);
-		steelHorseshoes = HorseshoesConfig.build(builder, "Steel Horseshoes", 0.05, 2, 0);
-		blackSteelHorseshoes = HorseshoesConfig.build(builder, "Black Steel Horseshoes", 0.1, 2, 0);
-		blueSteelHorseshoes = HorseshoesConfig.build(builder, "Blue Steel Horseshoes", 0.2, 5, 1);
-		redSteelHorseshoes = HorseshoesConfig.build(builder, "Red Steel Horseshoes", 0.2, 5, 1);
+		steelHorseshoes = HorseshoesConfig.build(builder, "Steel Horseshoes", 750, 0.05, 2, 0);
+		blackSteelHorseshoes = HorseshoesConfig.build(builder, "Black Steel Horseshoes", 1_000, 0.1, 2, 0);
+		blueSteelHorseshoes = HorseshoesConfig.build(builder, "Blue Steel Horseshoes", 1_500, 0.2, 5, 1);
+		redSteelHorseshoes = HorseshoesConfig.build(builder, "Red Steel Horseshoes", 1_500, 0.2, 5, 1);
 
 		builder.pop();
 
