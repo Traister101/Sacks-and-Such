@@ -87,7 +87,7 @@ jobs:
           version-type: "${{ env.VERSION_TYPE }}"
 
           files: |
-            build/libs/!(*-@(dev|sources|javadoc))-all.jar
+            build/libs/*.jar
 
           loaders: |
             forge
