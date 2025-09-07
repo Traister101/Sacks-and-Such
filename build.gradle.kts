@@ -96,6 +96,12 @@ legacyForge {
         minecraftVersion = libs.versions.parchmentMinecraft
     }
 
+    mods {
+        create(modID) {
+            sourceSet(sourceSets.main.get())
+        }
+    }
+
     runs {
         configureEach {
             systemProperty("forge.logging.markers", "REGISTRIES")
@@ -138,11 +144,11 @@ legacyForge {
                 "--existing-mod",
                 "tfc"
             )
-        }
-    }
-    mods {
-        create(modID) {
-            sourceSet(sourceSets.main.get())
+            mods {
+                getByName(modID) {
+                    sourceSet(sourceSets["datagen"])
+                }
+            }
         }
     }
 }
