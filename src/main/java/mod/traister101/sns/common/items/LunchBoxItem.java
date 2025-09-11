@@ -19,6 +19,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -66,8 +67,7 @@ public class LunchBoxItem extends ContainerItem {
 	public void appendHoverText(final ItemStack itemStack, @Nullable final Level level, final List<Component> tooltip, final TooltipFlag flagIn) {
 		if (Screen.hasShiftDown()) {
 			tooltip.add(Component.translatable(SELECTED_SLOT_TOOLTIP,
-					SNSUtils.intComponent(itemStack.getCapability(SNSCapabilities.FOOD_HOLDER).map(
-									FoodHolder::getSelectedSlot).orElse(0) + 1)
+					SNSUtils.intComponent(itemStack.getCapability(SNSCapabilities.FOOD_HOLDER).map(FoodHolder::getSelectedSlot).orElse(0) + 1)
 							.withStyle(ChatFormatting.WHITE)).withStyle(ChatFormatting.GRAY));
 			super.appendHoverText(itemStack, level, tooltip, flagIn);
 			return;
@@ -78,8 +78,30 @@ public class LunchBoxItem extends ContainerItem {
 
 	@Override
 	public Optional<TooltipComponent> getTooltipImage(final ItemStack itemStack) {
-		// TODO handle the selected slot somehow
-		return super.getTooltipImage(itemStack);
+		return itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().flatMap(handler -> {
+			final int width, height;
+			switch (handler.getSlots()) {
+				case 1 -> width = height = 1;
+				case 4 -> width = height = 2;
+				case 8 -> {
+					width = 4;
+					height = 2;
+				}
+				case 18 -> {
+					width = 9;
+					height = 2;
+				}
+				default -> {
+					// We want to round up, integer math rounds down
+					width = (int) Math.ceil((double) handler.getSlots() / 9);
+					height = handler.getSlots() / width;
+				}
+			}
+
+			return itemStack.getCapability(SNSCapabilities.FOOD_HOLDER)
+					.map(FoodHolder::getSelectedSlot)
+					.map(selectedSlot -> LunchboxTooltip.getTooltipImage(handler, width, height, selectedSlot));
+		}).orElse(super.getTooltipImage(itemStack));
 	}
 
 	@Override
@@ -96,9 +118,7 @@ public class LunchBoxItem extends ContainerItem {
 
 	@Override
 	public int getUseDuration(final ItemStack itemStack) {
-		return itemStack.getCapability(SNSCapabilities.FOOD_HOLDER)
-				.map(foodHolder -> foodHolder.getSelectedStack().getUseDuration())
-				.orElse(32);
+		return itemStack.getCapability(SNSCapabilities.FOOD_HOLDER).map(foodHolder -> foodHolder.getSelectedStack().getUseDuration()).orElse(32);
 	}
 
 	@Nullable
