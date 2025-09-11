@@ -3,6 +3,7 @@ package mod.traister101.sns.common.items;
 import com.google.common.collect.*;
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.attribute.SNSAttributes;
+import mod.traister101.sns.util.SNSUtils;
 
 import net.minecraft.*;
 import net.minecraft.nbt.CompoundTag;
@@ -20,8 +21,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Supplier;
-
-import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
 public class HorseshoesItem extends Item {
 
@@ -104,31 +103,7 @@ public class HorseshoesItem extends Item {
 
 		tooltip.add(Component.translatable(HORSESHOE_MODIFIER_TOOLTIP).withStyle(ChatFormatting.GRAY));
 
-		for (final var entry : modifiers.entries()) {
-			final var modifier = entry.getValue();
-			final var amount = modifier.getAmount();
-
-			final double displayAmount;
-			if (modifier.getOperation() != AttributeModifier.Operation.MULTIPLY_BASE && modifier.getOperation() != AttributeModifier.Operation.MULTIPLY_TOTAL) {
-				if (entry.getKey().equals(Attributes.KNOCKBACK_RESISTANCE)) {
-					displayAmount = amount * 10;
-				} else {
-					displayAmount = amount;
-				}
-			} else {
-				displayAmount = amount * 100;
-			}
-
-			if (amount > 0) {
-				tooltip.add(Component.translatable("attribute.modifier.plus." + modifier.getOperation().toValue(),
-								ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), Component.translatable(entry.getKey().getDescriptionId()))
-						.withStyle(ChatFormatting.BLUE));
-			} else if (amount < 0) {
-				tooltip.add(Component.translatable("attribute.modifier.take." + modifier.getOperation().toValue(),
-								ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount * -1), Component.translatable(entry.getKey().getDescriptionId()))
-						.withStyle(ChatFormatting.RED));
-			}
-		}
+		SNSUtils.attributeTooltips(tooltip, modifiers);
 	}
 
 	public interface HorseshoesProperties {

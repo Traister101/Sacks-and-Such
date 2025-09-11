@@ -1,5 +1,6 @@
 package mod.traister101.sns.util;
 
+import com.google.common.collect.Multimap;
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.compat.curios.CuriosUtils;
 import mod.traister101.sns.network.*;
@@ -11,6 +12,8 @@ import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.item.ItemStack;
 
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -19,9 +22,11 @@ import net.minecraftforge.items.IItemHandler;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
+
+import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
 @Slf4j
 public final class SNSUtils {
@@ -96,6 +101,38 @@ public final class SNSUtils {
 
 	public static <T> Stream<T> streamOf(final Iterable<T> iterable) {
 		return StreamSupport.stream(iterable.spliterator(), false);
+	}
+
+	/**
+	 * @param tooltip The tooltip
+	 * @param attributeModifiers The attribute modifiers
+	 */
+	public static void attributeTooltips(final List<Component> tooltip, final Multimap<Attribute, AttributeModifier> attributeModifiers) {
+		for (final var entry : attributeModifiers.entries()) {
+			final var modifier = entry.getValue();
+			final var amount = modifier.getAmount();
+
+			final double displayAmount;
+			if (modifier.getOperation() != Operation.MULTIPLY_BASE && modifier.getOperation() != Operation.MULTIPLY_TOTAL) {
+				if (entry.getKey().equals(Attributes.KNOCKBACK_RESISTANCE)) {
+					displayAmount = amount * 10;
+				} else {
+					displayAmount = amount;
+				}
+			} else {
+				displayAmount = amount * 100;
+			}
+
+			if (amount > 0) {
+				tooltip.add(Component.translatable("attribute.modifier.plus." + modifier.getOperation().toValue(),
+								ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), Component.translatable(entry.getKey().getDescriptionId()))
+						.withStyle(ChatFormatting.BLUE));
+			} else if (amount < 0) {
+				tooltip.add(Component.translatable("attribute.modifier.take." + modifier.getOperation().toValue(),
+								ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount * -1), Component.translatable(entry.getKey().getDescriptionId()))
+						.withStyle(ChatFormatting.RED));
+			}
+		}
 	}
 
 	/**
