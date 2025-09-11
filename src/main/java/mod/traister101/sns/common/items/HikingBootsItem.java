@@ -5,6 +5,7 @@ import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.client.models.*;
 import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.config.SNSConfig;
+import mod.traister101.sns.config.entries.BootsConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -19,12 +20,11 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeMod;
 
 import org.jetbrains.annotations.*;
 import java.util.*;
-import java.util.function.*;
+import java.util.function.Consumer;
 
 public class HikingBootsItem extends ArmorItem {
 
@@ -37,34 +37,12 @@ public class HikingBootsItem extends ArmorItem {
 
 	private static final UUID HIKING_BOOTS_UUID = UUID.fromString("1498ff98-5730-4216-a827-857c81e2e12c");
 
-	private final Supplier<Integer> stepsPerDamage;
-	private final Supplier<Double> movementSpeed;
-	private final Supplier<Double> stepHeight;
-	private final Supplier<Double> fallPadding;
+	private final HikingBootProperties bootProperties;
 	private Multimap<Attribute, AttributeModifier> attributeModifiers;
 
-	/**
-	 * @param armorMaterial The armor material
-	 * @param stepsPerDamage A supplier for the amount of steps per point of durability.
-	 * @param movementSpeed A supplier for the movement speed modifier the boots provide.
-	 * You are expected to pass in a {@link DoubleValue} to facilitate configurability
-	 * @param stepHeight A supplier for the step height modifier the boots provide.
-	 * You are expected to pass in a {@link DoubleValue} to facilitate configurability
-	 * @param fallPadding A supplier for the fall padding modifier the boots provide.
-	 * You are expected to pass in a {@link DoubleValue} to facilitate configurability
-	 */
-	public HikingBootsItem(final Properties properties, final ArmorMaterial armorMaterial, final Supplier<Integer> stepsPerDamage,
-			final Supplier<Double> movementSpeed, final Supplier<Double> stepHeight, final Supplier<Double> fallPadding) {
-		super(armorMaterial, Type.BOOTS, properties);
-		this.stepsPerDamage = stepsPerDamage;
-		this.movementSpeed = movementSpeed;
-		this.stepHeight = stepHeight;
-		this.fallPadding = fallPadding;
-	}
-
 	public HikingBootsItem(final Properties properties, final ArmorMaterial armorMaterial, final HikingBootProperties bootProperties) {
-		this(properties, armorMaterial, bootProperties.stepsPerDamage(), bootProperties.movementSpeed(), bootProperties.stepHeight(),
-				bootProperties.fallPadding());
+		super(armorMaterial, Type.BOOTS, properties);
+		this.bootProperties = bootProperties;
 	}
 
 	public static int getSteps(final ItemStack itemStack) {
@@ -83,17 +61,17 @@ public class HikingBootsItem extends ArmorItem {
 			final var builder = ImmutableMultimap.<Attribute, AttributeModifier>builder();
 			builder.putAll(super.getAttributeModifiers(slot, itemStack));
 
-			if (0 < movementSpeed.get()) {
+			if (0 < bootProperties.movementSpeed()) {
 				builder.put(Attributes.MOVEMENT_SPEED,
-						new AttributeModifier(HIKING_BOOTS_UUID, "Movement Speed", movementSpeed.get(), Operation.MULTIPLY_TOTAL));
+						new AttributeModifier(HIKING_BOOTS_UUID, "Movement Speed", bootProperties.movementSpeed(), Operation.MULTIPLY_TOTAL));
 			}
-			if (0 < stepHeight.get()) {
+			if (0 < bootProperties.stepHeight()) {
 				builder.put(ForgeMod.STEP_HEIGHT_ADDITION.get(),
-						new AttributeModifier(HIKING_BOOTS_UUID, "Step Height", stepHeight.get(), Operation.ADDITION));
+						new AttributeModifier(HIKING_BOOTS_UUID, "Step Height", bootProperties.stepHeight(), Operation.ADDITION));
 			}
-			if (0 < fallPadding.get()) {
+			if (0 < bootProperties.fallPadding()) {
 				builder.put(SNSAttributes.EXTRA_FALL_DISTANCE.get(),
-						new AttributeModifier(HIKING_BOOTS_UUID, "Fall Padding", fallPadding.get(), Operation.ADDITION));
+						new AttributeModifier(HIKING_BOOTS_UUID, "Fall Padding", bootProperties.fallPadding(), Operation.ADDITION));
 			}
 
 			this.attributeModifiers = builder.build();
@@ -106,7 +84,7 @@ public class HikingBootsItem extends ArmorItem {
 	public void onArmorTick(final ItemStack itemStack, final Level level, final Player player) {
 		if (level.isClientSide) return;
 
-		if (getSteps(itemStack) > this.stepsPerDamage.get()) {
+		if (getSteps(itemStack) > bootProperties.stepsPerDamage()) {
 			itemStack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(EquipmentSlot.FEET));
 			setSteps(itemStack, 0);
 		}
@@ -115,7 +93,7 @@ public class HikingBootsItem extends ArmorItem {
 		final double lastX = lastStep.getDouble(LAST_STEP_X_NBT_KEY);
 		final double lastZ = lastStep.getDouble(LAST_STEP_Z_NBT_KEY);
 		if (player.onGround() && !player.isPassenger() && !player.isCreative()) {
-			if (0 < this.stepsPerDamage.get() && (lastX != player.xOld || lastZ != player.zOld)) {
+			if (0 < bootProperties.stepsPerDamage() && (lastX != player.xOld || lastZ != player.zOld)) {
 				setSteps(itemStack, getSteps(itemStack) + 1);
 				lastStep.putDouble("x", player.xOld);
 				lastStep.putDouble("z", player.zOld);
@@ -167,12 +145,36 @@ public class HikingBootsItem extends ArmorItem {
 
 	public interface HikingBootProperties {
 
-		Supplier<Integer> stepsPerDamage();
+		static HikingBootProperties fromConfig(final BootsConfig config) {
+			return new HikingBootProperties() {
+				@Override
+				public int stepsPerDamage() {
+					return config.stepsPerDamage.get();
+				}
 
-		Supplier<Double> movementSpeed();
+				@Override
+				public double movementSpeed() {
+					return config.movementSpeed.get();
+				}
 
-		Supplier<Double> stepHeight();
+				@Override
+				public double stepHeight() {
+					return config.stepHeight.get();
+				}
 
-		Supplier<Double> fallPadding();
+				@Override
+				public double fallPadding() {
+					return config.fallPadding.get();
+				}
+			};
+		}
+
+		int stepsPerDamage();
+
+		double movementSpeed();
+
+		double stepHeight();
+
+		double fallPadding();
 	}
 }

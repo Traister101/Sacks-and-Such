@@ -1,18 +1,14 @@
 package mod.traister101.sns.config.entries;
 
-import mod.traister101.sns.common.items.HikingBootsItem.HikingBootProperties;
-
 import net.minecraftforge.common.ForgeConfigSpec.*;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 
 import lombok.*;
-import lombok.experimental.*;
+import lombok.experimental.FieldDefaults;
 
-@Getter
-@Accessors(fluent = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PUBLIC)
-public final class BootsConfig implements HikingBootProperties {
+public final class BootsConfig {
 
 	IntValue stepsPerDamage;
 	DoubleValue movementSpeed;

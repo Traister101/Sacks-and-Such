@@ -1,18 +1,14 @@
 package mod.traister101.sns.config.entries;
 
-import mod.traister101.sns.common.items.HorseshoesItem.HorseshoesProperties;
-
 import net.minecraftforge.common.ForgeConfigSpec.*;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 
 import lombok.*;
-import lombok.experimental.*;
+import lombok.experimental.FieldDefaults;
 
-@Getter
-@Accessors(fluent = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PUBLIC)
-public final class HorseshoesConfig implements HorseshoesProperties {
+public final class HorseshoesConfig {
 
 	IntValue stepsPerDamage;
 	DoubleValue movementSpeed;

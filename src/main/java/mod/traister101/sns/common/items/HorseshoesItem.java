@@ -3,6 +3,7 @@ package mod.traister101.sns.common.items;
 import com.google.common.collect.*;
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.attribute.SNSAttributes;
+import mod.traister101.sns.config.entries.HorseshoesConfig;
 import mod.traister101.sns.util.SNSUtils;
 
 import net.minecraft.*;
@@ -20,7 +21,6 @@ import net.minecraftforge.common.ForgeMod;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
-import java.util.function.Supplier;
 
 public class HorseshoesItem extends Item {
 
@@ -32,35 +32,24 @@ public class HorseshoesItem extends Item {
 	public static final UUID HORSE_SHOE_UUID = UUID.fromString("de872635-2298-412b-beac-667462412c28");
 	public static final String HORSESHOE_MODIFIER_TOOLTIP = SacksNSuch.MODID + ".tooltip.horseshoe.modifier";
 
-	private final Supplier<Integer> stepsPerDamage;
-	private final Supplier<Double> movementSpeed;
-	private final Supplier<Double> bonusFallDistance;
-	private final Supplier<Double> bonusStepDistance;
+	private final HorseshoesProperties horseshoesProperties;
 	@Getter(lazy = true)
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers = Util.make(() -> {
 		final var builder = ImmutableMultimap.<Attribute, AttributeModifier>builder();
 		builder.put(Attributes.MOVEMENT_SPEED,
-				new AttributeModifier(HorseshoesItem.HORSE_SHOE_UUID, "Horseshoe movement speed bonus", movementSpeed.get(),
+				new AttributeModifier(HorseshoesItem.HORSE_SHOE_UUID, "Horseshoe movement speed bonus", horseshoesProperties.movementSpeed(),
 						Operation.MULTIPLY_TOTAL));
 		builder.put(SNSAttributes.EXTRA_FALL_DISTANCE.get(),
-				new AttributeModifier(HORSE_SHOE_UUID, "Horseshoe fall distance bonus", bonusFallDistance.get(), Operation.ADDITION));
+				new AttributeModifier(HORSE_SHOE_UUID, "Horseshoe fall distance bonus", horseshoesProperties.bonusFallDistance(),
+						Operation.ADDITION));
 		builder.put(ForgeMod.STEP_HEIGHT_ADDITION.get(),
-				new AttributeModifier(HORSE_SHOE_UUID, "Horseshoe step bonus", bonusStepDistance.get(), Operation.ADDITION));
+				new AttributeModifier(HORSE_SHOE_UUID, "Horseshoe step bonus", horseshoesProperties.bonusStepDistance(), Operation.ADDITION));
 		return builder.build();
 	});
 
-	public HorseshoesItem(final Properties properties, final Supplier<Integer> stepsPerDamage, final Supplier<Double> movementSpeed,
-			final Supplier<Double> bonusFallDistance, final Supplier<Double> bonusStepDistance) {
-		super(properties);
-		this.stepsPerDamage = stepsPerDamage;
-		this.movementSpeed = movementSpeed;
-		this.bonusFallDistance = bonusFallDistance;
-		this.bonusStepDistance = bonusStepDistance;
-	}
-
 	public HorseshoesItem(final Properties properties, final HorseshoesProperties horseshoesProperties) {
-		this(properties, horseshoesProperties.stepsPerDamage(), horseshoesProperties.movementSpeed(), horseshoesProperties.bonusFallDistance(),
-				horseshoesProperties.bonusStepDistance());
+		super(properties);
+		this.horseshoesProperties = horseshoesProperties;
 	}
 
 	public static int getSteps(final ItemStack itemStack) {
@@ -78,7 +67,7 @@ public class HorseshoesItem extends Item {
 	public void horseshoeTick(final ItemStack itemStack, final Level level, final AbstractHorse horse) {
 		if (level.isClientSide) return;
 
-		if (getSteps(itemStack) > stepsPerDamage.get()) {
+		if (getSteps(itemStack) > horseshoesProperties.stepsPerDamage()) {
 			itemStack.hurtAndBreak(1, horse, e -> e.broadcastBreakEvent(EquipmentSlot.FEET));
 			setSteps(itemStack, 0);
 		}
@@ -87,7 +76,7 @@ public class HorseshoesItem extends Item {
 		final double lastX = lastStep.getDouble(LAST_STEP_X_NBT_KEY);
 		final double lastZ = lastStep.getDouble(LAST_STEP_Z_NBT_KEY);
 		if (horse.onGround() && !horse.isPassenger()) {
-			if (stepsPerDamage.get() > 0 && (lastX != horse.xOld || lastZ != horse.zOld)) {
+			if (horseshoesProperties.stepsPerDamage() > 0 && (lastX != horse.xOld || lastZ != horse.zOld)) {
 				setSteps(itemStack, getSteps(itemStack) + 1);
 				lastStep.putDouble("x", horse.xOld);
 				lastStep.putDouble("z", horse.zOld);
@@ -108,12 +97,37 @@ public class HorseshoesItem extends Item {
 
 	public interface HorseshoesProperties {
 
-		Supplier<Integer> stepsPerDamage();
+		static HorseshoesProperties fromConfig(final HorseshoesConfig config) {
+			return new HorseshoesProperties() {
 
-		Supplier<Double> movementSpeed();
+				@Override
+				public int stepsPerDamage() {
+					return config.stepsPerDamage.get();
+				}
 
-		Supplier<Double> bonusFallDistance();
+				@Override
+				public double movementSpeed() {
+					return config.movementSpeed.get();
+				}
 
-		Supplier<Double> bonusStepDistance();
+				@Override
+				public double bonusFallDistance() {
+					return config.bonusFallDistance.get();
+				}
+
+				@Override
+				public double bonusStepDistance() {
+					return config.bonusStepDistance.get();
+				}
+			};
+		}
+
+		int stepsPerDamage();
+
+		double movementSpeed();
+
+		double bonusFallDistance();
+
+		double bonusStepDistance();
 	}
 }

@@ -2,6 +2,8 @@ package mod.traister101.sns.common.items;
 
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.SNSArmorMaterials;
+import mod.traister101.sns.common.items.HikingBootsItem.HikingBootProperties;
+import mod.traister101.sns.common.items.HorseshoesItem.HorseshoesProperties;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.config.entries.HorseshoesConfig;
 import mod.traister101.sns.util.ContainerType;
@@ -48,24 +50,24 @@ public final class SNSItems {
 	public static final RegistryObject<MobNetItem> MOB_NET_ITEM = register("mob_net", MobNetItem::new);
 
 	public static final RegistryObject<HikingBootsItem> HIKING_BOOTS = register("hiking_boots",
-			properties -> new HikingBootsItem(properties, SNSArmorMaterials.HIKING_BOOTS, SNSConfig.SERVER.hikingBoots),
-			new Properties().stacksTo(1));
+			properties -> new HikingBootsItem(properties, SNSArmorMaterials.HIKING_BOOTS,
+					HikingBootProperties.fromConfig(SNSConfig.SERVER.hikingBoots)), new Properties().stacksTo(1));
 
 	public static final RegistryObject<HikingBootsItem> STEEL_TOE_HIKING_BOOTS = register("steel_toe_hiking_boots",
-			properties -> new HikingBootsItem(properties, SNSArmorMaterials.STEEL_TOE_HIKING_BOOTS, SNSConfig.SERVER.steelToeHikingBoots),
-			new Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+			properties -> new HikingBootsItem(properties, SNSArmorMaterials.STEEL_TOE_HIKING_BOOTS,
+					HikingBootProperties.fromConfig(SNSConfig.SERVER.steelToeHikingBoots)), new Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 
 	public static final RegistryObject<HikingBootsItem> BLACK_STEEL_TOE_HIKING_BOOTS = register("black_steel_toe_hiking_boots",
-			properties -> new HikingBootsItem(properties, SNSArmorMaterials.BLACK_STEEL_TOE_HIKING_BOOTS, SNSConfig.SERVER.blackSteelToeHikingBoots),
-			new Properties().stacksTo(1).rarity(Rarity.RARE));
+			properties -> new HikingBootsItem(properties, SNSArmorMaterials.BLACK_STEEL_TOE_HIKING_BOOTS,
+					HikingBootProperties.fromConfig(SNSConfig.SERVER.blackSteelToeHikingBoots)), new Properties().stacksTo(1).rarity(Rarity.RARE));
 
 	public static final RegistryObject<HikingBootsItem> BLUE_STEEL_TOE_HIKING_BOOTS = register("blue_steel_toe_hiking_boots",
-			properties -> new HikingBootsItem(properties, SNSArmorMaterials.BLUE_STEEL_TOE_HIKING_BOOTS, SNSConfig.SERVER.blueSteelToeHikingBoots),
-			new Properties().stacksTo(1).rarity(Rarity.EPIC));
+			properties -> new HikingBootsItem(properties, SNSArmorMaterials.BLUE_STEEL_TOE_HIKING_BOOTS,
+					HikingBootProperties.fromConfig(SNSConfig.SERVER.blueSteelToeHikingBoots)), new Properties().stacksTo(1).rarity(Rarity.EPIC));
 
 	public static final RegistryObject<HikingBootsItem> RED_STEEL_TOE_HIKING_BOOTS = register("red_steel_toe_hiking_boots",
-			properties -> new HikingBootsItem(properties, SNSArmorMaterials.RED_STEEL_TOE_HIKING_BOOTS, SNSConfig.SERVER.redSteelToeHikingBoots),
-			new Properties().stacksTo(1).rarity(Rarity.EPIC));
+			properties -> new HikingBootsItem(properties, SNSArmorMaterials.RED_STEEL_TOE_HIKING_BOOTS,
+					HikingBootProperties.fromConfig(SNSConfig.SERVER.redSteelToeHikingBoots)), new Properties().stacksTo(1).rarity(Rarity.EPIC));
 
 	public static final RegistryObject<HorseshoesItem> STEEL_HORSESHOES = registerHorseShoes(Default.STEEL, SNSConfig.SERVER.steelHorseshoes);
 
@@ -83,7 +85,8 @@ public final class SNSItems {
 	}
 
 	private static RegistryObject<HorseshoesItem> registerHorseShoes(final RegistryMetal metal, final HorseshoesConfig horseshoesConfig) {
-		return register("metal/horseshoes/" + metal.getSerializedName(), properties -> new HorseshoesItem(properties, horseshoesConfig),
+		return register("metal/horseshoes/" + metal.getSerializedName(),
+				properties -> new HorseshoesItem(properties, HorseshoesProperties.fromConfig(horseshoesConfig)),
 				new Properties().durability(metal.toolTier().getUses()).rarity(metal.getRarity()));
 	}
 
