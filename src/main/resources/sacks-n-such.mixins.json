@@ -10,7 +10,7 @@
 	"common.ByteBufUtilsMixin",
 	"common.HorseInventoryMenuMixin",
 	"common.JavelinItemMixin",
-	"common.PlayerMixin"
+	"common.LivingEntityMixin"
   ],
   "client": [
 	"client.HorseInventoryScreenMixin",
