@@ -57,7 +57,6 @@
   "sns.status.mob_net.cannot_place": "There's not enough space to release captured %s",
   "sns.status.sack.auto_pickup": "Item Pickup %s",
   "sns.tooltip.food_trait.lunchbox": "Lunchbox Preserved",
-  "sns.tooltip.hiking_boots.prevents_slow": "Prevents tall grass slowdown",
   "sns.tooltip.horseshoe.modifier": "When on Horse:",
   "sns.tooltip.item_container.allowed_size": "Fits at most size: %s",
   "sns.tooltip.item_container.slot_capacity": "Slot Capacity: %s",
@@ -66,5 +65,6 @@
   "sns.tooltip.item_container.tooltip.pickup": "Item Pickup %s",
   "sns.tooltip.item_container.tooltip.shift": "Hold (Shift) for container info",
   "sns.tooltip.item_container.tooltip.void": "Item Voiding %s",
-  "sns.tooltip.lunchbox.selected_slot": "Selected Slot: %s"
+  "sns.tooltip.lunchbox.selected_slot": "Selected Slot: %s",
+  "sns.tooltip.prevents_slow": "Prevents tall grass slowdown"
 }

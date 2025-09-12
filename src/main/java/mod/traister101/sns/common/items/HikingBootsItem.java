@@ -6,6 +6,7 @@ import mod.traister101.sns.client.models.*;
 import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.config.entries.BootsConfig;
+import mod.traister101.sns.util.SNSUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -32,8 +33,6 @@ public class HikingBootsItem extends ArmorItem {
 	public static final String LAST_STEP_X_NBT_KEY = "x";
 	public static final String LAST_STEP_Z_NBT_KEY = "z";
 	public static final String STEPS_NBT_KEY = "steps";
-
-	public static final String PREVENT_SLOW_TOOLTIP = SacksNSuch.MODID + ".tooltip.hiking_boots.prevents_slow";
 
 	private static final UUID HIKING_BOOTS_UUID = UUID.fromString("1498ff98-5730-4216-a827-857c81e2e12c");
 
@@ -110,7 +109,7 @@ public class HikingBootsItem extends ArmorItem {
 	@Override
 	public void appendHoverText(final ItemStack itemStack, @Nullable final Level level, final List<Component> components,
 			final TooltipFlag tooltipFlag) {
-		components.add(Component.translatable(PREVENT_SLOW_TOOLTIP));
+		components.add(Component.translatable(SNSUtils.PREVENT_SLOW_TOOLTIP));
 		super.appendHoverText(itemStack, level, components, tooltipFlag);
 	}
 

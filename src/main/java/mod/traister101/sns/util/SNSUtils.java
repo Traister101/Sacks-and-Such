@@ -35,6 +35,7 @@ public final class SNSUtils {
 	public static final String DISABLED = SacksNSuch.MODID + ".disabled";
 
 	public static final boolean CURIOS_LOADED = ModList.get().isLoaded(CuriosApi.MODID);
+	public static final String PREVENT_SLOW_TOOLTIP = SacksNSuch.MODID + ".tooltip.prevents_slow";
 
 	public static void sendTogglePacket(final ToggleType toggleType, final boolean flag) {
 		SNSPacketHandler.sendToServer(new ServerboundTogglePacket(flag, toggleType));
