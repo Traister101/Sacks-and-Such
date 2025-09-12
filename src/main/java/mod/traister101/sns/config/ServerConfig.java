@@ -43,6 +43,7 @@ public final class ServerConfig {
 	// Misc
 	DoubleValue traitLunchboxModifier;
 	DoubleValue maximumNetCaptureSize;
+	WalkingStickConfig woodenCane;
 
 	ServerConfig(final Builder builder) {
 
@@ -66,6 +67,12 @@ public final class ServerConfig {
 		blackSteelToeHikingBoots = BootsConfig.build(builder, "Black Steel Toe Boots", 1_000, 0.15, 0.5, 2);
 		blueSteelToeHikingBoots = BootsConfig.build(builder, "Blue Steel Toe Boots", 1_500, 0.2, 0.5, 5);
 		redSteelToeHikingBoots = BootsConfig.build(builder, "Red Steel Toe Boots", 1_500, 0.2, 0.5, 5);
+
+		builder.pop();
+
+		builder.push("Cane config");
+
+		woodenCane = WalkingStickConfig.build(builder, "Wooden Cane", 0.15, 0.05);
 
 		builder.pop();
 

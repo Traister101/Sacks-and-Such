@@ -1,7 +1,7 @@
 package mod.traister101.sns.mixins.common;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import mod.traister101.sns.common.items.HikingBootsItem;
+import mod.traister101.sns.common.items.*;
 import net.dries007.tfc.common.TFCTags.Blocks;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,8 +20,14 @@ public abstract class LivingEntityMixin extends Entity {
 	@Shadow
 	public abstract ItemStack getItemBySlot(final EquipmentSlot pSlot);
 
+	@Shadow
+	public abstract ItemStack getOffhandItem();
+
+	@Shadow
+	public abstract ItemStack getMainHandItem();
+
 	/**
-	 * @reason In order for our Boots to work we need to modify the speed factor accounting for our Boots
+	 * @reason In order for our slowdown preventing items to work we need to modify the speed factor
 	 * @author Traister101
 	 */
 	@ModifyReturnValue(method = "getBlockSpeedFactor", at = @At("RETURN"))
@@ -31,7 +37,8 @@ public abstract class LivingEntityMixin extends Entity {
 		final var feetItem = getItemBySlot(EquipmentSlot.FEET).getItem();
 		final var state = this.level().getBlockState(this.blockPosition());
 		if (state.is(Blocks.PLANTS)) {
-			return feetItem instanceof HikingBootsItem ? 1 : original;
+			if (feetItem instanceof HikingBootsItem) return 1;
+			if (getMainHandItem().getItem() instanceof WalkingStickItem || getOffhandItem().getItem() instanceof WalkingStickItem) return 1;
 		}
 
 		return original;

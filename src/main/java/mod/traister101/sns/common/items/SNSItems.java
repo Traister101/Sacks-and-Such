@@ -4,6 +4,7 @@ import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.SNSArmorMaterials;
 import mod.traister101.sns.common.items.HikingBootsItem.HikingBootProperties;
 import mod.traister101.sns.common.items.HorseshoesItem.HorseshoesProperties;
+import mod.traister101.sns.common.items.WalkingStickItem.WalkingStickProperties;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.config.entries.HorseshoesConfig;
 import mod.traister101.sns.util.ContainerType;
@@ -79,6 +80,9 @@ public final class SNSItems {
 
 	public static final RegistryObject<HorseshoesItem> RED_STEEL_HORSESHOES = registerHorseShoes(Default.RED_STEEL,
 			SNSConfig.SERVER.redSteelHorseshoes);
+
+	public static final RegistryObject<WalkingStickItem> WOODEN_WALKING_STICK = register("wooden_walking_stick",
+			properties -> new WalkingStickItem(properties, WalkingStickProperties.fromConfig(SNSConfig.SERVER.woodenCane)));
 
 	private static RegistryObject<Item> registerHorseshoe(final RegistryMetal metal) {
 		return registerSimple("metal/horseshoe/" + metal.getSerializedName(), new Properties().rarity(metal.getRarity()));
