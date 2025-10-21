@@ -6,7 +6,7 @@
 	{
 	  "type": "patchouli:spotlight",
 	  "item": "sns:frame_pack",
-	  "text": "$(item)大背包$() 是一种 $(l:sns/item_containers)物品容器$()，本质上就是把 TFC 箱子背在背上。与 TFC 箱子一样，它遵循 TFC 的 $(l:getting_started/size_and_weight)体积系统$()。"
+	  "text": "$(item)大背包$() 是一种 $(l:sns/item_containers)物品容器$()，实质上就像把 TFC 的箱子背在背上。与 TFC 箱子相同，它遵循 TFC 的 $(l:getting_started/size_and_weight)尺寸与重量$()。"
 	},
 	{
 	  "type": "patchouli:crafting",
