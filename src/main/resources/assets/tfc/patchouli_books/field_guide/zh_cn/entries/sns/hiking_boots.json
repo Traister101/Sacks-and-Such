@@ -1,0 +1,18 @@
+{
+  "name": "登山靴",
+  "category": "tfc:sacks_n_such",
+  "icon": "sns:hiking_boots",
+  "pages": [
+	{
+	  "type": "patchouli:text",
+	  "text": "每位探索者都需要一双好靴子。它能让你快速穿过灌木，并提供小幅移速提升与安全坠落高度的轻微提高。"
+	},
+	{
+	  "type": "patchouli:crafting",
+	  "recipe": "sns:crafting/hiking_boots",
+	  "text": "这些靴子天生就为行走而生"
+	}
+  ],
+  "read_by_default": true
+}
+

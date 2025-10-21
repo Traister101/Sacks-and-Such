@@ -1,0 +1,18 @@
+{
+  "name": "捕捉网",
+  "category": "tfc:sacks_n_such",
+  "icon": "sns:mob_net",
+  "pages": [
+	{
+	  "type": "patchouli:crafting",
+	  "recipe": "sns:crafting/mob_net",
+	  "text": "捕捉网在抓取小型生物时非常有用。它最适合搬运诸如鸟类，或像牛这类大型生物的幼崽。"
+	},
+	{
+	  "type": "patchouli:text",
+	  "text": "供整合包作者或希望添加更多生物的玩家参考，请查看实体标签 $(bold)sns:netable_mobs"
+	}
+  ],
+  "read_by_default": true
+}
+
