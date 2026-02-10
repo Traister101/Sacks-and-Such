@@ -46,8 +46,6 @@ public abstract class AbstractArrowMixin extends Projectile {
 	@Expression("player.getInventory().add(this.getPickupItem())")
 	@Inject(method = "tryPickup", at = @At(value = "MIXINEXTRAS:EXPRESSION"), cancellable = true)
 	private void tryInsertIntoQuiver(final Player player, final CallbackInfoReturnable<Boolean> cir) {
-		// Merge with arrows already in the inventory first
-		final var playerHandler = new PlayerMainInvWrapper(player.getInventory());
 		final var pickupItem = this.getPickupItem();
 
 		if (pickupItem.getCount() > 1) {
@@ -55,13 +53,21 @@ public abstract class AbstractArrowMixin extends Projectile {
 					pickupItem);
 		}
 
+		final var playerHandler = new PlayerMainInvWrapper(player.getInventory());
 		if (pickupItem.is(SNSItemTags.TFC_JAVELINS)) {
 			// There are no javelins in the player inventory
 			if (ItemSlot.stream(playerHandler).noneMatch(ItemSlot.contains(SNSItemTags.TFC_JAVELINS))) {
 				return;
 			}
 		}
+
+		// Merge with arrows already in the inventory first
 		final var inventoryRemainder = SNSUtils.insertItemOnlyStacked(playerHandler, pickupItem);
+
+		if (inventoryRemainder.isEmpty()) {
+			cir.setReturnValue(true);
+			return;
+		}
 
 		for (final var handler : SNSUtils.curiosAndInventory(player)) {
 			for (final var quiverSlot : ItemSlot.iterable(handler)) {
