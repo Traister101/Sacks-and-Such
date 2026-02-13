@@ -63,6 +63,11 @@ public abstract class AbstractArrowMixin extends Projectile {
 		}
 		final var inventoryRemainder = SNSUtils.insertItemOnlyStacked(playerHandler, pickupItem);
 
+		if(inventoryRemainder.getCount() < 1) {
+			cir.setReturnValue(true);
+			return;
+		}
+
 		for (final var handler : SNSUtils.curiosAndInventory(player)) {
 			for (final var quiverSlot : ItemSlot.iterable(handler)) {
 				final var quiverStack = quiverSlot.getStack();
