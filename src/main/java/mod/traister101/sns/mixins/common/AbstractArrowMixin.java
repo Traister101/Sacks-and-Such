@@ -63,7 +63,7 @@ public abstract class AbstractArrowMixin extends Projectile {
 		}
 		final var inventoryRemainder = SNSUtils.insertItemOnlyStacked(playerHandler, pickupItem);
 
-		if(inventoryRemainder.getCount() < 1) {
+		if(inventoryRemainder.isEmpty()) {
 			cir.setReturnValue(true);
 			return;
 		}
