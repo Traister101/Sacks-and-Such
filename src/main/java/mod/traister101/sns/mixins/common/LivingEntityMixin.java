@@ -1,8 +1,8 @@
 package mod.traister101.sns.mixins.common;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import mod.traister101.sns.common.SNSBlockTags;
 import mod.traister101.sns.common.items.HikingBootsItem;
-import net.dries007.tfc.common.TFCTags.Blocks;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -31,7 +31,7 @@ public abstract class LivingEntityMixin extends Entity {
 		final var feetItem = getItemBySlot(EquipmentSlot.FEET).getItem();
 		final var state = this.level().getBlockState(this.blockPosition());
 		final var stateBelow = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement());
-		if (state.is(Blocks.PLANTS) || stateBelow.is(Blocks.PLANTS)) {
+		if (state.is(SNSBlockTags.BOOTS_PREVENT_SLOWDOWN) || stateBelow.is(SNSBlockTags.BOOTS_PREVENT_SLOWDOWN)) {
 			return feetItem instanceof HikingBootsItem ? 1 : original;
 		}
 
