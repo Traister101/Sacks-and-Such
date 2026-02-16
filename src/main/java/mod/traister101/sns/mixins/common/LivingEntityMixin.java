@@ -30,7 +30,8 @@ public abstract class LivingEntityMixin extends Entity {
 
 		final var feetItem = getItemBySlot(EquipmentSlot.FEET).getItem();
 		final var state = this.level().getBlockState(this.blockPosition());
-		if (state.is(Blocks.PLANTS)) {
+		final var stateBelow = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement());
+		if (state.is(Blocks.PLANTS) || stateBelow.is(Blocks.PLANTS)) {
 			return feetItem instanceof HikingBootsItem ? 1 : original;
 		}
 
