@@ -35,6 +35,7 @@ import java.util.*;
 public class ContainerItem extends Item implements IItemSize {
 
 	public static final String CONTENTS_TAG = "contents";
+	public static final String VOID_SLOTS_TAG = "void_slots";
 	public static final String TYPE_NO_PICKUP = SacksNSuch.MODID + ".status.item_container.no_pickup";
 	public static final String HOLD_SHIFT_TOOLTIP = SacksNSuch.MODID + ".tooltip.item_container.tooltip.shift";
 	public static final String PICKUP_TOOLTIP = SacksNSuch.MODID + ".tooltip.item_container.tooltip.pickup";
@@ -60,6 +61,28 @@ public class ContainerItem extends Item implements IItemSize {
 
 	protected static void openMenu(final ServerPlayer player, final InteractionHand hand, final ItemStack heldStack) {
 		NetworkHooks.openScreen(player, createMenuProvider(hand, heldStack), ContainerItemMenu.writeHeld(hand));
+	}
+
+	private static void serializeToTag(final ItemStack itemStack, final CompoundTag compoundTag, final Capability<?> capability,
+			final String tagKey) {
+		itemStack.getCapability(capability).ifPresent(handler -> {
+			if (handler instanceof final INBTSerializable<?> serializable) {
+				compoundTag.put(tagKey, serializable.serializeNBT());
+			}
+		});
+	}
+
+	private static void deserializeFromTag(final ItemStack itemStack, final CompoundTag compoundTag, final Capability<?> capability,
+			final String tagKey) {
+		final var tag = compoundTag.get(tagKey);
+		if (tag == null) return;
+
+		itemStack.getCapability(capability).ifPresent(handler -> {
+			if (handler instanceof INBTSerializable<?>) {
+				@SuppressWarnings("unchecked") final var serializable = (INBTSerializable<Tag>) handler;
+				serializable.deserializeNBT(tag);
+			}
+		});
 	}
 
 	@Override
@@ -233,32 +256,27 @@ public class ContainerItem extends Item implements IItemSize {
 		final CompoundTag shareTag = super.getShareTag(itemStack);
 		final CompoundTag compoundTag = shareTag == null ? new CompoundTag() : shareTag;
 
-		// Serialize our contents
-		itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-			if (handler instanceof final INBTSerializable<?> containerItemHandler) {
-				compoundTag.put(CONTENTS_TAG, containerItemHandler.serializeNBT());
-			}
-		});
+		serializeToTag(itemStack, compoundTag, ForgeCapabilities.ITEM_HANDLER, CONTENTS_TAG);
+		serializeToTag(itemStack, compoundTag, SNSCapabilities.ITEM_VOIDER, VOID_SLOTS_TAG);
 
 		return compoundTag;
 	}
 
 	@Override
 	public void readShareTag(final ItemStack itemStack, @Nullable final CompoundTag compoundTag) {
-		super.readShareTag(itemStack, compoundTag);
+		if (compoundTag == null) {
+			super.readShareTag(itemStack, null);
+			return;
+		}
+		{
+			final var tag = compoundTag.copy();
+			tag.remove(CONTENTS_TAG);
+			tag.remove(VOID_SLOTS_TAG);
+			super.readShareTag(itemStack, tag);
+		}
 
-		if (compoundTag == null) return;
-
-		// Deserialize our contents
-		itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-			if (handler instanceof INBTSerializable<?>) {
-				@SuppressWarnings("unchecked") final INBTSerializable<Tag> containerItemHandler = (INBTSerializable<Tag>) handler;
-				final var tag = compoundTag.get(CONTENTS_TAG);
-				if (tag != null) {
-					containerItemHandler.deserializeNBT(tag);
-				}
-			}
-		});
+		deserializeFromTag(itemStack, compoundTag, ForgeCapabilities.ITEM_HANDLER, CONTENTS_TAG);
+		deserializeFromTag(itemStack, compoundTag, SNSCapabilities.ITEM_VOIDER, VOID_SLOTS_TAG);
 	}
 
 	@Override
