@@ -46,8 +46,7 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 			this.containerItemIndex = Integer.MIN_VALUE;
 		}
 
-		this.containerStackSupplier = () -> hand == InteractionHand.MAIN_HAND ? slots.get(containerItemIndex).getItem() :
-				inventory.player.getOffhandItem();
+		this.containerStackSupplier = () -> inventory.player.getItemInHand(hand);
 
 		this.addContainerSlots(handler);
 		this.addPlayerInventorySlots(inventory);
