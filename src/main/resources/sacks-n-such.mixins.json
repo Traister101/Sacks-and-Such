@@ -10,6 +10,7 @@
 	"common.LivingEntityMixin",
 	"common.feature.quiver.AbstractArrowMixin",
 	"common.feature.quiver.BowItemMixin",
+	"common.feature.quiver.CrossbowItemMixin",
 	"common.feature.quiver.JavelinItemMixin"
   ],
   "client": [
