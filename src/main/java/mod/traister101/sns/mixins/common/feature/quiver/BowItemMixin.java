@@ -1,13 +1,11 @@
-package mod.traister101.sns.mixins.common;
+package mod.traister101.sns.mixins.common.feature.quiver;
 
 import com.llamalad7.mixinextras.expression.*;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import mod.traister101.sns.common.items.SNSItems;
 import mod.traister101.sns.util.SNSUtils;
-import mod.traister101.sns.util.items.ItemSlot;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.At;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,12 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.LivingGetProjectileEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
-
-import java.util.Optional;
 
 @Mixin(BowItem.class)
 public class BowItemMixin {
@@ -33,26 +27,14 @@ public class BowItemMixin {
 	 * @author Traister101
 	 */
 	@Definition(id = "getProjectile", method = "Lnet/minecraft/world/entity/player/Player;getProjectile(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/ItemStack;")
-	@Expression("? = ?.getProjectile(?)")
-	@ModifyVariable(method = "releaseUsing", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = Shift.AFTER), ordinal = 1)
-	private ItemStack getProjectileFromQuiver(final ItemStack originalProjectile, @Local(argsOnly = true) ItemStack bow, @Local Player player) {
+	@Expression("?.getProjectile(?)")
+	@ModifyExpressionValue(method = "releaseUsing", at = @At("MIXINEXTRAS:EXPRESSION"))
+	private ItemStack extractProjectileFromQuiver(final ItemStack originalProjectile, final ItemStack bow, final @Local Player player) {
 		// Already found a projectile
 		if (!originalProjectile.isEmpty()) return originalProjectile;
 
 		if (!(bow.getItem() instanceof final ProjectileWeaponItem projectileWeaponItem)) return originalProjectile;
 
-		final var supportedProjectile = projectileWeaponItem.getAllSupportedProjectiles();
-
-		final var maybeProjectileSlot = SNSUtils.curiosAndInventoryStream(player)
-				.flatMap(ItemSlot::stream)
-				.filter(ItemSlot.contains(SNSItems.QUIVER.get()))
-				.map(ItemSlot.extractCapability(ForgeCapabilities.ITEM_HANDLER))
-				.map(LazyOptional::resolve)
-				.flatMap(Optional::stream)
-				.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, supportedProjectile))
-				.flatMap(Optional::stream)
-				.findFirst();
-
-		return maybeProjectileSlot.map(slot -> slot.extractItem(1, false)).orElse(originalProjectile);
+		return SNSUtils.extractProjectileFromQuiver(player, projectileWeaponItem.getAllSupportedProjectiles()).orElse(originalProjectile);
 	}
 }

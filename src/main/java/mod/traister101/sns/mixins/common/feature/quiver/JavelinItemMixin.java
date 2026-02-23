@@ -1,4 +1,4 @@
-package mod.traister101.sns.mixins.common;
+package mod.traister101.sns.mixins.common.feature.quiver;
 
 import com.llamalad7.mixinextras.expression.*;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import mod.traister101.sns.common.SNSItemTags;
 import mod.traister101.sns.common.items.SNSItems;
 import mod.traister101.sns.util.SNSUtils;
-import mod.traister101.sns.util.items.ItemSlot;
+import mod.traister101.sns.util.items.*;
 import net.dries007.tfc.common.items.JavelinItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,15 +36,7 @@ public abstract class JavelinItemMixin extends SwordItem {
 	@Expression("player.getInventory().removeItem(?)")
 	@WrapWithCondition(method = "releaseUsing", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
 	private boolean replaceThrownJavelin(final Inventory instance, final ItemStack stack, @Local final Player player) {
-		final var replaceJavalinSlot = SNSUtils.curiosAndInventoryStream(player)
-				.flatMap(ItemSlot::stream)
-				.filter(ItemSlot.contains(SNSItems.QUIVER.get()))
-				.map(ItemSlot.extractCapability(ForgeCapabilities.ITEM_HANDLER))
-				.map(LazyOptional::resolve)
-				.flatMap(Optional::stream)
-				.map(quiverHandler -> SNSUtils.findFirstInHandler(quiverHandler, itemStack -> itemStack.is(SNSItemTags.TFC_JAVELINS)))
-				.flatMap(Optional::stream)
-				.findFirst();
+		final var replaceJavalinSlot = SNSUtils.findFirstSlotInQuiver(player, itemStack -> itemStack.is(SNSItemTags.TFC_JAVELINS));
 
 		if (replaceJavalinSlot.isEmpty()) return true;
 

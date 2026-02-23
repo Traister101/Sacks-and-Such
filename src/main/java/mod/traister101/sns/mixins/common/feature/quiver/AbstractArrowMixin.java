@@ -1,4 +1,4 @@
-package mod.traister101.sns.mixins.common;
+package mod.traister101.sns.mixins.common.feature.quiver;
 
 import com.llamalad7.mixinextras.expression.*;
 import com.llamalad7.mixinextras.sugar.Local;

@@ -4,13 +4,13 @@
   "package": "mod.traister101.sns.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-	"common.AbstractArrowMixin",
 	"common.AbstractHorseMixin",
-	"common.BowItemMixin",
 	"common.ByteBufUtilsMixin",
 	"common.HorseInventoryMenuMixin",
-	"common.JavelinItemMixin",
-	"common.LivingEntityMixin"
+	"common.LivingEntityMixin",
+	"common.feature.quiver.AbstractArrowMixin",
+	"common.feature.quiver.BowItemMixin",
+	"common.feature.quiver.JavelinItemMixin"
   ],
   "client": [
 	"client.HorseInventoryScreenMixin",

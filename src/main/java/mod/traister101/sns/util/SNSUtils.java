@@ -2,6 +2,7 @@ package mod.traister101.sns.util;
 
 import com.google.common.collect.Multimap;
 import mod.traister101.sns.SacksNSuch;
+import mod.traister101.sns.common.items.SNSItems;
 import mod.traister101.sns.compat.curios.CuriosUtils;
 import mod.traister101.sns.network.*;
 import mod.traister101.sns.util.items.*;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.item.ItemStack;
 
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 
@@ -133,6 +135,27 @@ public final class SNSUtils {
 						.withStyle(ChatFormatting.RED));
 			}
 		}
+	}
+
+	/**
+	 * @param livingEntity The living entity
+	 * @param supportedProjectile The predicate for the supported projectiles
+	 *
+	 * @return The extracted ItemStack
+	 */
+	public static Optional<ItemStack> extractProjectileFromQuiver(final LivingEntity livingEntity, final Predicate<ItemStack> supportedProjectile) {
+		return findFirstSlotInQuiver(livingEntity, supportedProjectile).map(slot -> slot.extractItem(1, false));
+	}
+
+	public static Optional<ItemHandlerSlot> findFirstSlotInQuiver(final LivingEntity livingEntity, final Predicate<ItemStack> supportedProjectile) {
+		return curiosAndInventoryStream(livingEntity).flatMap(ItemSlot::stream)
+				.filter(ItemSlot.contains(SNSItems.QUIVER.get()))
+				.map(ItemSlot.extractCapability(ForgeCapabilities.ITEM_HANDLER))
+				.map(LazyOptional::resolve)
+				.flatMap(Optional::stream)
+				.map(quiverHandler -> findFirstInHandler(quiverHandler, supportedProjectile))
+				.flatMap(Optional::stream)
+				.findFirst();
 	}
 
 	/**
