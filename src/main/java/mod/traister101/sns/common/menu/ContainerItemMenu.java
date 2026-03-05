@@ -142,27 +142,6 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 	}
 
 	@Override
-	public ItemStack quickMoveStack(final Player player, final int slotIndex) {
-		final Slot slot = slots.get(slotIndex);
-
-		if (slot.hasItem()) {
-			final ItemStack slotStack = slot.getItem();
-
-			if (slotIndex < containerSlots) {
-				if (!moveItemStackTo(slotStack, containerSlots, slots.size(), true)) return ItemStack.EMPTY;
-			} else if (!moveItemStackTo(slotStack, 0, containerSlots, false)) return ItemStack.EMPTY;
-
-			if (slotStack.isEmpty()) {
-				slot.setByPlayer(ItemStack.EMPTY);
-			} else slot.setChanged();
-
-			return slotStack;
-		}
-
-		return ItemStack.EMPTY;
-	}
-
-	@Override
 	public void clicked(final int slotIndex, final int mouseButton, final ClickType clickType, final Player player) {
 		// We can't move if:
 		// the slot is the item index, and it's an illegal action (like, swapping the items)
@@ -178,10 +157,6 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 	@Override
 	public boolean stillValid(final Player player) {
 		return !getContainerStack().isEmpty();
-	}
-
-	public int getContainerSlots() {
-		return containerSlots;
 	}
 
 	public final ItemStack getContainerStack() {
