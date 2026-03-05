@@ -48,6 +48,7 @@ public class BuiltInLanguage extends SmartLanguageProvider {
 
 		add(PACK_DESCRIPTION, SacksNSuch.NAME + " Resources");
 		// Keybinds
+		add(SNSKeybinds.CATEGORY_SACKS_N_SUCH, "Sacks 'N Such Keybinds");
 		add(SNSKeybinds.TOGGLE_PICKUP.getName(), "Toggle Container Item Pickup");
 		add(SNSKeybinds.OPEN_ITEM_CONTAINER.getName(), "Open Item Container");
 		// Creative Tab

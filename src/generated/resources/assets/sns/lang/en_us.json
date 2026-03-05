@@ -47,6 +47,7 @@
   "sns.disabled": "Disabled",
   "sns.enabled": "Enabled",
   "sns.extra_fall_distance": "Fall Distance",
+  "sns.key.categories.sacks_n_such": "Sacks 'N Such Keybinds",
   "sns.key.openItemContainer": "Open Item Container",
   "sns.key.pickup": "Toggle Container Item Pickup",
   "sns.stack_name.mob_net.with_mob": "%s (%s)",
