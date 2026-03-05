@@ -1,0 +1,19 @@
+{
+  "name": "午餐盒",
+  "category": "tfc:sacks_n_such",
+  "icon": "sns:lunchbox",
+  "pages": [
+	{
+	  "type": "patchouli:spotlight",
+	  "item": "sns:lunchbox",
+	  "text": "$(item)午餐盒$() 是较为特别的 $(l:sns/item_containers)物品容器$()。顾名思义，它能存放食物，甚至允许你直接从中进食。按 $(k:sneak) + $(k:use) 打开午餐盒，按 $(k:sneak) 并滚轮选择要食用的物品堆，然后按 $(k:use) 食用所选物品。"
+	},
+	{
+	  "type": "patchouli:crafting",
+	  "recipe": "sns:crafting/lunchbox",
+	  "text": "供整合包作者或希望添加更多食物的玩家参考：请查看物品标签 $(bold)sns:lunchbox_food$()，大多数附加内容应会被自动支持。"
+	}
+  ],
+  "read_by_default": true
+}
+
