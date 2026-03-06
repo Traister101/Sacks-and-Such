@@ -2,18 +2,20 @@ package mod.traister101.sns.client;
 
 import mod.traister101.sns.common.capability.FoodHolder.CycleDirection;
 import mod.traister101.sns.common.capability.SNSCapabilities;
-import mod.traister101.sns.common.items.SNSItems;
+import mod.traister101.sns.common.items.*;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.mixins.client.invoker.AddCustomNbtDataInvoker;
 import mod.traister101.sns.network.*;
 import mod.traister101.sns.util.*;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
 import mod.traister101.sns.util.handlers.PickBlockHandler;
+import top.theillusivec4.curios.api.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.*;
@@ -25,6 +27,7 @@ import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.HitResult.Type;
 
 import net.minecraftforge.client.event.InputEvent.*;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public final class ClientForgeEventHandler {
@@ -36,13 +39,50 @@ public final class ClientForgeEventHandler {
 	}
 
 	public static void onKeyPress(final Key event) {
+		// Sanity check
 		final var minecraft = Minecraft.getInstance();
 		final var player = minecraft.player;
-		// Sanity check
 		if (player == null) return;
 
 		if (SNSKeybinds.OPEN_ITEM_CONTAINER.consumeClick()) {
-			SNSPacketHandler.sendToServer(new ServerboundOpenContainerPacket());
+			ItemSlotData slotData = null;
+			if (SNSUtils.isCuriosPresent()) {
+				final var maybeSlotResult = CuriosApi.getCuriosInventory(player)
+						.resolve()
+						.flatMap(curiosItemHandler -> curiosItemHandler.findFirstCurio(itemStack -> itemStack.getItem() instanceof ContainerItem));
+				if (maybeSlotResult.isPresent()) {
+					final var slotResult = maybeSlotResult.get();
+					final ItemStack itemStack = slotResult.stack();
+
+					final var maybeItemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+
+					if (maybeItemHandler.isPresent()) {
+						final SlotContext slotContext = slotResult.slotContext();
+						slotData = new CuriosSlotData(slotContext.identifier(), slotContext.index());
+					}
+				}
+			}
+
+			final Inventory inventory = player.getInventory();
+			if (slotData == null) for (int slotIndex = inventory.items.size() - 1; slotIndex >= 0; slotIndex--) {
+				final ItemStack itemStack = inventory.items.get(slotIndex);
+
+				if (!(itemStack.getItem() instanceof ContainerItem)) continue;
+
+				if (Inventory.isHotbarSlot(slotIndex)) {
+					inventory.selected = slotIndex;
+					player.connection.send(new ServerboundSetCarriedItemPacket(slotIndex));
+					slotData = new HeldSlotData(InteractionHand.MAIN_HAND);
+					break;
+				}
+
+				slotData = new InventorySlotData(slotIndex);
+				break;
+			}
+
+			if (slotData != null) {
+				SNSPacketHandler.sendToServer(new ServerboundOpenContainerPacket(slotData));
+			}
 		}
 
 		if (SNSKeybinds.TOGGLE_PICKUP.isDown()) {
