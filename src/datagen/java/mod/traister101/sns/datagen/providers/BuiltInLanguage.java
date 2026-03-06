@@ -51,6 +51,7 @@ public class BuiltInLanguage extends SmartLanguageProvider {
 		add(SNSKeybinds.CATEGORY_SACKS_N_SUCH, "Sacks 'N Such Keybinds");
 		add(SNSKeybinds.TOGGLE_PICKUP.getName(), "Toggle Container Item Pickup");
 		add(SNSKeybinds.OPEN_ITEM_CONTAINER.getName(), "Open Item Container");
+		add(SNSKeybinds.OPEN_HOVERED_ITEM_CONTAINER.getName(), "Open Hovered Item Container");
 		// Creative Tab
 		add("sns.creative_tab.sacks", "Sacks 'N Such");
 		// Tooltips

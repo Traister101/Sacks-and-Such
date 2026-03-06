@@ -17,6 +17,8 @@ public final class SNSKeybinds {
 
 	public static final KeyMapping OPEN_ITEM_CONTAINER = create("openItemContainer", KeyConflictContext.IN_GAME, InputConstants.KEY_B);
 
+	public static final KeyMapping OPEN_HOVERED_ITEM_CONTAINER = create("open_hovered_item_container", KeyConflictContext.GUI, InputConstants.KEY_B);
+
 	private static KeyMapping create(final String keyName, final KeyConflictContext keyContext, final int keyCode) {
 		return new KeyMapping(SacksNSuch.MODID + ".key." + keyName, keyContext, Type.KEYSYM, keyCode, CATEGORY_SACKS_N_SUCH);
 	}

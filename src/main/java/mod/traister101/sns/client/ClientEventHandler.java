@@ -40,6 +40,7 @@ public final class ClientEventHandler {
 	private static void registerKeyBindings(final RegisterKeyMappingsEvent event) {
 		event.register(SNSKeybinds.TOGGLE_PICKUP);
 		event.register(SNSKeybinds.OPEN_ITEM_CONTAINER);
+		event.register(SNSKeybinds.OPEN_HOVERED_ITEM_CONTAINER);
 	}
 
 	private static void registerLayers(final RegisterLayerDefinitions event) {

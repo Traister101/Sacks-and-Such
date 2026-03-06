@@ -1,5 +1,6 @@
 package mod.traister101.sns.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import mod.traister101.sns.common.capability.FoodHolder.CycleDirection;
 import mod.traister101.sns.common.capability.SNSCapabilities;
 import mod.traister101.sns.common.items.*;
@@ -7,12 +8,14 @@ import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.mixins.client.invoker.AddCustomNbtDataInvoker;
 import mod.traister101.sns.network.*;
 import mod.traister101.sns.util.*;
+import mod.traister101.sns.util.ItemSlotData.*;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
 import mod.traister101.sns.util.handlers.PickBlockHandler;
 import top.theillusivec4.curios.api.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
@@ -27,6 +30,7 @@ import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.HitResult.Type;
 
 import net.minecraftforge.client.event.InputEvent.*;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.eventbus.api.IEventBus;
 
@@ -34,6 +38,7 @@ public final class ClientForgeEventHandler {
 
 	public static void init(final IEventBus eventBus) {
 		eventBus.addListener(ClientForgeEventHandler::onKeyPress);
+		eventBus.addListener(ClientForgeEventHandler::onScreenKeyPress);
 		eventBus.addListener(ClientForgeEventHandler::onClickInput);
 		eventBus.addListener(ClientForgeEventHandler::onMouseScroll);
 	}
@@ -90,6 +95,30 @@ public final class ClientForgeEventHandler {
 			final boolean flag = !NBTHelper.isAutoPickup(heldStack);
 			SNSUtils.sendTogglePacket(ToggleType.PICKUP, flag);
 			player.displayClientMessage(ToggleType.PICKUP.getTooltip(flag), true);
+		}
+	}
+
+	private static void onScreenKeyPress(final ScreenEvent.KeyPressed.Pre event) {
+		if (SNSKeybinds.OPEN_HOVERED_ITEM_CONTAINER.isActiveAndMatches(InputConstants.getKey(event.getKeyCode(), event.getScanCode()))) {
+			if (!(event.getScreen() instanceof final AbstractContainerScreen<?> containerScreen)) return;
+
+			final var slotUnderMouse = containerScreen.getSlotUnderMouse();
+			if (slotUnderMouse != null) {
+				final var index = slotUnderMouse.getContainerSlot();
+				final var minecraft = Minecraft.getInstance();
+				final var player = minecraft.player;
+				if (player == null) return;
+
+				final ItemSlotData slotData;
+				if (Inventory.isHotbarSlot(index)) {
+					final var inventory = player.getInventory();
+					inventory.selected = index;
+					player.connection.send(new ServerboundSetCarriedItemPacket(index));
+					slotData = new HeldSlotData(InteractionHand.MAIN_HAND);
+				} else slotData = new InventorySlotData(index);
+
+				SNSPacketHandler.sendToServer(new ServerboundOpenContainerPacket(slotData));
+			}
 		}
 	}
 
