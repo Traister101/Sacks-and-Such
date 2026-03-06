@@ -3,11 +3,8 @@ package mod.traister101.sns.common.menu;
 import com.google.common.base.Supplier;
 import mod.traister101.esc.common.menu.ExtendedSlotCapacityMenu;
 import mod.traister101.esc.common.slot.ExtendedSlotItemHandler;
-import mod.traister101.sns.common.items.ContainerItem;
-import top.theillusivec4.curios.api.*;
+import mod.traister101.sns.util.ItemSlotData.*;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +13,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 
@@ -35,110 +31,51 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 	 */
 	protected int containerItemIndex;
 
-	private ContainerItemMenu(final int windowId, final Inventory inventory, final IItemHandler handler, final InteractionHand hand) {
-		super(SNSMenus.CONTAINER_ITEM_MENU.get(), windowId, handler.getSlots());
+	private ContainerItemMenu(final int windowId, final int containerSlots, final int containerItemIndex, final int hotbarIndex,
+			final Supplier<ItemStack> containerStackSupplier) {
+		super(SNSMenus.CONTAINER_ITEM_MENU.get(), windowId, containerSlots);
+		this.containerItemIndex = containerItemIndex;
+		this.hotbarIndex = hotbarIndex;
+		this.containerStackSupplier = containerStackSupplier;
+	}
 
-		if (hand == InteractionHand.MAIN_HAND) {
-			this.hotbarIndex = inventory.selected;
-			this.containerItemIndex = containerSlots + inventory.selected + 27;
+	public static ContainerItemMenu forHeld(final int windowId, final Inventory inventory, final HeldSlotData heldSlotData) {
+		final var handler = heldSlotData.stack(inventory.player).getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+		final int hotbarIndex, containerItemIndex;
+		if (heldSlotData.mainHand()) {
+			hotbarIndex = inventory.selected;
+			containerItemIndex = handler.getSlots() + inventory.selected + 27;
 		} else {
-			this.hotbarIndex = OFFHAND_MAGIC_INDEX;
-			this.containerItemIndex = Integer.MIN_VALUE;
+			hotbarIndex = OFFHAND_MAGIC_INDEX;
+			containerItemIndex = Integer.MIN_VALUE;
 		}
 
-		this.containerStackSupplier = () -> inventory.player.getItemInHand(hand);
-
-		this.addContainerSlots(handler);
-		this.addPlayerInventorySlots(inventory);
+		final var containerItemMenu = new ContainerItemMenu(windowId, handler.getSlots(), containerItemIndex, hotbarIndex,
+				() -> heldSlotData.stack(inventory.player));
+		containerItemMenu.addContainerSlots(handler);
+		containerItemMenu.addPlayerInventorySlots(inventory);
+		return containerItemMenu;
 	}
 
-	private ContainerItemMenu(final int windowId, final Inventory inventory, final IItemHandler handler, final int inventorySlotIndex) {
-		super(SNSMenus.CONTAINER_ITEM_MENU.get(), windowId, handler.getSlots());
-		this.hotbarIndex = Integer.MIN_VALUE;
-		this.containerItemIndex = containerSlots + inventorySlotIndex - 9;
-		this.containerStackSupplier = () -> inventory.getItem(inventorySlotIndex);
-
-		this.addContainerSlots(handler);
-		this.addPlayerInventorySlots(inventory);
+	public static ContainerItemMenu forInventory(final int windowId, final Inventory inventory, final InventorySlotData inventorySlotData) {
+		final var handler = inventorySlotData.stack(inventory.player).getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+		final var slotCount = handler.getSlots();
+		final var containerItemMenu = new ContainerItemMenu(windowId, slotCount,
+				slotCount + inventorySlotData.slotIndex() - Inventory.getSelectionSize(), Integer.MIN_VALUE,
+				() -> inventorySlotData.stack(inventory.player));
+		containerItemMenu.addContainerSlots(handler);
+		containerItemMenu.addPlayerInventorySlots(inventory);
+		return containerItemMenu;
 	}
 
-	private ContainerItemMenu(final int windowId, final Inventory inventory, final IItemHandler handler,
-			final Supplier<ItemStack> containerStackSupplier) {
-		super(SNSMenus.CONTAINER_ITEM_MENU.get(), windowId, handler.getSlots());
-		this.hotbarIndex = Integer.MIN_VALUE;
-		this.containerItemIndex = Integer.MIN_VALUE;
-		this.containerStackSupplier = containerStackSupplier;
-
-		this.addContainerSlots(handler);
-		this.addPlayerInventorySlots(inventory);
-	}
-
-	public static Consumer<FriendlyByteBuf> writeCurios(final String identifier, final int index) {
-		return friendlyByteBuf -> {
-			friendlyByteBuf.writeEnum(Type.WORN);
-			friendlyByteBuf.writeUtf(identifier);
-			friendlyByteBuf.writeVarInt(index);
-		};
-	}
-
-	public static Consumer<FriendlyByteBuf> writeInventory(final int slotIndex) {
-		return friendlyByteBuf -> {
-			friendlyByteBuf.writeEnum(Type.INVENTORY);
-			friendlyByteBuf.writeVarInt(slotIndex);
-		};
-	}
-
-	public static Consumer<FriendlyByteBuf> writeHeld(final InteractionHand hand) {
-		return friendlyByteBuf -> {
-			friendlyByteBuf.writeEnum(Type.HELD);
-			friendlyByteBuf.writeBoolean(hand == InteractionHand.MAIN_HAND);
-		};
-	}
-
-	static ContainerItemMenu fromNetwork(final int windowId, final Inventory inventory, final FriendlyByteBuf byteBuf) {
-		return switch (byteBuf.readEnum(Type.class)) {
-			case HELD -> {
-				final InteractionHand hand = byteBuf.readBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
-
-				final ItemStack heldStack = inventory.player.getItemInHand(hand);
-				final IItemHandler itemHandler = heldStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
-
-				yield forHeld(windowId, inventory, itemHandler, hand);
-			}
-
-			case INVENTORY -> {
-				final int slotIndex = byteBuf.readVarInt();
-				final IItemHandler itemHandler = inventory.getItem(slotIndex).getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
-
-				yield forInventory(windowId, inventory, itemHandler, slotIndex);
-			}
-
-			case WORN -> {
-				final var curiosItemHandler = CuriosApi.getCuriosInventory(inventory.player).resolve().orElseThrow();
-
-				final SlotResult slotResult = curiosItemHandler.findFirstCurio(itemStack -> itemStack.getItem() instanceof ContainerItem)
-						.orElseThrow();
-				final ItemStack stack = slotResult.stack();
-
-				final var itemHandler = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
-
-				yield forUnIndexableStack(windowId, inventory, itemHandler, slotResult::stack);
-			}
-		};
-	}
-
-	public static ContainerItemMenu forHeld(final int windowId, final Inventory inventory, final IItemHandler handler, final InteractionHand hand) {
-		return new ContainerItemMenu(windowId, inventory, handler, hand);
-	}
-
-	public static ContainerItemMenu forInventory(final int windowId, final Inventory inventory, final IItemHandler handler,
-			final int inventorySlotIndex) {
-		return new ContainerItemMenu(windowId, inventory, handler, inventorySlotIndex);
-	}
-
-	public static ContainerItemMenu forUnIndexableStack(final int windowId, final Inventory inventory, final IItemHandler handler,
-			final Supplier<ItemStack> containerStackSupplier) {
-		return new ContainerItemMenu(windowId, inventory, handler, containerStackSupplier);
+	public static ContainerItemMenu forCurios(final int windowId, final Inventory inventory, final CuriosSlotData curiosSlotData) {
+		final var handler = curiosSlotData.stack(inventory.player).getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+		final var slotCount = handler.getSlots();
+		final var containerItemMenu = new ContainerItemMenu(windowId, slotCount, Integer.MIN_VALUE, Integer.MIN_VALUE,
+				() -> curiosSlotData.stack(inventory.player));
+		containerItemMenu.addContainerSlots(handler);
+		containerItemMenu.addPlayerInventorySlots(inventory);
+		return containerItemMenu;
 	}
 
 	@Override
@@ -237,11 +174,5 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 		for (int k = 0; k < 9; k++) {
 			addSlot(new Slot(inventory, k, 8 + k * 18, 142));
 		}
-	}
-
-	enum Type {
-		HELD,
-		INVENTORY,
-		WORN
 	}
 }

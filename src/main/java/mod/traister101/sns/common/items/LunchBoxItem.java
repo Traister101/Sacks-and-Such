@@ -2,14 +2,15 @@ package mod.traister101.sns.common.items;
 
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.capability.*;
+import mod.traister101.sns.common.menu.SNSMenus;
 import mod.traister101.sns.util.*;
+import mod.traister101.sns.util.ItemSlotData.HeldSlotData;
 import net.dries007.tfc.common.capabilities.food.FoodCapability;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -55,7 +56,7 @@ public class LunchBoxItem extends ContainerItem {
 
 		if (!level.isClientSide) {
 			if (player.isShiftKeyDown()) {
-				openMenu(((ServerPlayer) player), hand, heldStack);
+				SNSMenus.CONTAINER_ITEM_MENU_PROVIDER.openMenu(player, new HeldSlotData(hand));
 				return InteractionResultHolder.consume(heldStack);
 			}
 		}

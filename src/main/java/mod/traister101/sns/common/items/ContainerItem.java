@@ -2,9 +2,10 @@ package mod.traister101.sns.common.items;
 
 import mod.traister101.sns.SacksNSuch;
 import mod.traister101.sns.common.capability.*;
-import mod.traister101.sns.common.menu.ContainerItemMenu;
+import mod.traister101.sns.common.menu.*;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.util.*;
+import mod.traister101.sns.util.ItemSlotData.HeldSlotData;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
 import mod.traister101.sns.util.items.ItemSlot;
 import net.dries007.tfc.common.capabilities.size.*;
@@ -14,7 +15,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
@@ -26,8 +26,7 @@ import net.minecraft.world.level.Level;
 
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.items.*;
-import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -50,17 +49,6 @@ public class ContainerItem extends Item implements IItemSize {
 	public ContainerItem(final Properties properties, final ContainerType type) {
 		super(properties);
 		this.type = type;
-	}
-
-	private static SimpleMenuProvider createMenuProvider(final InteractionHand hand, final ItemStack heldStack) {
-		final IItemHandler itemHandler = heldStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
-
-		return new SimpleMenuProvider((windowId, inventory, unused) -> ContainerItemMenu.forHeld(windowId, inventory, itemHandler, hand),
-				heldStack.getHoverName());
-	}
-
-	protected static void openMenu(final ServerPlayer player, final InteractionHand hand, final ItemStack heldStack) {
-		NetworkHooks.openScreen(player, createMenuProvider(hand, heldStack), ContainerItemMenu.writeHeld(hand));
 	}
 
 	private static void serializeToTag(final ItemStack itemStack, final CompoundTag compoundTag, final Capability<?> capability,
@@ -104,7 +92,7 @@ public class ContainerItem extends Item implements IItemSize {
 		}
 
 		if (!player.isShiftKeyDown()) {
-			openMenu((ServerPlayer) player, hand, heldStack);
+			SNSMenus.CONTAINER_ITEM_MENU_PROVIDER.openMenu(player, new HeldSlotData(hand));
 			return InteractionResultHolder.consume(heldStack);
 		}
 
