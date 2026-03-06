@@ -29,8 +29,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 
 public final class ClientForgeEventHandler {
 
-	public static final Minecraft MC = Minecraft.getInstance();
-
 	public static void init(final IEventBus eventBus) {
 		eventBus.addListener(ClientForgeEventHandler::onKeyPress);
 		eventBus.addListener(ClientForgeEventHandler::onClickInput);
@@ -38,18 +36,20 @@ public final class ClientForgeEventHandler {
 	}
 
 	public static void onKeyPress(final Key event) {
+		final var minecraft = Minecraft.getInstance();
+		final var player = minecraft.player;
 		// Sanity check
-		if (MC.player == null) return;
+		if (player == null) return;
 
 		if (SNSKeybinds.OPEN_ITEM_CONTAINER.consumeClick()) {
 			SNSPacketHandler.sendToServer(new ServerboundOpenContainerPacket());
 		}
 
 		if (SNSKeybinds.TOGGLE_PICKUP.isDown()) {
-			final ItemStack heldStack = MC.player.getMainHandItem();
+			final ItemStack heldStack = player.getMainHandItem();
 			final boolean flag = !NBTHelper.isAutoPickup(heldStack);
 			SNSUtils.sendTogglePacket(ToggleType.PICKUP, flag);
-			MC.player.displayClientMessage(ToggleType.PICKUP.getTooltip(flag), true);
+			player.displayClientMessage(ToggleType.PICKUP.getTooltip(flag), true);
 		}
 	}
 
@@ -58,26 +58,29 @@ public final class ClientForgeEventHandler {
 
 		// If we should handle pick block (Client)
 		if (SNSConfig.COMMON.doPickBlock.get()) {
+			final var minecraft = Minecraft.getInstance();
 			// Sanity checks
-			if (MC.player == null) return;
-			if (MC.hitResult == null) return;
+			if (minecraft.player == null) return;
+			if (minecraft.hitResult == null) return;
 			// In creative so don't handle
-			if (MC.player.isCreative()) return;
+			if (minecraft.player.isCreative()) return;
 
 			event.setCanceled(
-					vanillaPickBlock(MC.hitResult, MC.player, MC.level, MC.gameMode) || PickBlockHandler.onPickBlock(MC.player, MC.hitResult));
+					vanillaPickBlock(minecraft.hitResult, minecraft.player, minecraft.level, minecraft.gameMode) || PickBlockHandler.onPickBlock(
+							minecraft.player, minecraft.hitResult));
 		}
 	}
 
 	private static void onMouseScroll(final MouseScrollingEvent event) {
 		// Sanity checks
-		if (MC.player == null) return;
+		final var player = Minecraft.getInstance().player;
+		if (player == null) return;
 
-		final ItemStack mainHandStack = MC.player.getMainHandItem();
+		final ItemStack mainHandStack = player.getMainHandItem();
 
 		if (!mainHandStack.is(SNSItems.LUNCHBOX.get())) return;
 
-		if (!MC.player.isShiftKeyDown()) return;
+		if (!player.isShiftKeyDown()) return;
 
 		final double scrollDelta = event.getScrollDelta();
 
@@ -145,7 +148,7 @@ public final class ClientForgeEventHandler {
 			if (creative && Screen.hasControlDown() && blockState.hasBlockEntity()) {
 				final BlockEntity blockEntity = level.getBlockEntity(blockpos);
 				if (blockEntity != null) {
-					((AddCustomNbtDataInvoker) MC).invokeAddCustomNbtData(itemStack, blockEntity);
+					((AddCustomNbtDataInvoker) Minecraft.getInstance()).invokeAddCustomNbtData(itemStack, blockEntity);
 				}
 			}
 
