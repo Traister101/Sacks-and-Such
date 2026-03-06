@@ -25,16 +25,13 @@ import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.HitResult.Type;
 
 import net.minecraftforge.client.event.InputEvent.*;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public final class ClientForgeEventHandler {
 
 	public static final Minecraft MC = Minecraft.getInstance();
 
-	public static void init() {
-		final IEventBus eventBus = MinecraftForge.EVENT_BUS;
-
+	public static void init(final IEventBus eventBus) {
 		eventBus.addListener(ClientForgeEventHandler::onKeyPress);
 		eventBus.addListener(ClientForgeEventHandler::onClickInput);
 		eventBus.addListener(ClientForgeEventHandler::onMouseScroll);

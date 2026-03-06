@@ -12,16 +12,13 @@ import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinit
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class ClientEventHandler {
 
-	public static void init() {
-		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+	public static void init(final IEventBus modEventBus) {
 		modEventBus.addListener(ClientEventHandler::onClientSetup);
 		modEventBus.addListener(ClientEventHandler::onRegisterClientTooltip);
 		modEventBus.addListener(ClientEventHandler::registerKeyBindings);

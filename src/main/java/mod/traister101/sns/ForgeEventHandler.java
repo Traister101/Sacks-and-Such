@@ -9,7 +9,6 @@ import mod.traister101.sns.util.items.ItemSlot;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.ProjectileWeaponItem;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -20,8 +19,7 @@ import java.util.Optional;
 
 public final class ForgeEventHandler {
 
-	public static void init() {
-		final var eventBus = MinecraftForge.EVENT_BUS;
+	public static void init(final IEventBus eventBus) {
 		eventBus.register(ForgeEventHandler.class);
 
 		eventBus.addListener(PickupHandler::onPickupItem);

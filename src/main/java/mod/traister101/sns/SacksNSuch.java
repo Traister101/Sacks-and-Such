@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import net.minecraft.resources.ResourceLocation;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -30,22 +31,22 @@ public final class SacksNSuch {
 	public static final Logger LOGGER = LogUtils.getLogger();
 
 	public SacksNSuch() {
-		final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		eventBus.addListener(SacksNSuch::commonSetup);
-		eventBus.addListener(SacksNSuch::addEntityAttributes);
+		final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+		modBus.addListener(SacksNSuch::commonSetup);
+		modBus.addListener(SacksNSuch::addEntityAttributes);
 
-		SNSItems.ITEMS.register(eventBus);
-		SNSMenus.MENUS.register(eventBus);
-		SNSCreativeTab.CREATIVE_TABS.register(eventBus);
-		SNSAttributes.ATTRIBUTES.register(eventBus);
+		SNSItems.ITEMS.register(modBus);
+		SNSMenus.MENUS.register(modBus);
+		SNSCreativeTab.CREATIVE_TABS.register(modBus);
+		SNSAttributes.ATTRIBUTES.register(modBus);
 
 		SNSConfig.init();
 		SNSPacketHandler.init();
-		ForgeEventHandler.init();
+		ForgeEventHandler.init(MinecraftForge.EVENT_BUS);
 
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			ClientEventHandler.init();
-			ClientForgeEventHandler.init();
+			ClientEventHandler.init(modBus);
+			ClientForgeEventHandler.init(MinecraftForge.EVENT_BUS);
 		}
 	}
 
