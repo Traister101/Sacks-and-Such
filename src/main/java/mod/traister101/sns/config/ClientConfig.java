@@ -26,7 +26,7 @@ public final class ClientConfig {
 				.defineEnum("bootModelType", BootModelType.FANCY);
 		lunchboxSelectedSlotHighlightColor = builder.comment(
 						"The slot highlight color for the lunchbox item contents tooltip in hexadecimal in RGB format (technically ARGB but the alpha value will be ignored)")
-				.define("lunchboxSelectedSlotHighlightColor", Integer.toHexString(ClientLunchboxTooltip.COLOR));
+				.define("lunchboxSelectedSlotHighlightColor", Integer.toHexString(ClientLunchboxTooltip.DEFAULT_COLOR));
 		lunchboxSelectedSlotHighlightThickness = builder.comment(
 						"The line thickness in pixels, 0 will effectively disable the highlight 7 will make it fill the whole slot")
 				.defineInRange("lunchboxSelectedSlotHighlightThickness", 1, 0, 7);

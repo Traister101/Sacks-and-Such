@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ClientLunchboxTooltip implements ClientTooltipComponent {
 
-	public static final int COLOR = ARGB32.color(0, 27, 171, 68);
+	public static final int DEFAULT_COLOR = 0x1bab44;
 	private final LunchboxTooltip tooltip;
 
 	private static void blit(final GuiGraphics graphics, final int x, final int y, final Texture texture) {
@@ -56,9 +56,9 @@ public class ClientLunchboxTooltip implements ClientTooltipComponent {
 		try {
 			color = Integer.parseInt(SNSConfig.CLIENT.lunchboxSelectedSlotHighlightColor.get(), 16);
 		} catch (final NumberFormatException e) {
-			final var red = ARGB32.red(COLOR);
-			final var green = ARGB32.green(COLOR);
-			final var blue = ARGB32.blue(COLOR);
+			final var red = ARGB32.red(DEFAULT_COLOR);
+			final var green = ARGB32.green(DEFAULT_COLOR);
+			final var blue = ARGB32.blue(DEFAULT_COLOR);
 			return ARGB32.color(128, red, green, blue);
 		}
 		final var red = ARGB32.red(color);
