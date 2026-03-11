@@ -53,24 +53,24 @@ public class ItemContainerMenuProvider {
 			};
 		}
 
-		M create(int windowId, Inventory inventory, ItemSlotData slotData);
+		@Nullable M create(int windowId, Inventory inventory, ItemSlotData slotData);
 
 		@FunctionalInterface
 		interface HeldContainerFactory<M extends AbstractContainerMenu> {
 
-			M create(int windowId, Inventory inventory, HeldSlotData heldSlotData);
+			@Nullable M create(int windowId, Inventory inventory, HeldSlotData heldSlotData);
 		}
 
 		@FunctionalInterface
 		interface InventoryContainerFactory<M extends AbstractContainerMenu> {
 
-			M create(int windowId, Inventory inventory, InventorySlotData inventorySlotData);
+			@Nullable M create(int windowId, Inventory inventory, InventorySlotData inventorySlotData);
 		}
 
 		@FunctionalInterface
 		interface CuriosContainerFactory<M extends AbstractContainerMenu> {
 
-			M create(int windowId, Inventory inventory, CuriosSlotData curiosSlotData);
+			@Nullable M create(int windowId, Inventory inventory, CuriosSlotData curiosSlotData);
 		}
 	}
 }

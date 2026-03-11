@@ -3,6 +3,7 @@ package mod.traister101.sns.common.menu;
 import com.google.common.base.Supplier;
 import mod.traister101.esc.common.menu.ExtendedSlotCapacityMenu;
 import mod.traister101.esc.common.slot.ExtendedSlotItemHandler;
+import mod.traister101.sns.common.items.ContainerItem;
 import mod.traister101.sns.util.ItemSlotData.*;
 
 import net.minecraft.world.entity.player.*;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
@@ -39,8 +41,11 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 		this.containerStackSupplier = containerStackSupplier;
 	}
 
+	@Nullable
 	public static ContainerItemMenu forHeld(final int windowId, final Inventory inventory, final HeldSlotData heldSlotData) {
-		final var handler = heldSlotData.stack(inventory.player).getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+		final var stack = heldSlotData.stack(inventory.player);
+		if (!(stack.getItem() instanceof ContainerItem)) return null;
+		final var handler = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
 		final int hotbarIndex, containerItemIndex;
 		if (heldSlotData.mainHand()) {
 			hotbarIndex = inventory.selected;
@@ -57,8 +62,11 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 		return containerItemMenu;
 	}
 
+	@Nullable
 	public static ContainerItemMenu forInventory(final int windowId, final Inventory inventory, final InventorySlotData inventorySlotData) {
-		final var handler = inventorySlotData.stack(inventory.player).getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+		final var stack = inventorySlotData.stack(inventory.player);
+		if (!(stack.getItem() instanceof ContainerItem)) return null;
+		final var handler = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
 		final var slotCount = handler.getSlots();
 		final var containerItemMenu = new ContainerItemMenu(windowId, slotCount,
 				slotCount + inventorySlotData.slotIndex() - Inventory.getSelectionSize(), Integer.MIN_VALUE,
@@ -68,8 +76,11 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 		return containerItemMenu;
 	}
 
+	@Nullable
 	public static ContainerItemMenu forCurios(final int windowId, final Inventory inventory, final CuriosSlotData curiosSlotData) {
-		final var handler = curiosSlotData.stack(inventory.player).getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
+		final var stack = curiosSlotData.stack(inventory.player);
+		if (!(stack.getItem() instanceof ContainerItem)) return null;
+		final var handler = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().orElseThrow();
 		final var slotCount = handler.getSlots();
 		final var containerItemMenu = new ContainerItemMenu(windowId, slotCount, Integer.MIN_VALUE, Integer.MIN_VALUE,
 				() -> curiosSlotData.stack(inventory.player));
