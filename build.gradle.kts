@@ -245,11 +245,7 @@ dependencies {
     modRuntimeOnly(libs.jei)
 
     // Curios
-    compileOnly(libs.curios) {
-        artifact {
-            classifier = "api"
-        }
-    }
+    modCompileOnly(libs.curios)
     modRuntimeOnly(libs.curios)
 }
 

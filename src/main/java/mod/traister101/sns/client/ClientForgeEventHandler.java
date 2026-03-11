@@ -12,6 +12,7 @@ import mod.traister101.sns.util.ItemSlotData.*;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
 import mod.traister101.sns.util.handlers.PickBlockHandler;
 import top.theillusivec4.curios.api.*;
+import top.theillusivec4.curios.common.inventory.CurioSlot;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -109,15 +110,24 @@ public final class ClientForgeEventHandler {
 				final var player = minecraft.player;
 				if (player == null) return;
 
-				final ItemSlotData slotData;
-				if (Inventory.isHotbarSlot(index)) {
-					final var inventory = player.getInventory();
-					inventory.selected = index;
-					player.connection.send(new ServerboundSetCarriedItemPacket(index));
-					slotData = new HeldSlotData(InteractionHand.MAIN_HAND);
-				} else slotData = new InventorySlotData(index);
+				ItemSlotData slotData = null;
+				if (SNSUtils.isCuriosPresent() && slotUnderMouse instanceof final CurioSlot curioSlot) {
+					final var identifier = curioSlot.getIdentifier();
+					slotData = new CuriosSlotData(identifier, index);
+				}
 
-				SNSPacketHandler.sendToServer(new ServerboundOpenContainerPacket(slotData));
+				final var inventory = player.getInventory();
+				if (slotData == null && slotUnderMouse.container == inventory) {
+					if (Inventory.isHotbarSlot(index)) {
+						inventory.selected = index;
+						player.connection.send(new ServerboundSetCarriedItemPacket(index));
+						slotData = new HeldSlotData(InteractionHand.MAIN_HAND);
+					} else slotData = new InventorySlotData(index);
+				}
+
+				if (slotData != null) {
+					SNSPacketHandler.sendToServer(new ServerboundOpenContainerPacket(slotData));
+				}
 			}
 		}
 	}
