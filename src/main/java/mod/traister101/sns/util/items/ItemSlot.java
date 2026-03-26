@@ -11,7 +11,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import java.util.function.*;
 import java.util.stream.Stream;
 
@@ -178,6 +178,12 @@ public sealed interface ItemSlot permits ItemContainerSlot, ItemHandlerSlot {
 	 */
 	@SuppressWarnings("unused")
 	boolean isItemValid(ItemStack stack);
+
+	/**
+	 * {@return The index this slot is for}
+	 */
+	@Range(from = 0, to = Integer.MAX_VALUE)
+	int slotIndex();
 
 	interface Factory<C, I extends ItemSlot> {
 

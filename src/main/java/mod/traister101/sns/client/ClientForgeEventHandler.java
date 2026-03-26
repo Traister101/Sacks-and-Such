@@ -12,6 +12,7 @@ import mod.traister101.sns.util.ItemSlotData.*;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
 import mod.traister101.sns.util.handlers.PickBlockHandler;
 import top.theillusivec4.curios.api.*;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.common.inventory.CurioSlot;
 
 import net.minecraft.client.Minecraft;
@@ -35,6 +36,8 @@ import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.eventbus.api.IEventBus;
 
+import java.util.Optional;
+
 public final class ClientForgeEventHandler {
 
 	public static void init(final IEventBus eventBus) {
@@ -53,18 +56,31 @@ public final class ClientForgeEventHandler {
 		if (SNSKeybinds.OPEN_ITEM_CONTAINER.consumeClick()) {
 			ItemSlotData slotData = null;
 			if (SNSUtils.isCuriosPresent()) {
-				final var maybeSlotResult = CuriosApi.getCuriosInventory(player)
-						.resolve()
-						.flatMap(curiosItemHandler -> curiosItemHandler.findFirstCurio(itemStack -> itemStack.getItem() instanceof ContainerItem));
-				if (maybeSlotResult.isPresent()) {
-					final var slotResult = maybeSlotResult.get();
-					final ItemStack itemStack = slotResult.stack();
+				slotData = CuriosApi.getCuriosInventory(player).map(ICuriosItemHandler::getCurios).flatMap(curios -> {
+					for (final var identifier : SNSConfig.CLIENT.openItemContainerCuriosPriorities.get()) {
+						final var handler = curios.get(identifier);
+						if (handler == null) continue;
+						final var itemHandler = handler.getStacks();
+						return SNSUtils.findFirstInHandler(itemHandler, itemStack -> itemStack.getItem() instanceof ContainerItem)
+								.map(itemHandlerSlot -> new CuriosSlotData(identifier, itemHandlerSlot.slotIndex()));
+					}
+					return Optional.empty();
+				}).orElse(null);
+				if (slotData == null) {
+					final var maybeSlotResult = CuriosApi.getCuriosInventory(player)
+							.resolve()
+							.flatMap(
+									curiosItemHandler -> curiosItemHandler.findFirstCurio(itemStack -> itemStack.getItem() instanceof ContainerItem));
+					if (maybeSlotResult.isPresent()) {
+						final var slotResult = maybeSlotResult.get();
+						final ItemStack itemStack = slotResult.stack();
 
-					final var maybeItemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+						final var maybeItemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
 
-					if (maybeItemHandler.isPresent()) {
-						final SlotContext slotContext = slotResult.slotContext();
-						slotData = new CuriosSlotData(slotContext.identifier(), slotContext.index());
+						if (maybeItemHandler.isPresent()) {
+							final SlotContext slotContext = slotResult.slotContext();
+							slotData = new CuriosSlotData(slotContext.identifier(), slotContext.index());
+						}
 					}
 				}
 			}
@@ -109,6 +125,7 @@ public final class ClientForgeEventHandler {
 				final var minecraft = Minecraft.getInstance();
 				final var player = minecraft.player;
 				if (player == null) return;
+				if (!(slotUnderMouse.getItem().getItem() instanceof ContainerItem)) return;
 
 				ItemSlotData slotData = null;
 				if (SNSUtils.isCuriosPresent() && slotUnderMouse instanceof final CurioSlot curioSlot) {

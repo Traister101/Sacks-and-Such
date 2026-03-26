@@ -5,12 +5,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.*;
 
 @ToString
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class ItemHandlerSlot implements ItemSlot {
 
+	@Getter
+	@Accessors(fluent = true)
 	@Range(from = 0, to = Integer.MAX_VALUE)
 	final int slotIndex;
 	final IItemHandler itemHandler;
