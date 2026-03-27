@@ -14,7 +14,7 @@
   ],
   "client": [
 	"client.HorseInventoryScreenMixin",
-	"client.invoker.AddCustomNbtDataInvoker"
+	"common.feature.pickblock.MinecraftMixin"
   ],
   "injectors": {
 	"defaultRequire": 1
