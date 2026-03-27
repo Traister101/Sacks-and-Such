@@ -122,7 +122,8 @@ public class ContainerItemMenu extends ExtendedSlotCapacityMenu {
 			case 18 -> addSlots(handler, 2, 9, 8, 23);
 			default -> {
 				// We want to round up, integer math rounds down
-				final int rows = Math.round((float) containerSlots / 9);
+				final int rows = (int) Math.ceil((double) containerSlots / 9);
+				assert rows > 0 : "Rows must be at least 1";
 				final int columns = containerSlots / rows;
 				addSlots(handler, rows, columns);
 			}
