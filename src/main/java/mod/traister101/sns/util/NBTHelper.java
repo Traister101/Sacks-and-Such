@@ -1,6 +1,7 @@
 package mod.traister101.sns.util;
 
 import mod.traister101.sns.common.items.ContainerItem;
+import mod.traister101.sns.common.items.HikingBootsItem;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
 
 import net.minecraft.nbt.*;
@@ -24,6 +25,19 @@ public final class NBTHelper {
 		if (compoundTag == null) return false;
 
 		if (compoundTag.contains(ToggleType.PICKUP.tag, Tag.TAG_BYTE)) return compoundTag.getBoolean(ToggleType.PICKUP.tag);
+
+		return true;
+	}
+
+	public static boolean isStepUp(final ItemStack itemStack) {
+		if (!(itemStack.getItem() instanceof HikingBootsItem)) {
+			return false;
+		}
+
+		final CompoundTag compoundTag = itemStack.getTag();
+		if (compoundTag == null) return false;
+
+		if (compoundTag.contains(ToggleType.STEPUP.tag, Tag.TAG_BYTE)) return compoundTag.getBoolean(ToggleType.STEPUP.tag);
 
 		return true;
 	}

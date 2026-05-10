@@ -41,6 +41,7 @@ public final class ClientEventHandler {
 		event.register(SNSKeybinds.TOGGLE_PICKUP);
 		event.register(SNSKeybinds.OPEN_ITEM_CONTAINER);
 		event.register(SNSKeybinds.OPEN_HOVERED_ITEM_CONTAINER);
+		event.register(SNSKeybinds.TOGGLE_STEP_UP);
 	}
 
 	private static void registerLayers(final RegisterLayerDefinitions event) {

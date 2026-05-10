@@ -9,6 +9,7 @@ import mod.traister101.sns.network.*;
 import mod.traister101.sns.util.*;
 import mod.traister101.sns.util.ItemSlotData.*;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
+import net.minecraft.world.entity.EquipmentSlot;
 import top.theillusivec4.curios.api.*;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.common.inventory.CurioSlot;
@@ -100,6 +101,13 @@ public final class ClientForgeEventHandler {
 			final boolean flag = !NBTHelper.isAutoPickup(heldStack);
 			SNSUtils.sendTogglePacket(ToggleType.PICKUP, flag);
 			player.displayClientMessage(ToggleType.PICKUP.getTooltip(flag), true);
+		}
+
+		if (SNSKeybinds.TOGGLE_STEP_UP.isDown()) {
+			final ItemStack wornBoots = player.getItemBySlot(EquipmentSlot.FEET);
+			final boolean flag = !NBTHelper.isStepUp(wornBoots);
+			SNSUtils.sendTogglePacket(ToggleType.STEPUP, flag);
+			player.displayClientMessage(ToggleType.STEPUP.getTooltip(flag), true);
 		}
 	}
 

@@ -7,6 +7,9 @@ import mod.traister101.sns.common.attribute.SNSAttributes;
 import mod.traister101.sns.config.SNSConfig;
 import mod.traister101.sns.config.entries.BootsConfig;
 
+import mod.traister101.sns.util.NBTHelper;
+import mod.traister101.sns.util.SNSUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -34,6 +37,7 @@ public class HikingBootsItem extends ArmorItem {
 	public static final String STEPS_NBT_KEY = "steps";
 
 	public static final String PREVENT_SLOW_TOOLTIP = SacksNSuch.MODID + ".tooltip.hiking_boots.prevents_slow";
+	public static final String STEP_UP_TOOLTIP = SacksNSuch.MODID + ".tooltip.hiking_boots.step_up";
 
 	private static final UUID HIKING_BOOTS_UUID = UUID.fromString("1498ff98-5730-4216-a827-857c81e2e12c");
 
@@ -99,6 +103,16 @@ public class HikingBootsItem extends ArmorItem {
 				lastStep.putDouble("z", player.zOld);
 			}
 		}
+
+		if (player.tickCount % 5 == 0) {
+			CompoundTag tag = itemStack.getOrCreateTag();
+			boolean stepUpTag = tag.getBoolean("stepUp");
+			AttributeInstance attribute = player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get());
+			AttributeModifier mod = attribute.getModifier(HIKING_BOOTS_UUID);
+			if (!stepUpTag && mod != null) {
+				attribute.removeModifier(mod);
+			}
+		}
 	}
 
 	@Nullable
@@ -111,6 +125,7 @@ public class HikingBootsItem extends ArmorItem {
 	public void appendHoverText(final ItemStack itemStack, @Nullable final Level level, final List<Component> components,
 			final TooltipFlag tooltipFlag) {
 		components.add(Component.translatable(PREVENT_SLOW_TOOLTIP));
+		components.add(Component.translatable(STEP_UP_TOOLTIP, SNSUtils.toggleTooltip(NBTHelper.isStepUp(itemStack))).withStyle(ChatFormatting.GRAY));
 		super.appendHoverText(itemStack, level, components, tooltipFlag);
 	}
 
