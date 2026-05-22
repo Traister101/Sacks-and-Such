@@ -71,6 +71,7 @@ public class BuiltInLanguage extends SmartLanguageProvider {
 		add(MobNetItem.STACK_NAME, "%s (%s)");
 		add(HorseshoesItem.HORSESHOE_MODIFIER_TOOLTIP, "When on Horse:");
 		add(HikingBootsItem.PREVENT_SLOW_TOOLTIP, "Prevents tall grass slowdown");
+		add(HikingBootsItem.STEP_UP_TOOLTIP, "Step Up %s");
 		add(ToggleType.PICKUP.langKey, "Item Pickup %s");
 		add(SNSUtils.ENABLED, "Enabled");
 		add(SNSUtils.DISABLED, "Disabled");
