@@ -1,3 +1,7 @@
+### New
+
+Added a step-up toggle for hiking boots - Sakura
+
 ### Fixed
 
-* Incorrect math when calculating the amount of rows for dynamically laid out slot counts
+Fixed a minor issue with certain container slot configurations
