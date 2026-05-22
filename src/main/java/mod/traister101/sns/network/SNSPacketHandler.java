@@ -42,6 +42,8 @@ public final class SNSPacketHandler {
 				ServerboundToggleSlotVoidingPacket::handle);
 		register(ServerboundOpenContainerPacket.class, ServerboundOpenContainerPacket::encode, ServerboundOpenContainerPacket::new,
 				ServerboundOpenContainerPacket::handle);
+		register(ServerboundToggleBootsStepUp.class, ServerboundToggleBootsStepUp::encode, ServerboundToggleBootsStepUp::new,
+				ServerboundToggleBootsStepUp::handle);
 	}
 
 	@SuppressWarnings("unused")

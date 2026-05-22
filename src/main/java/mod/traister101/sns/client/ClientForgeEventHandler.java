@@ -9,6 +9,8 @@ import mod.traister101.sns.network.*;
 import mod.traister101.sns.util.*;
 import mod.traister101.sns.util.ItemSlotData.*;
 import mod.traister101.sns.util.SNSUtils.ToggleType;
+
+import net.minecraft.network.chat.*;
 import net.minecraft.world.entity.EquipmentSlot;
 import top.theillusivec4.curios.api.*;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
@@ -105,9 +107,9 @@ public final class ClientForgeEventHandler {
 
 		if (SNSKeybinds.TOGGLE_STEP_UP.isDown()) {
 			final ItemStack wornBoots = player.getItemBySlot(EquipmentSlot.FEET);
-			final boolean flag = !NBTHelper.isStepUp(wornBoots);
-			SNSUtils.sendTogglePacket(ToggleType.STEPUP, flag);
-			player.displayClientMessage(ToggleType.STEPUP.getTooltip(flag), true);
+			final boolean flag = !HikingBootsItem.isStepUpEnabled(wornBoots);
+			player.displayClientMessage(Component.translatable(HikingBootsItem.STEP_UP_TOOLTIP, SNSUtils.toggleTooltip(flag)), true);
+			SNSPacketHandler.sendToServer(new ServerboundToggleBootsStepUp());
 		}
 	}
 

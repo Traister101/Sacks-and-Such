@@ -163,8 +163,7 @@ public final class SNSUtils {
 	 */
 	public enum ToggleType {
 		NONE(0, "", ""),
-		PICKUP(1, SacksNSuch.MODID + ".status.sack.auto_pickup", "pickup"),
-		STEPUP(2, SacksNSuch.MODID + ".status.hiking_boots.step_up", "stepUp");
+		PICKUP(1, SacksNSuch.MODID + ".status.sack.auto_pickup", "pickup");
 
 		private static final IntFunction<ToggleType> BY_ID = ByIdMap.continuous(ToggleType::getId, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
 		@Getter
@@ -184,7 +183,7 @@ public final class SNSUtils {
 
 		public boolean supportsContainerType(final ContainerType containerType) {
 			return switch (this) {
-				case NONE, STEPUP -> false;
+				case NONE -> false;
 				case PICKUP -> containerType.doesAutoPickup();
 			};
 		}
